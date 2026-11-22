@@ -1,0 +1,46 @@
+[2026-11-20 11:28:34-0600] scripts/backup/logical_restore_test.sh all  (registro: evidence/backups/logical_restore_test_20261120_112834.log)
+[2026-11-20 11:28:34-0600] restauración lógica de prueba: central <- logical/central/20261120T172828Z
+[2026-11-20 11:28:34-0600]   SHA-256 verificado
+[2026-11-20 11:28:36-0600]   pg_restore terminado sin errores
+[2026-11-20 11:28:36-0600]   RESULTADO central: restauración lógica VÁLIDA
+[2026-11-20 11:28:36-0600] restauración lógica de prueba: cartago <- logical/cartago/20261120T172828Z
+[2026-11-20 11:28:36-0600]   SHA-256 verificado
+[2026-11-20 11:28:37-0600]   pg_restore terminado sin errores
+[2026-11-20 11:28:38-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 11:28:38-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 11:28:38-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 11:28:38-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 11:28:38-0600]   RESULTADO cartago: restauración lógica VÁLIDA
+[2026-11-20 11:28:38-0600] restauración lógica de prueba: san_jose <- logical/san_jose/20261120T172829Z
+[2026-11-20 11:28:38-0600]   SHA-256 verificado
+[2026-11-20 11:28:39-0600]   pg_restore terminado sin errores
+[2026-11-20 11:28:39-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 11:28:39-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 11:28:39-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 11:28:40-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 11:28:40-0600]   RESULTADO san_jose: restauración lógica VÁLIDA
+[2026-11-20 11:28:40-0600] restauración lógica de prueba: san_carlos <- logical/san_carlos/20261120T172829Z
+[2026-11-20 11:28:40-0600]   SHA-256 verificado
+[2026-11-20 11:28:41-0600]   pg_restore terminado sin errores
+[2026-11-20 11:28:41-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 11:28:41-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 11:28:41-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 11:28:41-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 11:28:41-0600]   RESULTADO san_carlos: restauración lógica VÁLIDA
+[2026-11-20 11:28:42-0600] restauración lógica de prueba: alajuela <- logical/alajuela/20261120T172829Z
+[2026-11-20 11:28:42-0600]   SHA-256 verificado
+[2026-11-20 11:28:43-0600]   pg_restore terminado sin errores
+[2026-11-20 11:28:43-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 11:28:43-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 11:28:43-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 11:28:43-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 11:28:43-0600]   RESULTADO alajuela: restauración lógica VÁLIDA
+[2026-11-20 11:28:43-0600] restauración lógica de prueba: limon <- logical/limon/20261120T172830Z
+[2026-11-20 11:28:43-0600]   SHA-256 verificado
+[2026-11-20 11:28:45-0600]   pg_restore terminado sin errores
+[2026-11-20 11:28:45-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 11:28:45-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 11:28:45-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 11:28:45-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 11:28:45-0600]   RESULTADO limon: restauración lógica VÁLIDA
+[2026-11-20 11:28:45-0600] resultado: OK

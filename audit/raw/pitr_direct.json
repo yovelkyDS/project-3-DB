@@ -1,0 +1,30 @@
+[
+  {
+    "project": "sigtec",
+    "service": "pg-san-carlos",
+    "rc": 0,
+    "stdout": "BEGIN\n     id     |         nombre          |                                descripcion                                |   pg_xact_commit_timestamp   \n------------+-------------------------+---------------------------------------------------------------------------+------------------------------\n 3000000050 | PITR-A 20261120T172854Z | MODIFICADO POR EL CAMBIO B (no debe recuperarse).                         | 2026-11-20 11:29:02.87997-06\n 3000000051 | PITR-B 20261120T172854Z | Cambio B: confirmado DESPU\u00c9S del instante objetivo (no debe recuperarse). | 2026-11-20 11:29:02.87997-06\n(2 rows)\n\n      run_id      | marker \n------------------+--------\n 20261120T172854Z | A\n 20261120T172854Z | B\n(2 rows)\n\n pg_is_in_recovery \n-------------------\n f\n(1 row)\n\n timeline_id \n-------------\n           1\n(1 row)\n\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "project": "sigtec",
+    "service": "pg-recovery",
+    "rc": 0,
+    "stdout": "BEGIN\n     id     |         nombre          |                             descripcion                              |   pg_xact_commit_timestamp    \n------------+-------------------------+----------------------------------------------------------------------+-------------------------------\n 3000000050 | PITR-A 20261120T172854Z | Cambio A: confirmado ANTES del instante objetivo (debe recuperarse). | 2026-11-20 11:28:57.799862-06\n(1 row)\n\n      run_id      | marker \n------------------+--------\n 20261120T172854Z | A\n(1 row)\n\n pg_is_in_recovery \n-------------------\n f\n(1 row)\n\n timeline_id \n-------------\n           2\n(1 row)\n\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "project": "sigtec_audit_20261120",
+    "service": "pg-san-carlos",
+    "rc": 0,
+    "stdout": "BEGIN\n     id     |         nombre          |                                descripcion                                |   pg_xact_commit_timestamp    \n------------+-------------------------+---------------------------------------------------------------------------+-------------------------------\n 3000000050 | PITR-A 20261120T202335Z | MODIFICADO POR EL CAMBIO B (no debe recuperarse).                         | 2026-11-20 14:23:43.971695-06\n 3000000051 | PITR-B 20261120T202335Z | Cambio B: confirmado DESPU\u00c9S del instante objetivo (no debe recuperarse). | 2026-11-20 14:23:43.971695-06\n(2 rows)\n\n      run_id      | marker \n------------------+--------\n 20261120T202335Z | A\n 20261120T202335Z | B\n(2 rows)\n\n pg_is_in_recovery \n-------------------\n f\n(1 row)\n\n timeline_id \n-------------\n           1\n(1 row)\n\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "project": "sigtec_audit_20261120",
+    "service": "pg-recovery",
+    "rc": 0,
+    "stdout": "BEGIN\n     id     |         nombre          |                             descripcion                              |   pg_xact_commit_timestamp   \n------------+-------------------------+----------------------------------------------------------------------+------------------------------\n 3000000050 | PITR-A 20261120T202335Z | Cambio A: confirmado ANTES del instante objetivo (debe recuperarse). | 2026-11-20 14:23:39.09249-06\n(1 row)\n\n      run_id      | marker \n------------------+--------\n 20261120T202335Z | A\n(1 row)\n\n pg_is_in_recovery \n-------------------\n f\n(1 row)\n\n timeline_id \n-------------\n           2\n(1 row)\n\nCOMMIT\n",
+    "stderr": ""
+  }
+]

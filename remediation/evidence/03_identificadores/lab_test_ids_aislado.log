@@ -1,0 +1,276 @@
+ Container sigtec_remed-sigtec-tools-run-d3d29f9d6ed7 Creating 
+ Container sigtec_remed-sigtec-tools-run-d3d29f9d6ed7 Created 
+PASS|cartago.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|cartago.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|cartago.editor_sin_privilegio_secuencia|f
+PASS|cartago.insercion_normal_id_generado|id=1000000042
+PASS|cartago.insercion_normal_registrada|puntos_interes/insercion
+PASS|cartago.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|cartago.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|cartago.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|cartago.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|cartago.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|cartago.carrera_mismo_id_primera_confirmada|rc=0
+PASS|cartago.carrera_mismo_id_una_sola_fila|1
+PASS|cartago.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|cartago.carrera_revertida_registro_coherente|zonas_verdes
+PASS|cartago.id_explicito_repetido_otra_capa|23505
+PASS|cartago.rechaza_id_prefijo_otro_campus|23514
+PASS|cartago.rechaza_campus_id_ajeno|23514
+PASS|cartago.rechaza_modificar_id|23514
+PASS|cartago.rechaza_modificar_campus_id|23514
+PASS|cartago.rechaza_modificar_id_mantenimiento|42501
+PASS|cartago.editor_con_guc_rechazado|42501
+PASS|cartago.editor_no_ejecuta_autorizacion|42501
+PASS|cartago.editor_no_escribe_registro|42501
+PASS|cartago.editor_no_borra_registro|42501
+PASS|cartago.editor_no_usa_secuencia|42501
+PASS|cartago.editor_no_desactiva_disparadores|42501
+PASS|cartago.editor_no_modo_replica|42501
+PASS|cartago.editor_no_reutiliza_disparador|42501
+PASS|cartago.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|cartago.rol_sin_permisos_no_inserta|42501
+PASS|cartago.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|cartago.mantenimiento_rechaza_id_no_emitido|23514
+PASS|cartago.mantenimiento_sin_guc_rechazado|23514
+PASS|cartago.rollback_no_deja_registro|0
+PASS|cartago.rollback_siguiente_id_mayor|1000000447 revertido -> 1000000448
+PASS|cartago.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|cartago.eliminacion_conserva_registro|parqueos
+PASS|cartago.eliminacion_id_no_reutilizable|23505
+PASS|cartago.eliminacion_nuevo_id_distinto|1000000449 eliminado -> nuevo 1000000450
+PASS|cartago.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|cartago.reinicio_inserta_y_registra|1
+PASS|cartago.restauracion_sin_errores|0
+PASS|cartago.restauracion_invariantes|0:0
+PASS|cartago.restauracion_disparadores|24
+PASS|cartago.restauracion_id_posterior_rechazado_antes_de_ajustar|id 1000000452 no emitido según la secuencia restaurada
+PASS|cartago.restauracion_reincorpora_id_posterior|id 1000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|cartago.restauracion_rechaza_duplicado|23505
+PASS|cartago.restauracion_secuencia_ajustada|máximo conocido 1000000452 -> siguiente 1000000453
+PASS|cartago.publicacion_ocho_tablas|8
+PASS|cartago.publicacion_excluye_ops|0
+PASS|cartago.replica_identity_pk|8
+PASS|cartago.columnas_sin_cambios|48
+PASS|cartago.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|san_jose.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|san_jose.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|san_jose.editor_sin_privilegio_secuencia|f
+PASS|san_jose.insercion_normal_id_generado|id=2000000042
+PASS|san_jose.insercion_normal_registrada|puntos_interes/insercion
+PASS|san_jose.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|san_jose.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|san_jose.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|san_jose.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|san_jose.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|san_jose.carrera_mismo_id_primera_confirmada|rc=0
+PASS|san_jose.carrera_mismo_id_una_sola_fila|1
+PASS|san_jose.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|san_jose.carrera_revertida_registro_coherente|zonas_verdes
+PASS|san_jose.id_explicito_repetido_otra_capa|23505
+PASS|san_jose.rechaza_id_prefijo_otro_campus|23514
+PASS|san_jose.rechaza_campus_id_ajeno|23514
+PASS|san_jose.rechaza_modificar_id|23514
+PASS|san_jose.rechaza_modificar_campus_id|23514
+PASS|san_jose.rechaza_modificar_id_mantenimiento|42501
+PASS|san_jose.editor_con_guc_rechazado|42501
+PASS|san_jose.editor_no_ejecuta_autorizacion|42501
+PASS|san_jose.editor_no_escribe_registro|42501
+PASS|san_jose.editor_no_borra_registro|42501
+PASS|san_jose.editor_no_usa_secuencia|42501
+PASS|san_jose.editor_no_desactiva_disparadores|42501
+PASS|san_jose.editor_no_modo_replica|42501
+PASS|san_jose.editor_no_reutiliza_disparador|42501
+PASS|san_jose.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|san_jose.rol_sin_permisos_no_inserta|42501
+PASS|san_jose.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|san_jose.mantenimiento_rechaza_id_no_emitido|23514
+PASS|san_jose.mantenimiento_sin_guc_rechazado|23514
+PASS|san_jose.rollback_no_deja_registro|0
+PASS|san_jose.rollback_siguiente_id_mayor|2000000447 revertido -> 2000000448
+PASS|san_jose.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|san_jose.eliminacion_conserva_registro|parqueos
+PASS|san_jose.eliminacion_id_no_reutilizable|23505
+PASS|san_jose.eliminacion_nuevo_id_distinto|2000000449 eliminado -> nuevo 2000000450
+PASS|san_jose.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|san_jose.reinicio_inserta_y_registra|1
+PASS|san_jose.restauracion_sin_errores|0
+PASS|san_jose.restauracion_invariantes|0:0
+PASS|san_jose.restauracion_disparadores|24
+PASS|san_jose.restauracion_id_posterior_rechazado_antes_de_ajustar|id 2000000452 no emitido según la secuencia restaurada
+PASS|san_jose.restauracion_reincorpora_id_posterior|id 2000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|san_jose.restauracion_rechaza_duplicado|23505
+PASS|san_jose.restauracion_secuencia_ajustada|máximo conocido 2000000452 -> siguiente 2000000453
+PASS|san_jose.publicacion_ocho_tablas|8
+PASS|san_jose.publicacion_excluye_ops|0
+PASS|san_jose.replica_identity_pk|8
+PASS|san_jose.columnas_sin_cambios|48
+PASS|san_jose.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|san_carlos.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|san_carlos.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|san_carlos.editor_sin_privilegio_secuencia|f
+PASS|san_carlos.insercion_normal_id_generado|id=3000000042
+PASS|san_carlos.insercion_normal_registrada|puntos_interes/insercion
+PASS|san_carlos.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|san_carlos.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|san_carlos.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|san_carlos.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|san_carlos.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|san_carlos.carrera_mismo_id_primera_confirmada|rc=0
+PASS|san_carlos.carrera_mismo_id_una_sola_fila|1
+PASS|san_carlos.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|san_carlos.carrera_revertida_registro_coherente|zonas_verdes
+PASS|san_carlos.id_explicito_repetido_otra_capa|23505
+PASS|san_carlos.rechaza_id_prefijo_otro_campus|23514
+PASS|san_carlos.rechaza_campus_id_ajeno|23514
+PASS|san_carlos.rechaza_modificar_id|23514
+PASS|san_carlos.rechaza_modificar_campus_id|23514
+PASS|san_carlos.rechaza_modificar_id_mantenimiento|42501
+PASS|san_carlos.editor_con_guc_rechazado|42501
+PASS|san_carlos.editor_no_ejecuta_autorizacion|42501
+PASS|san_carlos.editor_no_escribe_registro|42501
+PASS|san_carlos.editor_no_borra_registro|42501
+PASS|san_carlos.editor_no_usa_secuencia|42501
+PASS|san_carlos.editor_no_desactiva_disparadores|42501
+PASS|san_carlos.editor_no_modo_replica|42501
+PASS|san_carlos.editor_no_reutiliza_disparador|42501
+PASS|san_carlos.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|san_carlos.rol_sin_permisos_no_inserta|42501
+PASS|san_carlos.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|san_carlos.mantenimiento_rechaza_id_no_emitido|23514
+PASS|san_carlos.mantenimiento_sin_guc_rechazado|23514
+PASS|san_carlos.rollback_no_deja_registro|0
+PASS|san_carlos.rollback_siguiente_id_mayor|3000000447 revertido -> 3000000448
+PASS|san_carlos.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|san_carlos.eliminacion_conserva_registro|parqueos
+PASS|san_carlos.eliminacion_id_no_reutilizable|23505
+PASS|san_carlos.eliminacion_nuevo_id_distinto|3000000449 eliminado -> nuevo 3000000450
+PASS|san_carlos.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|san_carlos.reinicio_inserta_y_registra|1
+PASS|san_carlos.restauracion_sin_errores|0
+PASS|san_carlos.restauracion_invariantes|0:0
+PASS|san_carlos.restauracion_disparadores|24
+PASS|san_carlos.restauracion_id_posterior_rechazado_antes_de_ajustar|id 3000000452 no emitido según la secuencia restaurada
+PASS|san_carlos.restauracion_reincorpora_id_posterior|id 3000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|san_carlos.restauracion_rechaza_duplicado|23505
+PASS|san_carlos.restauracion_secuencia_ajustada|máximo conocido 3000000452 -> siguiente 3000000453
+PASS|san_carlos.publicacion_ocho_tablas|8
+PASS|san_carlos.publicacion_excluye_ops|0
+PASS|san_carlos.replica_identity_pk|8
+PASS|san_carlos.columnas_sin_cambios|48
+PASS|san_carlos.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|alajuela.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|alajuela.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|alajuela.editor_sin_privilegio_secuencia|f
+PASS|alajuela.insercion_normal_id_generado|id=4000000042
+PASS|alajuela.insercion_normal_registrada|puntos_interes/insercion
+PASS|alajuela.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|alajuela.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|alajuela.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|alajuela.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|alajuela.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|alajuela.carrera_mismo_id_primera_confirmada|rc=0
+PASS|alajuela.carrera_mismo_id_una_sola_fila|1
+PASS|alajuela.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|alajuela.carrera_revertida_registro_coherente|zonas_verdes
+PASS|alajuela.id_explicito_repetido_otra_capa|23505
+PASS|alajuela.rechaza_id_prefijo_otro_campus|23514
+PASS|alajuela.rechaza_campus_id_ajeno|23514
+PASS|alajuela.rechaza_modificar_id|23514
+PASS|alajuela.rechaza_modificar_campus_id|23514
+PASS|alajuela.rechaza_modificar_id_mantenimiento|42501
+PASS|alajuela.editor_con_guc_rechazado|42501
+PASS|alajuela.editor_no_ejecuta_autorizacion|42501
+PASS|alajuela.editor_no_escribe_registro|42501
+PASS|alajuela.editor_no_borra_registro|42501
+PASS|alajuela.editor_no_usa_secuencia|42501
+PASS|alajuela.editor_no_desactiva_disparadores|42501
+PASS|alajuela.editor_no_modo_replica|42501
+PASS|alajuela.editor_no_reutiliza_disparador|42501
+PASS|alajuela.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|alajuela.rol_sin_permisos_no_inserta|42501
+PASS|alajuela.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|alajuela.mantenimiento_rechaza_id_no_emitido|23514
+PASS|alajuela.mantenimiento_sin_guc_rechazado|23514
+PASS|alajuela.rollback_no_deja_registro|0
+PASS|alajuela.rollback_siguiente_id_mayor|4000000447 revertido -> 4000000448
+PASS|alajuela.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|alajuela.eliminacion_conserva_registro|parqueos
+PASS|alajuela.eliminacion_id_no_reutilizable|23505
+PASS|alajuela.eliminacion_nuevo_id_distinto|4000000449 eliminado -> nuevo 4000000450
+PASS|alajuela.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|alajuela.reinicio_inserta_y_registra|1
+PASS|alajuela.restauracion_sin_errores|0
+PASS|alajuela.restauracion_invariantes|0:0
+PASS|alajuela.restauracion_disparadores|24
+PASS|alajuela.restauracion_id_posterior_rechazado_antes_de_ajustar|id 4000000452 no emitido según la secuencia restaurada
+PASS|alajuela.restauracion_reincorpora_id_posterior|id 4000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|alajuela.restauracion_rechaza_duplicado|23505
+PASS|alajuela.restauracion_secuencia_ajustada|máximo conocido 4000000452 -> siguiente 4000000453
+PASS|alajuela.publicacion_ocho_tablas|8
+PASS|alajuela.publicacion_excluye_ops|0
+PASS|alajuela.replica_identity_pk|8
+PASS|alajuela.columnas_sin_cambios|48
+PASS|alajuela.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|limon.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|limon.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|limon.editor_sin_privilegio_secuencia|f
+PASS|limon.insercion_normal_id_generado|id=5000000042
+PASS|limon.insercion_normal_registrada|puntos_interes/insercion
+PASS|limon.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|limon.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|limon.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|limon.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|limon.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|limon.carrera_mismo_id_primera_confirmada|rc=0
+PASS|limon.carrera_mismo_id_una_sola_fila|1
+PASS|limon.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|limon.carrera_revertida_registro_coherente|zonas_verdes
+PASS|limon.id_explicito_repetido_otra_capa|23505
+PASS|limon.rechaza_id_prefijo_otro_campus|23514
+PASS|limon.rechaza_campus_id_ajeno|23514
+PASS|limon.rechaza_modificar_id|23514
+PASS|limon.rechaza_modificar_campus_id|23514
+PASS|limon.rechaza_modificar_id_mantenimiento|42501
+PASS|limon.editor_con_guc_rechazado|42501
+PASS|limon.editor_no_ejecuta_autorizacion|42501
+PASS|limon.editor_no_escribe_registro|42501
+PASS|limon.editor_no_borra_registro|42501
+PASS|limon.editor_no_usa_secuencia|42501
+PASS|limon.editor_no_desactiva_disparadores|42501
+PASS|limon.editor_no_modo_replica|42501
+PASS|limon.editor_no_reutiliza_disparador|42501
+PASS|limon.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|limon.rol_sin_permisos_no_inserta|42501
+PASS|limon.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|limon.mantenimiento_rechaza_id_no_emitido|23514
+PASS|limon.mantenimiento_sin_guc_rechazado|23514
+PASS|limon.rollback_no_deja_registro|0
+PASS|limon.rollback_siguiente_id_mayor|5000000447 revertido -> 5000000448
+PASS|limon.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|limon.eliminacion_conserva_registro|parqueos
+PASS|limon.eliminacion_id_no_reutilizable|23505
+PASS|limon.eliminacion_nuevo_id_distinto|5000000449 eliminado -> nuevo 5000000450
+PASS|limon.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|limon.reinicio_inserta_y_registra|1
+PASS|limon.restauracion_sin_errores|0
+PASS|limon.restauracion_invariantes|0:0
+PASS|limon.restauracion_disparadores|24
+PASS|limon.restauracion_id_posterior_rechazado_antes_de_ajustar|id 5000000452 no emitido según la secuencia restaurada
+PASS|limon.restauracion_reincorpora_id_posterior|id 5000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|limon.restauracion_rechaza_duplicado|23505
+PASS|limon.restauracion_secuencia_ajustada|máximo conocido 5000000452 -> siguiente 5000000453
+PASS|limon.publicacion_ocho_tablas|8
+PASS|limon.publicacion_excluye_ops|0
+PASS|limon.replica_identity_pk|8
+PASS|limon.columnas_sin_cambios|48
+PASS|limon.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|actualizacion.base_sin_0103|0
+PASS|actualizacion.aborta_con_duplicado|rc=3, conflicto informado: 1000000024 en iluminacion+puntos_interes
+PASS|actualizacion.sin_cambios_parciales|registro:0103:trg30:secdef
+PASS|actualizacion.datos_intactos|no borró ni renumeró
+PASS|actualizacion.aplica_tras_resolver|0
+PASS|actualizacion.registro_completo|41:0:0
+PASS|actualizacion.idempotente|un segundo migrate no reaplica 0103
+----
+RESUMEN identificadores: 272 PASS, 0 FAIL

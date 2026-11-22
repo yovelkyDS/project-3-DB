@@ -1,0 +1,162 @@
+{
+  "Id": "16be34ff06814c33fe5133fd1455dd45ebcb6f78a8d7158d13f1b6dc3364305b",
+  "Image": "sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af",
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "sigtec_pgdata_recovery",
+      "Source": "/var/lib/docker/volumes/sigtec_pgdata_recovery/_data",
+      "Destination": "/var/lib/postgresql/data",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_alajuela",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_alajuela/_data",
+      "Destination": "/archives/alajuela",
+      "Driver": "local",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_backups",
+      "Source": "/var/lib/docker/volumes/sigtec_backups/_data",
+      "Destination": "/backups",
+      "Driver": "local",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_central",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_central/_data",
+      "Destination": "/archives/central",
+      "Driver": "local",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_limon",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_limon/_data",
+      "Destination": "/archives/limon",
+      "Driver": "local",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_recovery",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_recovery/_data",
+      "Destination": "/var/lib/postgresql/wal_archive",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_cartago",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_cartago/_data",
+      "Destination": "/archives/cartago",
+      "Driver": "local",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_san_jose",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_san_jose/_data",
+      "Destination": "/archives/san_jose",
+      "Driver": "local",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_san_carlos",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_san_carlos/_data",
+      "Destination": "/archives/san_carlos",
+      "Driver": "local",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": ""
+    }
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 69144,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-20T17:29:07.140913139Z",
+    "FinishedAt": "0001-01-01T00:00:00Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-11-20T18:51:10.639124462Z",
+          "End": "2026-11-20T18:51:10.705327629Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:15.706725131Z",
+          "End": "2026-11-20T18:51:15.778237798Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:20.778631425Z",
+          "End": "2026-11-20T18:51:20.841060425Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:25.841677302Z",
+          "End": "2026-11-20T18:51:25.909683136Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:30.910669513Z",
+          "End": "2026-11-20T18:51:30.971175638Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "Ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "55436"
+      }
+    ]
+  },
+  "Networks": {
+    "sigtec_net": {
+      "IPAddress": "172.22.0.5",
+      "Aliases": [
+        "sigtec-pg-recovery-1",
+        "pg-recovery"
+      ]
+    }
+  }
+}

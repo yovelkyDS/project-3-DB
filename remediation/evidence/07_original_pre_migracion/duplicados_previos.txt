@@ -1,0 +1,11 @@
+fecha: 2026-11-20 15:25:28-0600
+== cartago
+objetos=41 ids_distintos=41 repetidos_entre_capas=0 registro_existe=false migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+== san_jose
+objetos=41 ids_distintos=41 repetidos_entre_capas=0 registro_existe=false migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+== san_carlos
+objetos=43 ids_distintos=43 repetidos_entre_capas=0 registro_existe=false migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+== alajuela
+objetos=41 ids_distintos=41 repetidos_entre_capas=0 registro_existe=false migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+== limon
+objetos=41 ids_distintos=41 repetidos_entre_capas=0 registro_existe=false migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo

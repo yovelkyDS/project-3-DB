@@ -1,0 +1,22 @@
+[2026-11-20 17:21:10-0600] scripts/backup/physical_backup.sh all  (registro: ./remediation/RA-01/evidence/08_lab_instalacion_limpia/backups/physical_backup_20261120_172110.log)
+ Container sigtec_remed-sigtec-tools-run-827b7adba5cd Creating 
+ Container sigtec_remed-sigtec-tools-run-827b7adba5cd Created 
+[2026-11-20 17:21:10-0600] pg_basebackup central (pg-central) -> physical/central/20261120T232110Z/data
+[2026-11-20 17:21:11-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 17:21:11-0600]   OK central: 53 MiB, inicio 0/7000028 (file 000000010000000000000007), verificado
+[2026-11-20 17:21:11-0600] pg_basebackup cartago (pg-cartago) -> physical/cartago/20261120T232111Z/data
+[2026-11-20 17:21:11-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 17:21:11-0600]   OK cartago: 54 MiB, inicio 0/8000028 (file 000000010000000000000008), verificado
+[2026-11-20 17:21:11-0600] pg_basebackup san_jose (pg-san-jose) -> physical/san_jose/20261120T232111Z/data
+[2026-11-20 17:21:11-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 17:21:11-0600]   OK san_jose: 54 MiB, inicio 0/7000028 (file 000000010000000000000007), verificado
+[2026-11-20 17:21:11-0600] pg_basebackup san_carlos (pg-san-carlos) -> physical/san_carlos/20261120T232111Z/data
+[2026-11-20 17:21:11-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 17:21:12-0600]   OK san_carlos: 54 MiB, inicio 0/7000028 (file 000000010000000000000007), verificado
+[2026-11-20 17:21:12-0600] pg_basebackup alajuela (pg-alajuela) -> physical/alajuela/20261120T232112Z/data
+[2026-11-20 17:21:12-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 17:21:12-0600]   OK alajuela: 54 MiB, inicio 0/7000028 (file 000000010000000000000007), verificado
+[2026-11-20 17:21:12-0600] pg_basebackup limon (pg-limon) -> physical/limon/20261120T232112Z/data
+[2026-11-20 17:21:12-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 17:21:12-0600]   OK limon: 54 MiB, inicio 0/7000028 (file 000000010000000000000007), verificado
+[2026-11-20 17:21:12-0600] resultado: OK

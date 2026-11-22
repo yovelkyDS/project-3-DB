@@ -1,0 +1,26 @@
+ Container sigtec-sigtec-tools-run-0d17150f6762 Creating 
+ Container sigtec-sigtec-tools-run-0d17150f6762 Created 
+NODE central
+sigtec|postgres|t|
+postgres|f
+sigtec_backup|f
+NODE cartago
+sigtec|postgres|t|
+postgres|f
+sigtec_backup|f
+NODE san_jose
+sigtec|postgres|t|
+postgres|f
+sigtec_backup|f
+NODE san_carlos
+sigtec|postgres|t|
+postgres|f
+sigtec_backup|f
+NODE alajuela
+sigtec|postgres|t|
+postgres|f
+sigtec_backup|f
+NODE limon
+sigtec|postgres|t|
+postgres|f
+sigtec_backup|f

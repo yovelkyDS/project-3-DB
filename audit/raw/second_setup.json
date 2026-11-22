@@ -1,0 +1,19 @@
+{
+  "exit_code": 0,
+  "data_unchanged": true,
+  "credentials_unchanged": true,
+  "before": {
+    "cartago": "b0aa5a7b1f653037886c0ec277ba226423989732658773919d276e2a38b59d0f",
+    "san_jose": "390b938b7c0313420a53d5556efa2c2c7dcd638a775fb6734fa981f5bc97f57b",
+    "san_carlos": "9f853f1c12e76c52d3b06b658fbdd19dfe05f77d01967902df4d669da2b8a97c",
+    "alajuela": "16fefd4347b7b7fae912750118c57298725cf28302ccfa3ac7d1c7e6a358e5f1",
+    "limon": "2d297a59733f785d789078da06ad4c38e5c061eb8da817e92bfde91a6bb3004c"
+  },
+  "after": {
+    "cartago": "b0aa5a7b1f653037886c0ec277ba226423989732658773919d276e2a38b59d0f",
+    "san_jose": "390b938b7c0313420a53d5556efa2c2c7dcd638a775fb6734fa981f5bc97f57b",
+    "san_carlos": "9f853f1c12e76c52d3b06b658fbdd19dfe05f77d01967902df4d669da2b8a97c",
+    "alajuela": "16fefd4347b7b7fae912750118c57298725cf28302ccfa3ac7d1c7e6a358e5f1",
+    "limon": "2d297a59733f785d789078da06ad4c38e5c061eb8da817e92bfde91a6bb3004c"
+  }
+}

@@ -1,0 +1,28 @@
+# SIG-TEC · versiones efectivas — 2026-11-20 15:30:40-0600
+host: Darwin 27.0.0 arm64
+docker: Docker version 29.2.1, build a5c7197
+docker compose: 5.0.2
+docker server: 29.2.1 (Docker Desktop, aarch64)
+imagen: sigtec/postgis:17.12-3.5.4 id=sha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c
+imagen base: postgres:17.12-trixie@sha256:b60e90042aa6b8dbecd58e224b3e36114dbf8ad754465264c2476ad58a86e45c
+PostGIS fuente: 3.5.4 sha256=bc960a0395942d58abb8078a09bb901bd49555565532f5246cc28292d9eadb57
+
+cliente: psql (PostgreSQL) 17.12 (Debian 17.12-1.pgdg13+1) / pg_dump (PostgreSQL) 17.12 (Debian 17.12-1.pgdg13+1) / pg_basebackup (PostgreSQL) 17.12 (Debian 17.12-1.pgdg13+1)
+--- central (pg-central)
+PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+POSTGIS="3.5.4 2fc837e" [EXTENSION] PGSQL="170" GEOS="3.15.0-CAPI-1.21.0" PROJ="9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db" (compiled against PROJ 9.9.0) LIBXML="2.9.14" LIBJSON="0.18"
+--- cartago (pg-cartago)
+PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+POSTGIS="3.5.4 2fc837e" [EXTENSION] PGSQL="170" GEOS="3.15.0-CAPI-1.21.0" PROJ="9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db" (compiled against PROJ 9.9.0) LIBXML="2.9.14" LIBJSON="0.18"
+--- san_jose (pg-san-jose)
+PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+POSTGIS="3.5.4 2fc837e" [EXTENSION] PGSQL="170" GEOS="3.15.0-CAPI-1.21.0" PROJ="9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db" (compiled against PROJ 9.9.0) LIBXML="2.9.14" LIBJSON="0.18"
+--- san_carlos (pg-san-carlos)
+PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+POSTGIS="3.5.4 2fc837e" [EXTENSION] PGSQL="170" GEOS="3.15.0-CAPI-1.21.0" PROJ="9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db" (compiled against PROJ 9.9.0) LIBXML="2.9.14" LIBJSON="0.18"
+--- alajuela (pg-alajuela)
+PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+POSTGIS="3.5.4 2fc837e" [EXTENSION] PGSQL="170" GEOS="3.15.0-CAPI-1.21.0" PROJ="9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db" (compiled against PROJ 9.9.0) LIBXML="2.9.14" LIBJSON="0.18"
+--- limon (pg-limon)
+PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+POSTGIS="3.5.4 2fc837e" [EXTENSION] PGSQL="170" GEOS="3.15.0-CAPI-1.21.0" PROJ="9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db" (compiled against PROJ 9.9.0) LIBXML="2.9.14" LIBJSON="0.18"

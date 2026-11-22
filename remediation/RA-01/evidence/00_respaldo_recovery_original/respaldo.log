@@ -1,0 +1,17 @@
+== estado previo (solo lectura)
+en_recuperacion=false
+nodo=san_carlos campus_id=3 esquema=local_san_carlos
+migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+registro_0103=false
+== pg_basebackup
+backup successfully verified
+== pg_dump
+tablas_de_capas_en_dump=8
+984c621a07563fe103bdd137857ac41e54a07b9b6370db16e7d7d7d189b67262  /backups/recovery_pre_ra01/20261120T225613Z/sigtec.dump
+55M	/backups/recovery_pre_ra01/20261120T225613Z/data
+76K	/backups/recovery_pre_ra01/20261120T225613Z/sigtec.dump
+data
+sigtec.dump
+toc.txt
+RESPALDO_RECOVERY_ORIGINAL=/backups/recovery_pre_ra01/20261120T225613Z
+rc=

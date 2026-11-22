@@ -1,0 +1,30 @@
+
+PostgreSQL Database directory appears to contain a database; Skipping initialization
+
+sigtec-recovery: restaurando /backups/physical/san_carlos/20261120T214841Z/data -> /var/lib/postgresql/data
+sigtec-recovery: recovery.signal creado; PostgreSQL reproducirá el WAL hasta el objetivo
+2026-11-20 15:48:46.075 CST [1] LOG:  starting PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-11-20 15:48:46.075 CST [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-11-20 15:48:46.075 CST [1] LOG:  listening on IPv6 address "::", port 5432
+2026-11-20 15:48:46.077 CST [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-11-20 15:48:46.079 CST [54] LOG:  database system was interrupted; last known up at 2026-11-20 15:48:41 CST
+2026-11-20 15:48:46.170 CST [54] LOG:  starting backup recovery with redo LSN 0/13000028, checkpoint LSN 0/13000080, on timeline ID 1
+2026-11-20 15:48:46.177 CST [54] LOG:  restored log file "000000010000000000000013" from archive
+2026-11-20 15:48:46.191 CST [54] LOG:  starting point-in-time recovery to 2026-11-20 15:48:43.511729-06
+2026-11-20 15:48:46.194 CST [54] LOG:  redo starts at 0/13000028
+2026-11-20 15:48:46.200 CST [54] LOG:  restored log file "000000010000000000000014" from archive
+cp: cannot stat '/archives/san_carlos/000000010000000000000015': No such file or directory
+2026-11-20 15:48:46.213 CST [54] LOG:  completed backup recovery with redo LSN 0/13000028 and end LSN 0/13000120
+2026-11-20 15:48:46.213 CST [54] LOG:  consistent recovery state reached at 0/13000120
+2026-11-20 15:48:46.213 CST [1] LOG:  database system is ready to accept read-only connections
+2026-11-20 15:48:46.213 CST [54] LOG:  recovery stopping before commit of transaction 845, time 2026-11-20 15:48:44.859247-06
+2026-11-20 15:48:46.213 CST [54] LOG:  redo done at 0/140018B8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.01 s
+2026-11-20 15:48:46.213 CST [54] LOG:  last completed transaction was at log time 2026-11-20 15:48:42.179164-06
+2026-11-20 15:48:46.220 CST [54] LOG:  restored log file "000000010000000000000014" from archive
+cp: cannot stat '/archives/san_carlos/00000002.history': No such file or directory
+2026-11-20 15:48:46.233 CST [54] LOG:  selected new timeline ID: 2
+cp: cannot stat '/archives/san_carlos/00000001.history': No such file or directory
+2026-11-20 15:48:46.246 CST [54] LOG:  archive recovery complete
+2026-11-20 15:48:46.246 CST [52] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-11-20 15:48:46.251 CST [52] LOG:  checkpoint complete: wrote 13 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.002 s, total=0.006 s; sync files=12, longest=0.001 s, average=0.001 s; distance=16390 kB, estimate=16390 kB; lsn=0/140018B8, redo lsn=0/140018B8
+2026-11-20 15:48:46.253 CST [1] LOG:  database system is ready to accept connections

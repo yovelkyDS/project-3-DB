@@ -1,0 +1,16 @@
+[2026-11-20 17:35:20-0600] scripts/backup/logical_backup.sh all  (registro: ./remediation/RA-01/evidence/08b_lab_instalacion_limpia/backups/logical_backup_20261120_173520.log)
+ Container sigtec_ra01-sigtec-tools-run-37c60e38ed8f Creating 
+ Container sigtec_ra01-sigtec-tools-run-37c60e38ed8f Created 
+[2026-11-20 17:35:20-0600] pg_dump central (pg-central) -> logical/central/20261120T233520Z
+[2026-11-20 17:35:21-0600]   OK central: 8616 bytes, 23 entradas TOC, validado
+[2026-11-20 17:35:21-0600] pg_dump cartago (pg-cartago) -> logical/cartago/20261120T233521Z
+[2026-11-20 17:35:21-0600]   OK cartago: 87794 bytes, 169 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:35:21-0600] pg_dump san_jose (pg-san-jose) -> logical/san_jose/20261120T233521Z
+[2026-11-20 17:35:21-0600]   OK san_jose: 88215 bytes, 169 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:35:21-0600] pg_dump san_carlos (pg-san-carlos) -> logical/san_carlos/20261120T233521Z
+[2026-11-20 17:35:21-0600]   OK san_carlos: 88943 bytes, 169 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:35:21-0600] pg_dump alajuela (pg-alajuela) -> logical/alajuela/20261120T233521Z
+[2026-11-20 17:35:22-0600]   OK alajuela: 88161 bytes, 169 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:35:22-0600] pg_dump limon (pg-limon) -> logical/limon/20261120T233522Z
+[2026-11-20 17:35:22-0600]   OK limon: 87029 bytes, 169 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:35:22-0600] resultado: OK

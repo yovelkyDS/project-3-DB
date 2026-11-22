@@ -1,0 +1,197 @@
+[
+  {
+    "name": "editor_has_no_sequence_usage",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "f\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "explicit_editor_guc",
+    "passed": true,
+    "evidence": {
+      "rc": 3,
+      "stdout": "",
+      "stderr": "ERROR:  42501: SIG-TEC: el rol reaudit_editor no est\u00e1 autorizado para insertar identificadores expl\u00edcitos\nHINT:  Solo los miembros de sigtec_mantenimiento_id pueden usar sigtec.permitir_id_explicito.\nCONTEXT:  PL/pgSQL function local_cartago.tg_asignar_identificador() line 25 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3913\n"
+    }
+  },
+  {
+    "name": "authorization_function",
+    "passed": true,
+    "evidence": {
+      "rc": 3,
+      "stdout": "",
+      "stderr": "ERROR:  42501: permission denied for function sigtec_id_autorizar_explicito\nLOCATION:  aclcheck_error, aclchk.c:2843\n"
+    }
+  },
+  {
+    "name": "registry_write",
+    "passed": true,
+    "evidence": {
+      "rc": 3,
+      "stdout": "",
+      "stderr": "ERROR:  42501: permission denied for schema ops\nLINE 1: DELETE FROM ops.identificadores_globales;\n                    ^\nLOCATION:  aclcheck_error, aclchk.c:2843\n"
+    }
+  },
+  {
+    "name": "disable_trigger",
+    "passed": true,
+    "evidence": {
+      "rc": 3,
+      "stdout": "",
+      "stderr": "ERROR:  42501: must be owner of table puntos_interes\nLOCATION:  aclcheck_error, aclchk.c:2981\n"
+    }
+  },
+  {
+    "name": "replica_mode",
+    "passed": true,
+    "evidence": {
+      "rc": 3,
+      "stdout": "",
+      "stderr": "ERROR:  42501: permission denied to set parameter \"session_replication_role\"\nLOCATION:  set_config_with_handle, guc.c:3601\n"
+    }
+  },
+  {
+    "name": "grant_self",
+    "passed": true,
+    "evidence": {
+      "rc": 3,
+      "stdout": "",
+      "stderr": "ERROR:  42501: permission denied to grant role \"sigtec_mantenimiento_id\"\nDETAIL:  Only roles with the ADMIN option on role \"sigtec_mantenimiento_id\" may grant this role.\nLOCATION:  check_role_membership_authorization, user.c:2150\n"
+    }
+  },
+  {
+    "name": "automatic_editor_insert",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "1000000066\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "race_COMMIT_overlap",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "170|PgSleep\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "race_COMMIT",
+    "passed": true,
+    "evidence": {
+      "first": {
+        "rc": 0,
+        "stdout": "1000000067\n\n",
+        "stderr": ""
+      },
+      "second": {
+        "rc": 3,
+        "stdout": "",
+        "stderr": "ERROR:  23505: SIG-TEC: el id 1000000067 ya existe en el registro global del campus (asignado en puntos_interes; los ids eliminados tampoco se reutilizan)\nHINT:  Omita la columna id para que PostgreSQL asigne uno nuevo.\nCONTEXT:  PL/pgSQL function local_cartago.tg_registrar_identificador() line 10 at RAISE\nLOCATION:  exec_stmt_raise, pl_exec.c:3913\n"
+      },
+      "seconds_waited": 3.839686791998247,
+      "result": {
+        "rc": 0,
+        "stdout": "1|puntos_interes\n1\n",
+        "stderr": ""
+      }
+    }
+  },
+  {
+    "name": "race_ROLLBACK_overlap",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "220|PgSleep\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "race_ROLLBACK",
+    "passed": true,
+    "evidence": {
+      "first": {
+        "rc": 0,
+        "stdout": "1000000068\n\n",
+        "stderr": ""
+      },
+      "second": {
+        "rc": 0,
+        "stdout": "1000000068\n",
+        "stderr": ""
+      },
+      "seconds_waited": 3.851349124999615,
+      "result": {
+        "rc": 0,
+        "stdout": "1|iluminacion\n1\n",
+        "stderr": ""
+      }
+    }
+  },
+  {
+    "name": "automatic_concurrency_180",
+    "passed": true,
+    "evidence": {
+      "activity": {
+        "rc": 0,
+        "stdout": "6\n",
+        "stderr": ""
+      },
+      "connections": [
+        {
+          "rc": 0,
+          "stdout": "1000000093\n1000000099\n1000000104\n1000000111\n1000000112\n1000000113\n1000000119\n1000000127\n1000000132\n1000000133\n1000000141\n1000000143\n1000000148\n1000000152\n1000000159\n1000000163\n1000000167\n1000000173\n1000000178\n1000000185\n1000000187\n1000000190\n1000000194\n1000000196\n1000000199\n1000000202\n1000000204\n1000000209\n1000000211\n1000000215\n\n",
+          "stderr": ""
+        },
+        {
+          "rc": 0,
+          "stdout": "1000000091\n1000000097\n1000000105\n1000000114\n1000000121\n1000000124\n1000000125\n1000000126\n1000000129\n1000000134\n1000000140\n1000000142\n1000000147\n1000000155\n1000000160\n1000000161\n1000000164\n1000000166\n1000000168\n1000000171\n1000000172\n1000000176\n1000000182\n1000000189\n1000000195\n1000000200\n1000000208\n1000000212\n1000000216\n1000000218\n\n",
+          "stderr": ""
+        },
+        {
+          "rc": 0,
+          "stdout": "1000000069\n1000000070\n1000000071\n1000000072\n1000000073\n1000000074\n1000000075\n1000000076\n1000000077\n1000000078\n1000000079\n1000000080\n1000000082\n1000000083\n1000000084\n1000000085\n1000000087\n1000000089\n1000000092\n1000000096\n1000000102\n1000000110\n1000000117\n1000000122\n1000000128\n1000000137\n1000000145\n1000000153\n1000000156\n1000000157\n\n",
+          "stderr": ""
+        },
+        {
+          "rc": 0,
+          "stdout": "1000000095\n1000000100\n1000000103\n1000000107\n1000000108\n1000000115\n1000000123\n1000000130\n1000000136\n1000000144\n1000000149\n1000000150\n1000000154\n1000000162\n1000000169\n1000000174\n1000000177\n1000000179\n1000000181\n1000000183\n1000000186\n1000000192\n1000000198\n1000000203\n1000000205\n1000000207\n1000000210\n1000000213\n1000000214\n1000000217\n\n",
+          "stderr": ""
+        },
+        {
+          "rc": 0,
+          "stdout": "1000000081\n1000000086\n1000000088\n1000000090\n1000000094\n1000000098\n1000000101\n1000000106\n1000000109\n1000000116\n1000000118\n1000000120\n1000000131\n1000000135\n1000000138\n1000000139\n1000000146\n1000000151\n1000000158\n1000000165\n1000000170\n1000000175\n1000000180\n1000000184\n1000000188\n1000000191\n1000000193\n1000000197\n1000000201\n1000000206\n\n",
+          "stderr": ""
+        },
+        {
+          "rc": 0,
+          "stdout": "1000000219\n1000000220\n1000000221\n1000000222\n1000000223\n1000000224\n1000000225\n1000000226\n1000000227\n1000000228\n1000000229\n1000000230\n1000000231\n1000000232\n1000000233\n1000000234\n1000000235\n1000000236\n1000000237\n1000000238\n1000000239\n1000000240\n1000000241\n1000000242\n1000000243\n1000000244\n1000000245\n1000000246\n1000000247\n1000000248\n\n",
+          "stderr": ""
+        }
+      ]
+    }
+  },
+  {
+    "name": "all_layers_unique_and_registered",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "224|224|0\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "probe_roles_removed",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  }
+]

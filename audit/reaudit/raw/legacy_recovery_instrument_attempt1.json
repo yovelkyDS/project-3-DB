@@ -1,0 +1,5 @@
+{
+  "rc": 1,
+  "stdout": "",
+  "stderr": "ERROR:  CREATE DATABASE cannot run inside a transaction block\n"
+}

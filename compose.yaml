@@ -1,0 +1,214 @@
+# =====================================================================
+# SIG-TEC — seis nodos PostgreSQL 17.12 + PostGIS 3.5.4
+#
+#   pg-central      55430  autenticación, coordinación, consolidación (sin campus_id)
+#   pg-cartago      55431  campus_id 1
+#   pg-san-jose     55432  campus_id 2
+#   pg-san-carlos   55433  campus_id 3
+#   pg-alajuela     55434  campus_id 4
+#   pg-limon        55435  campus_id 5
+#   pg-recovery     55436  instancia aislada de recuperación PITR (perfil "recovery")
+#   sigtec-tools    —      contenedor efímero de administración (perfil "tools")
+#
+# Uso normal: make up / make down (nunca "down -v": borraría los volúmenes).
+# =====================================================================
+name: ${COMPOSE_PROJECT_NAME:-sigtec}
+
+x-pg-node: &pg-node
+  image: ${SIGTEC_IMAGE:-sigtec/postgis:17.12-3.5.4}
+  build:
+    context: ./docker/postgis
+  # Imagen local: se construye con "make build"; nunca se descarga de un registro.
+  pull_policy: never
+  restart: unless-stopped
+  shm_size: 128mb
+  stop_grace_period: 60s
+  networks: [sigtec]
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -q -h 127.0.0.1 -p 5432 -U postgres -d sigtec"]
+    interval: 5s
+    timeout: 5s
+    retries: 24
+    start_period: 60s
+
+x-pg-env: &pg-env
+  POSTGRES_DB: sigtec
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD en .env (ejecute scripts/setup.sh)}
+  POSTGRES_INITDB_ARGS: "--data-checksums --encoding=UTF8 --locale=C.UTF-8"
+  TZ: America/Costa_Rica
+
+x-central-dependency: &central-dependency
+  depends_on:
+    pg-central:
+      condition: service_healthy
+
+services:
+  pg-central:
+    <<: *pg-node
+    hostname: pg-central
+    environment:
+      <<: *pg-env
+      SIGTEC_NODE: central
+      SIGTEC_NODE_HOST: pg-central
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "cluster_name=pg-central"]
+    ports:
+      - "${SIGTEC_BIND_ADDRESS:-127.0.0.1}:${SIGTEC_PORT_CENTRAL:-55430}:5432"
+    volumes:
+      - pgdata_central:/var/lib/postgresql/data
+      - walarchive_central:/var/lib/postgresql/wal_archive
+
+  pg-cartago:
+    <<: [*pg-node, *central-dependency]
+    hostname: pg-cartago
+    environment:
+      <<: *pg-env
+      SIGTEC_NODE: cartago
+      SIGTEC_NODE_HOST: pg-cartago
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "cluster_name=pg-cartago"]
+    ports:
+      - "${SIGTEC_BIND_ADDRESS:-127.0.0.1}:${SIGTEC_PORT_CARTAGO:-55431}:5432"
+    volumes:
+      - pgdata_cartago:/var/lib/postgresql/data
+      - walarchive_cartago:/var/lib/postgresql/wal_archive
+
+  pg-san-jose:
+    <<: [*pg-node, *central-dependency]
+    hostname: pg-san-jose
+    environment:
+      <<: *pg-env
+      SIGTEC_NODE: san_jose
+      SIGTEC_NODE_HOST: pg-san-jose
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "cluster_name=pg-san-jose"]
+    ports:
+      - "${SIGTEC_BIND_ADDRESS:-127.0.0.1}:${SIGTEC_PORT_SAN_JOSE:-55432}:5432"
+    volumes:
+      - pgdata_san_jose:/var/lib/postgresql/data
+      - walarchive_san_jose:/var/lib/postgresql/wal_archive
+
+  pg-san-carlos:
+    <<: [*pg-node, *central-dependency]
+    hostname: pg-san-carlos
+    environment:
+      <<: *pg-env
+      SIGTEC_NODE: san_carlos
+      SIGTEC_NODE_HOST: pg-san-carlos
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "cluster_name=pg-san-carlos"]
+    ports:
+      - "${SIGTEC_BIND_ADDRESS:-127.0.0.1}:${SIGTEC_PORT_SAN_CARLOS:-55433}:5432"
+    volumes:
+      - pgdata_san_carlos:/var/lib/postgresql/data
+      - walarchive_san_carlos:/var/lib/postgresql/wal_archive
+
+  pg-alajuela:
+    <<: [*pg-node, *central-dependency]
+    hostname: pg-alajuela
+    environment:
+      <<: *pg-env
+      SIGTEC_NODE: alajuela
+      SIGTEC_NODE_HOST: pg-alajuela
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "cluster_name=pg-alajuela"]
+    ports:
+      - "${SIGTEC_BIND_ADDRESS:-127.0.0.1}:${SIGTEC_PORT_ALAJUELA:-55434}:5432"
+    volumes:
+      - pgdata_alajuela:/var/lib/postgresql/data
+      - walarchive_alajuela:/var/lib/postgresql/wal_archive
+
+  pg-limon:
+    <<: [*pg-node, *central-dependency]
+    hostname: pg-limon
+    environment:
+      <<: *pg-env
+      SIGTEC_NODE: limon
+      SIGTEC_NODE_HOST: pg-limon
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "cluster_name=pg-limon"]
+    ports:
+      - "${SIGTEC_BIND_ADDRESS:-127.0.0.1}:${SIGTEC_PORT_LIMON:-55435}:5432"
+    volumes:
+      - pgdata_limon:/var/lib/postgresql/data
+      - walarchive_limon:/var/lib/postgresql/wal_archive
+
+  # ---------------------------------------------------------------
+  # Instancia aislada de recuperación (PITR). Volumen de datos propio;
+  # lee respaldos y archivos WAL de los nodos en SOLO LECTURA.
+  # ---------------------------------------------------------------
+  pg-recovery:
+    <<: *pg-node
+    profiles: ["recovery"]
+    hostname: pg-recovery
+    restart: "no"
+    entrypoint: ["sigtec-recovery-entrypoint"]
+    environment:
+      <<: *pg-env
+      SIGTEC_NODE: recovery
+      SIGTEC_NODE_HOST: pg-recovery
+      RECOVERY_SOURCE_NODE: ${RECOVERY_SOURCE_NODE:-}
+      RECOVERY_BASEBACKUP: ${RECOVERY_BASEBACKUP:-}
+      RECOVERY_TARGET_TIME: ${RECOVERY_TARGET_TIME:-}
+      RECOVERY_TARGET_NAME: ${RECOVERY_TARGET_NAME:-}
+      RECOVERY_TARGET_LSN: ${RECOVERY_TARGET_LSN:-}
+      RECOVERY_TARGET_INCLUSIVE: ${RECOVERY_TARGET_INCLUSIVE:-on}
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "cluster_name=pg-recovery"]
+    ports:
+      - "${SIGTEC_BIND_ADDRESS:-127.0.0.1}:${SIGTEC_PORT_RECOVERY:-55436}:5432"
+    volumes:
+      - pgdata_recovery:/var/lib/postgresql/data
+      - walarchive_recovery:/var/lib/postgresql/wal_archive
+      - backups:/backups:ro
+      - walarchive_central:/archives/central:ro
+      - walarchive_cartago:/archives/cartago:ro
+      - walarchive_san_jose:/archives/san_jose:ro
+      - walarchive_san_carlos:/archives/san_carlos:ro
+      - walarchive_alajuela:/archives/alajuela:ro
+      - walarchive_limon:/archives/limon:ro
+
+  # ---------------------------------------------------------------
+  # Herramientas de administración (migraciones, datos, pruebas,
+  # pg_dump, pg_basebackup). Se ejecuta con "docker compose run --rm".
+  # ---------------------------------------------------------------
+  sigtec-tools:
+    image: ${SIGTEC_IMAGE:-sigtec/postgis:17.12-3.5.4}
+    pull_policy: never
+    profiles: ["tools"]
+    networks: [sigtec]
+    entrypoint: ["bash"]
+    working_dir: /opt/sigtec
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD en .env}
+      SIGTEC_BACKUP_PASSWORD: ${SIGTEC_BACKUP_PASSWORD:?Defina SIGTEC_BACKUP_PASSWORD en .env}
+      PGCONNECT_TIMEOUT: "5"
+      PGAPPNAME: sigtec-tools
+      TZ: America/Costa_Rica
+    volumes:
+      - ./scripts:/opt/sigtec/scripts:ro
+      - ./sql:/opt/sigtec/sql:ro
+      - ./tests:/opt/sigtec/tests:ro
+      - backups:/backups
+      - walarchive_central:/archives/central:ro
+      - walarchive_cartago:/archives/cartago:ro
+      - walarchive_san_jose:/archives/san_jose:ro
+      - walarchive_san_carlos:/archives/san_carlos:ro
+      - walarchive_alajuela:/archives/alajuela:ro
+      - walarchive_limon:/archives/limon:ro
+
+networks:
+  sigtec:
+    name: ${COMPOSE_PROJECT_NAME:-sigtec}_net
+    driver: bridge
+
+volumes:
+  pgdata_central:
+  pgdata_cartago:
+  pgdata_san_jose:
+  pgdata_san_carlos:
+  pgdata_alajuela:
+  pgdata_limon:
+  walarchive_central:
+  walarchive_cartago:
+  walarchive_san_jose:
+  walarchive_san_carlos:
+  walarchive_alajuela:
+  walarchive_limon:
+  backups:
+  pgdata_recovery:
+  walarchive_recovery:

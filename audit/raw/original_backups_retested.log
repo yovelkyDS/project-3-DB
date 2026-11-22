@@ -1,0 +1,92 @@
+VERIFY /backups/physical/alajuela/20261120T172833Z/data
+backup successfully verified
+VERIFY /backups/physical/cartago/20261120T172831Z/data
+backup successfully verified
+VERIFY /backups/physical/central/20261120T172831Z/data
+backup successfully verified
+VERIFY /backups/physical/limon/20261120T172833Z/data
+backup successfully verified
+VERIFY /backups/physical/san_carlos/20261120T172832Z/data
+backup successfully verified
+VERIFY /backups/physical/san_carlos/20261120T172854Z/data
+backup successfully verified
+VERIFY /backups/physical/san_jose/20261120T172832Z/data
+backup successfully verified
+[2026-11-20 20:22:49+0000] restauración lógica de prueba: central <- logical/central/20261120T172828Z
+[2026-11-20 20:22:49+0000]   SHA-256 verificado
+[2026-11-20 20:22:50+0000]   pg_restore terminado sin errores
+[2026-11-20 20:22:50+0000]   RESULTADO central: restauración lógica VÁLIDA
+[2026-11-20 20:22:51+0000] restauración lógica de prueba: cartago <- logical/cartago/20261120T172828Z
+[2026-11-20 20:22:51+0000]   SHA-256 verificado
+[2026-11-20 20:22:52+0000]   pg_restore terminado sin errores
+[2026-11-20 20:22:52+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:22:52+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:22:52+0000]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 20:22:52+0000]   disparadores de identificadores restaurados (16)
+[2026-11-20 20:22:52+0000]   RESULTADO cartago: restauración lógica VÁLIDA
+[2026-11-20 20:22:52+0000] restauración lógica de prueba: san_jose <- logical/san_jose/20261120T172829Z
+[2026-11-20 20:22:52+0000]   SHA-256 verificado
+[2026-11-20 20:22:53+0000]   pg_restore terminado sin errores
+[2026-11-20 20:22:53+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:22:53+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:22:53+0000]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 20:22:53+0000]   disparadores de identificadores restaurados (16)
+[2026-11-20 20:22:53+0000]   RESULTADO san_jose: restauración lógica VÁLIDA
+[2026-11-20 20:22:53+0000] restauración lógica de prueba: san_carlos <- logical/san_carlos/20261120T172829Z
+[2026-11-20 20:22:53+0000]   SHA-256 verificado
+[2026-11-20 20:22:54+0000]   pg_restore terminado sin errores
+[2026-11-20 20:22:54+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:22:54+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:22:54+0000]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 20:22:54+0000]   disparadores de identificadores restaurados (16)
+[2026-11-20 20:22:54+0000]   RESULTADO san_carlos: restauración lógica VÁLIDA
+[2026-11-20 20:22:54+0000] restauración lógica de prueba: alajuela <- logical/alajuela/20261120T172829Z
+[2026-11-20 20:22:54+0000]   SHA-256 verificado
+[2026-11-20 20:22:55+0000]   pg_restore terminado sin errores
+[2026-11-20 20:22:55+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:22:55+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:22:55+0000]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 20:22:55+0000]   disparadores de identificadores restaurados (16)
+[2026-11-20 20:22:55+0000]   RESULTADO alajuela: restauración lógica VÁLIDA
+[2026-11-20 20:22:56+0000] restauración lógica de prueba: limon <- logical/limon/20261120T172830Z
+[2026-11-20 20:22:56+0000]   SHA-256 verificado
+[2026-11-20 20:22:56+0000]   pg_restore terminado sin errores
+[2026-11-20 20:22:56+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:22:57+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:22:57+0000]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 20:22:57+0000]   disparadores de identificadores restaurados (16)
+[2026-11-20 20:22:57+0000]   RESULTADO limon: restauración lógica VÁLIDA
+[2026-11-20 20:22:57+0000] recuperación física de prueba: central <- physical/central/20261120T172831Z + WAL /archives/central
+[2026-11-20 20:22:57+0000]   recuperación completada y promovida (consistent recovery state reached at 0/5000120)
+[2026-11-20 20:22:57+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 20:22:57+0000]   RESULTADO central: copia física RECUPERABLE
+[2026-11-20 20:22:58+0000] recuperación física de prueba: cartago <- physical/cartago/20261120T172831Z + WAL /archives/cartago
+[2026-11-20 20:22:59+0000]   recuperación completada y promovida (consistent recovery state reached at 0/5000120)
+[2026-11-20 20:22:59+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 20:22:59+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:22:59+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:22:59+0000]   RESULTADO cartago: copia física RECUPERABLE
+[2026-11-20 20:22:59+0000] recuperación física de prueba: san_jose <- physical/san_jose/20261120T172832Z + WAL /archives/san_jose
+[2026-11-20 20:23:00+0000]   recuperación completada y promovida (consistent recovery state reached at 0/5000120)
+[2026-11-20 20:23:00+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 20:23:00+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:23:00+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:23:00+0000]   RESULTADO san_jose: copia física RECUPERABLE
+[2026-11-20 20:23:00+0000] recuperación física de prueba: san_carlos <- physical/san_carlos/20261120T172854Z + WAL /archives/san_carlos
+[2026-11-20 20:23:01+0000]   recuperación completada y promovida (consistent recovery state reached at 0/7000120)
+[2026-11-20 20:23:01+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 20:23:01+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:23:01+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:23:01+0000]   RESULTADO san_carlos: copia física RECUPERABLE
+[2026-11-20 20:23:01+0000] recuperación física de prueba: alajuela <- physical/alajuela/20261120T172833Z + WAL /archives/alajuela
+[2026-11-20 20:23:02+0000]   recuperación completada y promovida (consistent recovery state reached at 0/5000120)
+[2026-11-20 20:23:02+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 20:23:02+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:23:02+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:23:02+0000]   RESULTADO alajuela: copia física RECUPERABLE
+[2026-11-20 20:23:02+0000] recuperación física de prueba: limon <- physical/limon/20261120T172833Z + WAL /archives/limon
+[2026-11-20 20:23:03+0000]   recuperación completada y promovida (consistent recovery state reached at 0/5000120)
+[2026-11-20 20:23:03+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 20:23:03+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 20:23:03+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 20:23:03+0000]   RESULTADO limon: copia física RECUPERABLE

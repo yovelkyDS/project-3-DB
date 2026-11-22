@@ -1,0 +1,31 @@
+#!/bin/sh
+# SIG-TEC — archive_command
+#   sigtec-archive-wal <%p ruta del segmento> <%f nombre del segmento>
+#
+# Reglas que exige la documentación de PostgreSQL para un archive_command correcto:
+#   * devolver 0 solo si el archivo quedó copiado de forma duradera;
+#   * no sobrescribir un archivo ya archivado (si existe y es idéntico, devolver 0;
+#     si es distinto, fallar para que el operador lo revise).
+set -eu
+
+src="$1"
+name="$2"
+dir="${SIGTEC_WAL_ARCHIVE_DIR:-/var/lib/postgresql/wal_archive}"
+dest="$dir/$name"
+tmp="$dir/.$name.tmp.$$"
+
+if [ -f "$dest" ]; then
+    if cmp -s "$src" "$dest"; then
+        exit 0
+    fi
+    echo "sigtec-archive-wal: $dest ya existe con contenido distinto" >&2
+    exit 1
+fi
+
+trap 'rm -f "$tmp"' EXIT
+cp "$src" "$tmp"
+sync "$tmp"
+mv "$tmp" "$dest"
+sync "$dir"
+trap - EXIT
+exit 0

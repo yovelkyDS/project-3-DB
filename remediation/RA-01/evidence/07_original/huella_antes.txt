@@ -1,0 +1,27 @@
+ Container sigtec-sigtec-tools-run-ebe65f77acb5 Creating 
+ Container sigtec-sigtec-tools-run-ebe65f77acb5 Created 
+      capa      | filas |               md5                
+----------------+-------+----------------------------------
+ accesibilidad  | 4     | 8cfbb559780f1aac3c7ce6d9aaaa7c83
+ aceras         | 5     | 27948bec9f338c3b9d188009558fb653
+ carreteras     | 4     | 8eaec2e541decc490f3e8ff0e7847777
+ edificios      | 6     | 03f48bb4d207515aedb610c9fec13b63
+ iluminacion    | 8     | bdb2d31a8b49b8fae553660f9e883118
+ parqueos       | 4     | 5750b5feac46f9d565e67576e90301f4
+ puntos_interes | 7     | 3b2ca2c2f0d4a36a297a51605d7394df
+ zonas_verdes   | 4     | 20a51673ebb80e56591b4e210e0be70b
+(8 rows)
+
+ node_code  | campus_id |   local_schema   
+------------+-----------+------------------
+ san_carlos |         3 | local_san_carlos
+(1 row)
+
+           version           
+-----------------------------
+ campus/0101_capas_locales
+ campus/0102_identificadores
+ common/0001_postgis
+ common/0002_ops_nodo
+(4 rows)
+

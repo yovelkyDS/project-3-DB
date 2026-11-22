@@ -1,0 +1,13 @@
+{
+  "run": "reaudit_20261120T214840Z",
+  "base": "/backups/physical/san_carlos/20261120T214841Z/data",
+  "A": "3000000095|2026-11-20 21:48:42.179164+00",
+  "target": "2026-11-20 21:48:43.511729+00",
+  "B": "3000000096|2026-11-20 21:48:44.859247+00",
+  "WAL": "000000010000000000000014",
+  "container": "sigtec_reaudit_pitr",
+  "new_volumes": [
+    "sigtec_reaudit_20261120_pgdata",
+    "sigtec_reaudit_20261120_wal"
+  ]
+}

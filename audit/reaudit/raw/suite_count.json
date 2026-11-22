@@ -1,0 +1,29 @@
+{
+  "PASS": 733,
+  "FAIL": 0,
+  "duplicate_labels": [
+    "cartago.editor_no_escribe_registro",
+    "cartago.editor_no_desactiva_disparadores",
+    "cartago.mantenimiento_autorizado_inserta",
+    "san_jose.editor_no_escribe_registro",
+    "san_jose.editor_no_desactiva_disparadores",
+    "san_jose.mantenimiento_autorizado_inserta",
+    "san_carlos.editor_no_escribe_registro",
+    "san_carlos.editor_no_desactiva_disparadores",
+    "san_carlos.mantenimiento_autorizado_inserta",
+    "alajuela.editor_no_escribe_registro",
+    "alajuela.editor_no_desactiva_disparadores",
+    "alajuela.mantenimiento_autorizado_inserta",
+    "limon.editor_no_escribe_registro",
+    "limon.editor_no_desactiva_disparadores",
+    "limon.mantenimiento_autorizado_inserta"
+  ],
+  "summaries": [
+    "RESUMEN: 392 PASS, 0 FAIL",
+    "RESUMEN respaldos: 36 PASS, 0 FAIL",
+    "RESUMEN identificadores: 272 PASS, 0 FAIL"
+  ],
+  "exit": [
+    "INDEPENDENT_SUITE_RC=0"
+  ]
+}

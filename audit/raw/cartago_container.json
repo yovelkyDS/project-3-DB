@@ -1,0 +1,92 @@
+{
+  "Id": "2e79bea36856a14e9b3a9c2550fbde4b4724ec9d1c4fd7f5bac10ef225cb9165",
+  "Image": "sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af",
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "sigtec_pgdata_cartago",
+      "Source": "/var/lib/docker/volumes/sigtec_pgdata_cartago/_data",
+      "Destination": "/var/lib/postgresql/data",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_cartago",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_cartago/_data",
+      "Destination": "/var/lib/postgresql/wal_archive",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 64264,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-20T17:28:20.504544464Z",
+    "FinishedAt": "2026-11-20T17:28:20.016716255Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-11-20T18:50:55.414009636Z",
+          "End": "2026-11-20T18:50:55.478761427Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:00.482154013Z",
+          "End": "2026-11-20T18:51:00.569357346Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:05.569802959Z",
+          "End": "2026-11-20T18:51:05.635631376Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:10.639161837Z",
+          "End": "2026-11-20T18:51:10.707902379Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:15.708290256Z",
+          "End": "2026-11-20T18:51:15.775499756Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "Ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "55431"
+      }
+    ]
+  },
+  "Networks": {
+    "sigtec_net": {
+      "IPAddress": "172.22.0.4",
+      "Aliases": [
+        "sigtec-pg-cartago-1",
+        "pg-cartago"
+      ]
+    }
+  }
+}

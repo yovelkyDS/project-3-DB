@@ -1,0 +1,69 @@
+ Container sigtec_remed-sigtec-tools-run-c44389c83652 Creating 
+ Container sigtec_remed-sigtec-tools-run-c44389c83652 Created 
+PASS|pitr.origen_sin_0103|campus/0101_capas_locales,campus/0102_identificadores
+PASS|pitr.copia_base|0
+PASS|pitr.origen_migrado_despues_del_objetivo|1
+PASS|pitr.wal_archivado|000000010000000000000004
+PASS|pitr.promovida|f
+PASS|pitr.cambio_a_presente|1
+PASS|pitr.cambio_b_ausente|0
+PASS|pitr.esquema_anterior_a_0103|el instante restaurado es anterior a 0103
+PASS|pitr.identidad_restaurada|san_carlos/3
+PASS|ra01.sin_0103_admite_duplicado|antes de migrar, dos conexiones del editor confirmaron 3000000075 en dos capas (RA-01 reproducido)
+PASS|neg.destino_desconocido|destino inválido: 'nodo_x'
+PASS|neg.lista_con_desconocido|2
+PASS|neg.seed_rechaza_recovery|rc=1
+PASS|neg.servidor_inaccesible|no aceptó conexiones en 3s
+PASS|neg.contrasena_incorrecta|password authentication failed for user 
+PASS|neg.sin_secretos|la contraseña no aparece en la salida
+PASS|neg.no_promovida|sigue en recuperación (reproduciendo WAL o en pausa; solo lectura)
+PASS|neg.identidad_inconsistente|identidad inconsistente (SIGTEC_RECOVERY_INFO: limon; ops.node_info: san_carlos)
+PASS|neg.ids_repetidos|ids repetidos entre capas: 3000000075 en iluminacion+puntos_interes
+PASS|neg.sin_cambios|0103, registro y datos sin cambios
+PASS|neg.sin_respaldo_publicado|0
+PASS|mig.rc_cero|0
+PASS|mig.0103_aplicada|1
+PASS|mig.respaldo_previo_publicado|1
+PASS|mig.respaldo_previo_legible|0
+PASS|mig.respaldo_previo_anterior_a_0103|manifest: migraciones_registradas=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+PASS|mig.datos_preservados|huella idéntica, 42 objetos
+PASS|mig.identidad_conservada|san_carlos|pg-san-carlos|3|local_san_carlos
+PASS|mig.registro_completo|42
+PASS|mig.verificacion_0103|10:0
+PASS|mig.registro_primary_key|PRIMARY KEY (id)
+PASS|mig.ids_unicos_entre_capas|0 ids repetidos
+PASS|mig.objetos_registrados|42 objetos; 0 sin registro o con otra capa
+PASS|mig.disparadores_habilitados|24 (esperado 24: trg_10, trg_20, trg_30 × 8 capas); deshabilitados: 0
+PASS|mig.modo_de_seguridad_funciones|sigtec_id_autorizar_explicito=DEFINER sigtec_id_siguiente=DEFINER tg_asignar_identificador=INVOKER tg_registrar_identificador=DEFINER
+PASS|mig.permisos_mantenimiento|rol sigtec_mantenimiento_id NOLOGIN; autorización solo para ese rol; PUBLIC sin escritura en el registro
+PASS|mig.secuencia_cubre_ids|último consecutivo emitido 75 >= máximo usado 42 (objetos 42, registro 42)
+PASS|mig.siguiente_id_libre|el próximo id automático sería 3000000076
+PASS|mig.segunda_ejecucion_rc|0
+PASS|mig.segunda_ejecucion_nada|ninguna migración reaplicada
+PASS|mig.segunda_ejecucion_sin_respaldo|1
+PASS|mig.verify_recovery|0
+PASS|mig.verify_apta|declarada apta
+PASS|neg.error_sql|division by zero
+PASS|neg.error_sql_sin_parcial|ni registrada ni objetos a medias
+PASS|neg.verify_detecta_pendiente_sql|verify rc=1: no apta mientras falte campus/0199
+PASS|neg.error_permisos|permission denied for schema local_san_carlos
+PASS|neg.error_permisos_sin_parcial|ni registrada ni objetos a medias
+PASS|neg.verify_detecta_pendiente_permisos|verify rc=1: no apta mientras falte campus/0199
+PASS|int.editor_guc|42501
+PASS|int.editor_no_autoriza|42501
+PASS|int.editor_no_registro|42501
+PASS|int.editor_no_deshabilita|42501
+PASS|int.mant_mismo_id_dos_capas|23505
+PASS|int.carrera_primera_confirma|rc=0
+PASS|int.carrera_segunda_espera_y_falla|esperó 3 s, 23505
+PASS|int.carrera_una_fila|1
+PASS|int.concurrencia_superpuesta|8 transacciones abiertas a la vez
+PASS|int.concurrencia_confirmadas|8
+PASS|int.concurrencia_registradas|200
+PASS|int.ids_unicos|0
+PASS|int.siguiente_id|3000000278
+PASS|int.reinicio_datos|bf0a90dc9fbebdc13edffb0eefeea093
+PASS|int.reinicio_verify|0
+PASS|int.reinicio_insercion|id=3000000279 (> 3000000278)
+----
+RESUMEN recuperación RA-01: 65 PASS, 0 FAIL

@@ -1,0 +1,27 @@
+{
+  "cartago": {
+    "rc": 0,
+    "stdout": "41|41|0|0\npostgres\nsigtec_mantenimiento_id\n",
+    "stderr": ""
+  },
+  "san_jose": {
+    "rc": 0,
+    "stdout": "41|41|0|0\npostgres\nsigtec_mantenimiento_id\n",
+    "stderr": ""
+  },
+  "san_carlos": {
+    "rc": 0,
+    "stdout": "43|43|0|0\npostgres\nsigtec_mantenimiento_id\n",
+    "stderr": ""
+  },
+  "alajuela": {
+    "rc": 0,
+    "stdout": "41|41|0|0\npostgres\nsigtec_mantenimiento_id\n",
+    "stderr": ""
+  },
+  "limon": {
+    "rc": 0,
+    "stdout": "41|41|0|0\npostgres\nsigtec_mantenimiento_id\n",
+    "stderr": ""
+  }
+}

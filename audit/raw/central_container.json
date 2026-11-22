@@ -1,0 +1,92 @@
+{
+  "Id": "98ecf81f2c8ae2ee0110e5623fef2571a96d1d3dbe0ce5861646fa9909cf5c04",
+  "Image": "sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af",
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "sigtec_pgdata_central",
+      "Source": "/var/lib/docker/volumes/sigtec_pgdata_central/_data",
+      "Destination": "/var/lib/postgresql/data",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_central",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_central/_data",
+      "Destination": "/var/lib/postgresql/wal_archive",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 64009,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-20T17:28:20.179439797Z",
+    "FinishedAt": "2026-11-20T17:28:19.976623589Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-11-20T18:50:55.413886636Z",
+          "End": "2026-11-20T18:50:55.476158969Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:00.482521055Z",
+          "End": "2026-11-20T18:51:00.565260305Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:05.569837376Z",
+          "End": "2026-11-20T18:51:05.635088959Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:10.639239545Z",
+          "End": "2026-11-20T18:51:10.708460837Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:15.708928256Z",
+          "End": "2026-11-20T18:51:15.776985589Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "Ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "55430"
+      }
+    ]
+  },
+  "Networks": {
+    "sigtec_net": {
+      "IPAddress": "172.22.0.2",
+      "Aliases": [
+        "sigtec-pg-central-1",
+        "pg-central"
+      ]
+    }
+  }
+}

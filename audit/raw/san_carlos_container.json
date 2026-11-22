@@ -1,0 +1,92 @@
+{
+  "Id": "892b1bc458e7f79e740c0b32a325aae81d8456a0ab090c65c8e7d8edc10e2579",
+  "Image": "sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af",
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "sigtec_pgdata_san_carlos",
+      "Source": "/var/lib/docker/volumes/sigtec_pgdata_san_carlos/_data",
+      "Destination": "/var/lib/postgresql/data",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_san_carlos",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_san_carlos/_data",
+      "Destination": "/var/lib/postgresql/wal_archive",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 69761,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-20T17:29:15.270082295Z",
+    "FinishedAt": "2026-11-20T17:29:04.408983221Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-11-20T18:51:00.482205638Z",
+          "End": "2026-11-20T18:51:00.566834555Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:05.569912251Z",
+          "End": "2026-11-20T18:51:05.636926501Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:10.639267587Z",
+          "End": "2026-11-20T18:51:10.705408879Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:15.706757506Z",
+          "End": "2026-11-20T18:51:15.777044589Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:20.778053508Z",
+          "End": "2026-11-20T18:51:20.845303425Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "Ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "55433"
+      }
+    ]
+  },
+  "Networks": {
+    "sigtec_net": {
+      "IPAddress": "172.22.0.8",
+      "Aliases": [
+        "sigtec-pg-san-carlos-1",
+        "pg-san-carlos"
+      ]
+    }
+  }
+}

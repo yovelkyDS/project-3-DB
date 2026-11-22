@@ -1,0 +1,201 @@
+[
+  {
+    "test": "create_unprivileged_editor",
+    "command": [
+      "docker",
+      "exec",
+      "-i",
+      "-u",
+      "postgres",
+      "sigtec_audit_20261120-pg-cartago-1",
+      "psql",
+      "-X",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-d",
+      "sigtec"
+    ],
+    "rc": 0,
+    "stdout": "CREATE ROLE\nGRANT\nGRANT\n last_value \n------------\n         49\n(1 row)\n\n",
+    "stderr": ""
+  },
+  {
+    "test": "ordinary_editor_bypasses_explicit_id_guard",
+    "command": [
+      "docker",
+      "exec",
+      "-i",
+      "-u",
+      "postgres",
+      "sigtec_audit_20261120-pg-cartago-1",
+      "psql",
+      "-X",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-d",
+      "sigtec"
+    ],
+    "rc": 0,
+    "stdout": "BEGIN\nSET\n current_user | session_user | has_sequence_privilege \n--------------+--------------+------------------------\n audit_editor | postgres     | f\n(1 row)\n\nSET\n     id     \n------------\n 1000000042\n(1 row)\n\nINSERT 0 1\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "test": "concurrent_insert_lighting",
+    "command": [
+      "docker",
+      "exec",
+      "-i",
+      "-u",
+      "postgres",
+      "sigtec_audit_20261120-pg-cartago-1",
+      "psql",
+      "-X",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-d",
+      "sigtec"
+    ],
+    "rc": 0,
+    "stdout": "BEGIN\nSET\nSET\nINSERT 0 1\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "test": "concurrent_insert_points",
+    "command": [
+      "docker",
+      "exec",
+      "-i",
+      "-u",
+      "postgres",
+      "sigtec_audit_20261120-pg-cartago-1",
+      "psql",
+      "-X",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-d",
+      "sigtec"
+    ],
+    "rc": 0,
+    "stdout": "BEGIN\nSET\nSET\nINSERT 0 1\n pg_sleep \n----------\n \n(1 row)\n\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "test": "duplicate_id_persisted",
+    "command": [
+      "docker",
+      "exec",
+      "-i",
+      "-u",
+      "postgres",
+      "sigtec_audit_20261120-pg-cartago-1",
+      "psql",
+      "-X",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-d",
+      "sigtec"
+    ],
+    "rc": 0,
+    "stdout": "     id     | count \n------------+-------\n 1000000043 |     2\n(1 row)\n\n",
+    "stderr": ""
+  },
+  {
+    "test": "logical_backup_wrong_password",
+    "command": [
+      "docker",
+      "compose",
+      "--project-directory",
+      "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/lab",
+      "-f",
+      "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/lab/compose.yaml",
+      "--profile",
+      "tools",
+      "run",
+      "--rm",
+      "-T",
+      "-e",
+      "SIGTEC_BACKUP_PASSWORD=audit-deliberately-invalid",
+      "-e",
+      "BACKUP_ROOT=/tmp/audit-negative-logical",
+      "sigtec-tools",
+      "scripts/backup/logical_backup.sh",
+      "central"
+    ],
+    "rc": 0,
+    "stdout": "",
+    "stderr": " Container sigtec_audit_20261120-sigtec-tools-run-f3afed0ad87c Creating \n Container sigtec_audit_20261120-sigtec-tools-run-f3afed0ad87c Created \n[2026-11-20 14:24:12-0600] pg_dump central (pg-central) -> logical/central/20261120T202412Z\npg_restore: error: input file is too short (read 0, expected 5)\npsql: error: connection to server at \"pg-central\" (172.23.0.2), port 5432 failed: FATAL:  password authentication failed for user \"sigtec_backup\"\nconnection to server at \"pg-central\" (172.23.0.2), port 5432 failed: FATAL:  password authentication failed for user \"sigtec_backup\"\n[2026-11-20 14:24:13-0600]   OK central: 0 bytes, 0 entradas TOC\n"
+  },
+  {
+    "test": "physical_backup_wrong_password",
+    "command": [
+      "docker",
+      "compose",
+      "--project-directory",
+      "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/lab",
+      "-f",
+      "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/lab/compose.yaml",
+      "--profile",
+      "tools",
+      "run",
+      "--rm",
+      "-T",
+      "-e",
+      "SIGTEC_BACKUP_PASSWORD=audit-deliberately-invalid",
+      "-e",
+      "BACKUP_ROOT=/tmp/audit-negative-physical",
+      "sigtec-tools",
+      "scripts/backup/physical_backup.sh",
+      "central"
+    ],
+    "rc": 0,
+    "stdout": "",
+    "stderr": " Container sigtec_audit_20261120-sigtec-tools-run-c9ac00be4604 Creating \n Container sigtec_audit_20261120-sigtec-tools-run-c9ac00be4604 Created \n[2026-11-20 14:24:13-0600] pg_basebackup central (pg-central) -> physical/central/20261120T202413Z/data\n[2026-11-20 14:24:13-0600]   pg_verifybackup: pg_verifybackup: error: could not open file \"/tmp/audit-negative-physical/physical/central/20261120T202413Z/data/backup_manifest\": No such file or directory\nsed: can't read /tmp/audit-negative-physical/physical/central/20261120T202413Z/data/backup_label: No such file or directory\nsed: can't read /tmp/audit-negative-physical/physical/central/20261120T202413Z/data/backup_label: No such file or directory\nsed: can't read /tmp/audit-negative-physical/physical/central/20261120T202413Z/data/backup_label: No such file or directory\ndu: cannot access '/tmp/audit-negative-physical/physical/central/20261120T202413Z/data': No such file or directory\n[2026-11-20 14:24:13-0600]   OK central: 0 MiB, inicio \n"
+  },
+  {
+    "test": "pitr_marker_command",
+    "command": [
+      "docker",
+      "compose",
+      "--project-directory",
+      "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/lab",
+      "-f",
+      "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/lab/compose.yaml",
+      "--profile",
+      "tools",
+      "run",
+      "--rm",
+      "-T",
+      "sigtec-tools",
+      "scripts/recovery/pitr_steps.sh",
+      "marcar-recuperada",
+      "san_carlos",
+      "audit-marker-validation",
+      "audit marker"
+    ],
+    "rc": 1,
+    "stdout": "",
+    "stderr": " Container sigtec_audit_20261120-sigtec-tools-run-6a4c31c58d7f Creating \n Container sigtec_audit_20261120-sigtec-tools-run-6a4c31c58d7f Created \nERROR:  syntax error at or near \":\"\nLINE 1: ...ry_markers (run_id, marker, detalle, lsn) VALUES (:'run', 'R...\n                                                             ^\n\n"
+  },
+  {
+    "test": "transport_without_tls",
+    "command": [
+      "docker",
+      "compose",
+      "--project-directory",
+      "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/lab",
+      "-f",
+      "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/lab/compose.yaml",
+      "--profile",
+      "tools",
+      "run",
+      "--rm",
+      "-T",
+      "sigtec-tools",
+      "-c",
+      ". scripts/lib/db.sh; PGSSLMODE=disable psql_su central -tAc \"SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()\""
+    ],
+    "rc": 0,
+    "stdout": "f\n",
+    "stderr": " Container sigtec_audit_20261120-sigtec-tools-run-58dfbc95f248 Creating \n Container sigtec_audit_20261120-sigtec-tools-run-58dfbc95f248 Created \n"
+  }
+]

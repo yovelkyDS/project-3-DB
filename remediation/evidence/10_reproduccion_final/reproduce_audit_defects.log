@@ -1,0 +1,100 @@
+laboratorio: remediation/lab  (proyecto sigtec_remed)  fecha: 2026-11-20 15:31:36-0600
+
+=== F-01 logical: contraseña de sigtec_backup incorrecta (nodo central) ===
+[2026-11-20 15:31:37-0600] pg_dump central (pg-central) -> logical/central/20261120T213137Z
+      | pg_dump: error: connection to server at "pg-central" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+      | connection to server at "pg-central" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+[2026-11-20 15:31:37-0600]   FALLA: pg_dump terminó con error
+[2026-11-20 15:31:37-0600]   ERROR respaldando central: no se publicó ningún respaldo
+[2026-11-20 15:31:37-0600] RESULTADO: uno o más respaldos lógicos FALLARON
+rc_script=1
+directorios_publicados=0
+bitacora:
+central	pg_dump	-	ERROR
+RESULTADO F-01 logical: DEFECTO NO REPRODUCIDO (rc=1, publicados=0)
+
+=== F-01 physical: contraseña de sigtec_backup incorrecta (nodo central) ===
+[2026-11-20 15:31:37-0600] pg_basebackup central (pg-central) -> physical/central/20261120T213137Z/data
+      | pg_basebackup: error: connection to server at "pg-central" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+      | connection to server at "pg-central" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+[2026-11-20 15:31:37-0600]   FALLA: pg_basebackup terminó con error
+[2026-11-20 15:31:37-0600]   ERROR respaldando central: no se publicó ninguna copia
+[2026-11-20 15:31:37-0600] RESULTADO: una o más copias físicas FALLARON
+rc_script=1
+directorios_publicados=0
+bitacora:
+central	pg_basebackup	-	ERROR
+RESULTADO F-01 physical: DEFECTO NO REPRODUCIDO (rc=1, publicados=0)
+
+=== F-02 preparación: rol remed_editor sin privilegios de secuencia; consecutivos emitidos sin usar ===
+DO
+GRANT
+GRANT
+ nextval 
+---------
+      52
+      53
+      54
+(3 rows)
+
+ editor_usa_secuencia | ultimo 
+----------------------+--------
+ f                    |     54
+(1 row)
+
+
+=== F-02a: remed_editor + SET LOCAL sigtec.permitir_id_explicito=on inserta id explícito 1000000052 ===
+BEGIN
+SET
+SET
+ERROR:  SIG-TEC: el rol remed_editor no está autorizado para insertar identificadores explícitos
+HINT:  Solo los miembros de sigtec_mantenimiento_id pueden usar sigtec.permitir_id_explicito.
+CONTEXT:  PL/pgSQL function local_cartago.tg_asignar_identificador() line 25 at RAISE
+RESULTADO F-02a: DEFECTO NO REPRODUCIDO (rechazado)
+
+=== F-02b: dos sesiones concurrentes, mismo id 1000000053 en puntos_interes e iluminacion (remed_editor) ===
+BEGIN
+SET
+SET
+ERROR:  SIG-TEC: el rol remed_editor no está autorizado para insertar identificadores explícitos
+HINT:  Solo los miembros de sigtec_mantenimiento_id pueden usar sigtec.permitir_id_explicito.
+CONTEXT:  PL/pgSQL function local_cartago.tg_asignar_identificador() line 25 at RAISE
+sesion1_rc=3
+BEGIN
+SET
+SET
+ERROR:  SIG-TEC: el rol remed_editor no está autorizado para insertar identificadores explícitos
+HINT:  Solo los miembros de sigtec_mantenimiento_id pueden usar sigtec.permitir_id_explicito.
+CONTEXT:  PL/pgSQL function local_cartago.tg_asignar_identificador() line 25 at RAISE
+sesion2_rc=3
+
+=== F-02 resultado: ids repetidos entre capas de Cartago ===
+duplicados: ninguno
+RESULTADO F-02b: DEFECTO NO REPRODUCIDO
+
+=== F-02c: carrera con rol autorizado (miembro de sigtec_mantenimiento_id) ===
+ nextval 
+---------
+      55
+(1 row)
+
+BEGIN
+SET
+SET
+INSERT 0 1
+BEGIN
+SET
+SET
+ pg_sleep 
+----------
+ 
+(1 row)
+
+COMMIT
+ERROR:  SIG-TEC: el id 1000000055 ya existe en el registro global del campus (asignado en puntos_interes; los ids eliminados tampoco se reutilizan)
+HINT:  Omita la columna id para que PostgreSQL asigne uno nuevo.
+CONTEXT:  PL/pgSQL function local_cartago.tg_registrar_identificador() line 10 at RAISE
+sesion1_rc=0
+sesion2_rc=3 (esperó 3 s a la sesión 1)
+filas confirmadas con id 1000000055: 1
+RESULTADO F-02c: DEFECTO NO REPRODUCIDO (una sola inserción confirmada)

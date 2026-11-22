@@ -1,0 +1,14 @@
+ Container sigtec_audit_20261120-sigtec-tools-run-00e325fcec27 Creating 
+ Container sigtec_audit_20261120-sigtec-tools-run-00e325fcec27 Created 
+[2026-11-20 14:24:12-0600] pg_dump central (pg-central) -> logical/central/20261120T202412Z
+[2026-11-20 14:24:12-0600]   OK central: 8616 bytes, 23 entradas TOC
+[2026-11-20 14:24:12-0600] pg_dump cartago (pg-cartago) -> logical/cartago/20261120T202412Z
+[2026-11-20 14:24:12-0600]   OK cartago: 76348 bytes, 143 entradas TOC; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=9 accesibilidad=4
+[2026-11-20 14:24:12-0600] pg_dump san_jose (pg-san-jose) -> logical/san_jose/20261120T202412Z
+[2026-11-20 14:24:13-0600]   OK san_jose: 75959 bytes, 140 entradas TOC; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 14:24:13-0600] pg_dump san_carlos (pg-san-carlos) -> logical/san_carlos/20261120T202413Z
+[2026-11-20 14:24:13-0600]   OK san_carlos: 76814 bytes, 140 entradas TOC; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=8 accesibilidad=4
+[2026-11-20 14:24:13-0600] pg_dump alajuela (pg-alajuela) -> logical/alajuela/20261120T202413Z
+[2026-11-20 14:24:14-0600]   OK alajuela: 75912 bytes, 140 entradas TOC; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 14:24:14-0600] pg_dump limon (pg-limon) -> logical/limon/20261120T202414Z
+[2026-11-20 14:24:14-0600]   OK limon: 75004 bytes, 140 entradas TOC; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4

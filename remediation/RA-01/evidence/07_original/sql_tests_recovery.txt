@@ -1,0 +1,39 @@
+PASS|recovery.id_formula_campus|puntos_interes=3000000083 iluminacion=3000000084 accesibilidad (id NULL explícito)=3000000085
+PASS|recovery.secuencia_compartida_entre_capas|consecutivo previo 82 -> 83,84,85
+PASS|recovery.campus_id_asignado|3
+PASS|recovery.rechaza_cambio_de_id|23514: SIG-TEC: el identificador global es inmutable (3000000083 -> 3000000084)
+PASS|recovery.rechaza_cambio_de_campus|23514: SIG-TEC: el campus propietario es inmutable (objeto 3000000083: 3 -> 4)
+PASS|recovery.rechaza_insertar_otro_campus|23514: SIG-TEC: campus_id 4 no pertenece a este nodo (campus 3)
+PASS|recovery.rechaza_id_explicito|23514: SIG-TEC: el identificador global lo asigna PostgreSQL (se recibió id 3999999999)
+PASS|recovery.mantenimiento_rechaza_id_repetido_entre_capas|23505: SIG-TEC: el id 3000000083 ya existe en el registro global del campus (asignado en puntos_interes; los ids eliminados tampoco se reutilizan)
+PASS|recovery.mantenimiento_rechaza_id_futuro|23514: SIG-TEC: id 3999999999 no fue emitido por la secuencia del campus 3 (último consecutivo: 85)
+PASS|recovery.rechaza_srid_distinto|22023: Geometry SRID (4326) does not match column SRID (5367)
+PASS|recovery.rechaza_tipo_geometrico|22023: Geometry type (Point) does not match column type (Polygon)
+PASS|recovery.rechaza_geometria_invalida|23514: new row for relation "zonas_verdes" violates check constraint "zonas_verdes_geom_ck"
+PASS|recovery.rechaza_geometria_nula|23502: null value in column "geom" of relation "carreteras" violates not-null constraint
+PASS|recovery.rechaza_atributo_obligatorio|23502: null value in column "nombre" of relation "edificios" violates not-null constraint
+PASS|recovery.rechaza_dominio_invalido|23514: new row for relation "carreteras" violates check constraint "carreteras_tipo_ck"
+PASS|recovery.rechaza_disponibilidad_mayor_capacidad|23514: new row for relation "parqueos" violates check constraint "parqueos_disponibilidad_ck"
+PASS|recovery.permite_actualizar_atributos|NO_ERROR
+PASS|recovery.permite_eliminar|NO_ERROR
+PASS|recovery.registro_existe_con_pk|ops.identificadores_globales (id PRIMARY KEY)
+PASS|recovery.registro_sin_acceso_publico|PUBLIC sin INSERT/DELETE ni USAGE en ops
+PASS|recovery.disparador_registro_8_capas|8 tablas
+PASS|recovery.asignacion_security_invoker|tg_asignar_identificador SECURITY INVOKER
+PASS|recovery.funciones_definer_search_path_seguro|sigtec_id_autorizar_explicito,sigtec_id_siguiente,tg_registrar_identificador
+PASS|recovery.autorizacion_solo_mantenimiento|EXECUTE de la autorización solo para sigtec_mantenimiento_id
+PASS|recovery.rol_mantenimiento_sin_login|sigtec_mantenimiento_id NOLOGIN
+PASS|recovery.ids_unicos_entre_capas|0 ids repetidos entre capas
+PASS|recovery.todos_los_objetos_registrados|42 objetos; 0 sin registro o con otra capa
+PASS|recovery.secuencia_cubre_registro|máximo consecutivo registrado 50 <= último de la secuencia 90
+PASS|recovery.editor_inserta_sin_privilegio_secuencia|NO_ERROR
+PASS|recovery.editor_con_guc_no_inserta_id_explicito|42501: SIG-TEC: el rol sigtec_t_editor no está autorizado para insertar identificadores explícitos
+PASS|recovery.editor_no_invoca_autorizacion|42501: permission denied for function sigtec_id_autorizar_explicito
+PASS|recovery.editor_no_escribe_registro|42501: permission denied for schema ops
+PASS|recovery.editor_no_desactiva_disparadores|42501: must be owner of table puntos_interes
+PASS|recovery.editor_no_activa_modo_replica|42501: permission denied to set parameter "session_replication_role"
+PASS|recovery.mantenimiento_autorizado_y_unicidad_entre_capas|23505
+PASS|recovery.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|recovery.mantenimiento_no_modifica_ids|42501: permission denied for table puntos_interes
+PASS|recovery.id_existente_no_reutilizable|23505: SIG-TEC: el id 3000000001 ya existe en el registro global del campus (asignado en edificios; los ids eliminados tampoco se reutilizan)
+RESUMEN 30_reglas_identificadores + 40_registro_ids en pg-recovery original (transacción revertida): 38 PASS, 0 FAIL

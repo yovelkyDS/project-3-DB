@@ -1,0 +1,15 @@
+test_commit_both (test_coordinator.CoordinatorTests.test_commit_both) ... ok
+test_crash_before_decision_presumes_abort (test_coordinator.CoordinatorTests.test_crash_before_decision_presumes_abort) ... ok
+test_failed_commit_can_be_retried_from_durable_decision (test_coordinator.CoordinatorTests.test_failed_commit_can_be_retried_from_durable_decision) ... ok
+test_failure_aborts_first_participant (test_coordinator.CoordinatorTests.test_failure_aborts_first_participant) ... ok
+test_restart_after_decision_completes_and_is_idempotent (test_coordinator.CoordinatorTests.test_restart_after_decision_completes_and_is_idempotent) ... ok
+test_slots_are_unique_per_destination (test_coordinator.CoordinatorTests.test_slots_are_unique_per_destination) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.174s
+
+OK
+OK 2PC confirmación en ambos sigtec_0c4a62341d5442de83807125bc43e0f8
+Decisión COMMIT persistida; interrupción simulada. Ejecute resolve. GID: sigtec_8e985694945d45a6895de5de1ddff684
+OK 2PC reversión completa sigtec_6807b9ed82f14a15b68e14f3688c1332
+Decisión COMMIT persistida; interrupción simulada. Ejecute resolve. GID: sigtec_34e8bc9441874dc29dbc9ad38464542f

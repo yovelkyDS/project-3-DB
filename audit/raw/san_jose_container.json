@@ -1,0 +1,92 @@
+{
+  "Id": "334880b9d5acccb269b703eb9e693f15980bf1927848d8a4274bfa2e1c43d723",
+  "Image": "sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af",
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "sigtec_pgdata_san_jose",
+      "Source": "/var/lib/docker/volumes/sigtec_pgdata_san_jose/_data",
+      "Destination": "/var/lib/postgresql/data",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_san_jose",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_san_jose/_data",
+      "Destination": "/var/lib/postgresql/wal_archive",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 64181,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-20T17:28:20.408657922Z",
+    "FinishedAt": "2026-11-20T17:28:20.015090422Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-11-20T18:50:55.414565636Z",
+          "End": "2026-11-20T18:50:55.478843511Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:00.482209305Z",
+          "End": "2026-11-20T18:51:00.570400805Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:05.570355584Z",
+          "End": "2026-11-20T18:51:05.637379918Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:10.639100754Z",
+          "End": "2026-11-20T18:51:10.71326442Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:15.713881673Z",
+          "End": "2026-11-20T18:51:15.776844006Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "Ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "55432"
+      }
+    ]
+  },
+  "Networks": {
+    "sigtec_net": {
+      "IPAddress": "172.22.0.6",
+      "Aliases": [
+        "sigtec-pg-san-jose-1",
+        "pg-san-jose"
+      ]
+    }
+  }
+}

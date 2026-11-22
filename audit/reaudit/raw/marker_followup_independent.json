@@ -1,0 +1,18 @@
+[
+  {
+    "name": "F03_actual_marker_verified_after_harness_fix",
+    "passed": true,
+    "evidence": {
+      "command": {
+        "rc": 0,
+        "stdout": "ok\n",
+        "stderr": " Container sigtec_remed-sigtec-tools-run-bbbdd01e74a0 Creating \n Container sigtec_remed-sigtec-tools-run-bbbdd01e74a0 Created \n"
+      },
+      "stored": {
+        "rc": 0,
+        "stdout": "A\nRECUPERADA\n",
+        "stderr": ""
+      }
+    }
+  }
+]

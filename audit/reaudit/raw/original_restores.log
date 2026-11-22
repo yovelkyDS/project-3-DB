@@ -1,0 +1,88 @@
+[2026-11-20 21:47:17+0000] restauración lógica de prueba: central <- logical/central/20261120T212746Z
+[2026-11-20 21:47:17+0000]   SHA-256 verificado
+[2026-11-20 21:47:18+0000]   pg_restore terminado sin errores
+[2026-11-20 21:47:18+0000]   RESULTADO central: restauración lógica VÁLIDA
+[2026-11-20 21:47:18+0000] restauración lógica de prueba: cartago <- logical/cartago/20261120T212746Z
+[2026-11-20 21:47:18+0000]   SHA-256 verificado
+[2026-11-20 21:47:19+0000]   pg_restore terminado sin errores
+[2026-11-20 21:47:19+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:19+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:19+0000]   secuencia de ids restaurada (último consecutivo 59)
+[2026-11-20 21:47:19+0000]   disparadores de identificadores restaurados (24)
+[2026-11-20 21:47:19+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:19+0000]   RESULTADO cartago: restauración lógica VÁLIDA
+[2026-11-20 21:47:19+0000] restauración lógica de prueba: san_jose <- logical/san_jose/20261120T212746Z
+[2026-11-20 21:47:19+0000]   SHA-256 verificado
+[2026-11-20 21:47:20+0000]   pg_restore terminado sin errores
+[2026-11-20 21:47:20+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:20+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:21+0000]   secuencia de ids restaurada (último consecutivo 59)
+[2026-11-20 21:47:21+0000]   disparadores de identificadores restaurados (24)
+[2026-11-20 21:47:21+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:21+0000]   RESULTADO san_jose: restauración lógica VÁLIDA
+[2026-11-20 21:47:21+0000] restauración lógica de prueba: san_carlos <- logical/san_carlos/20261120T212746Z
+[2026-11-20 21:47:21+0000]   SHA-256 verificado
+[2026-11-20 21:47:22+0000]   pg_restore terminado sin errores
+[2026-11-20 21:47:22+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:22+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:22+0000]   secuencia de ids restaurada (último consecutivo 92)
+[2026-11-20 21:47:22+0000]   disparadores de identificadores restaurados (24)
+[2026-11-20 21:47:22+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:22+0000]   RESULTADO san_carlos: restauración lógica VÁLIDA
+[2026-11-20 21:47:22+0000] restauración lógica de prueba: alajuela <- logical/alajuela/20261120T212747Z
+[2026-11-20 21:47:22+0000]   SHA-256 verificado
+[2026-11-20 21:47:23+0000]   pg_restore terminado sin errores
+[2026-11-20 21:47:23+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:23+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:23+0000]   secuencia de ids restaurada (último consecutivo 59)
+[2026-11-20 21:47:23+0000]   disparadores de identificadores restaurados (24)
+[2026-11-20 21:47:23+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:23+0000]   RESULTADO alajuela: restauración lógica VÁLIDA
+[2026-11-20 21:47:23+0000] restauración lógica de prueba: limon <- logical/limon/20261120T212747Z
+[2026-11-20 21:47:23+0000]   SHA-256 verificado
+[2026-11-20 21:47:24+0000]   pg_restore terminado sin errores
+[2026-11-20 21:47:24+0000]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:24+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:24+0000]   secuencia de ids restaurada (último consecutivo 59)
+[2026-11-20 21:47:24+0000]   disparadores de identificadores restaurados (24)
+[2026-11-20 21:47:24+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:24+0000]   RESULTADO limon: restauración lógica VÁLIDA
+[2026-11-20 21:47:25+0000] recuperación física de prueba: central <- physical/central/20261120T212747Z + WAL /archives/central
+[2026-11-20 21:47:25+0000]   recuperación completada y promovida (consistent recovery state reached at 0/12000120)
+[2026-11-20 21:47:25+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 21:47:25+0000]   RESULTADO central: copia física RECUPERABLE
+[2026-11-20 21:47:25+0000] recuperación física de prueba: cartago <- physical/cartago/20261120T212748Z + WAL /archives/cartago
+[2026-11-20 21:47:26+0000]   recuperación completada y promovida (consistent recovery state reached at 0/12000120)
+[2026-11-20 21:47:26+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 21:47:26+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:26+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:26+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:26+0000]   RESULTADO cartago: copia física RECUPERABLE
+[2026-11-20 21:47:26+0000] recuperación física de prueba: san_jose <- physical/san_jose/20261120T212748Z + WAL /archives/san_jose
+[2026-11-20 21:47:28+0000]   recuperación completada y promovida (consistent recovery state reached at 0/12000120)
+[2026-11-20 21:47:28+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 21:47:28+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:28+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:28+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:28+0000]   RESULTADO san_jose: copia física RECUPERABLE
+[2026-11-20 21:47:28+0000] recuperación física de prueba: san_carlos <- physical/san_carlos/20261120T212748Z + WAL /archives/san_carlos
+[2026-11-20 21:47:29+0000]   recuperación completada y promovida (consistent recovery state reached at 0/15000120)
+[2026-11-20 21:47:29+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 21:47:29+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:29+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:29+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:29+0000]   RESULTADO san_carlos: copia física RECUPERABLE
+[2026-11-20 21:47:29+0000] recuperación física de prueba: alajuela <- physical/alajuela/20261120T212748Z + WAL /archives/alajuela
+[2026-11-20 21:47:30+0000]   recuperación completada y promovida (consistent recovery state reached at 0/12000120)
+[2026-11-20 21:47:30+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 21:47:30+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:30+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:30+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:30+0000]   RESULTADO alajuela: copia física RECUPERABLE
+[2026-11-20 21:47:30+0000] recuperación física de prueba: limon <- physical/limon/20261120T212749Z + WAL /archives/limon
+[2026-11-20 21:47:31+0000]   recuperación completada y promovida (consistent recovery state reached at 0/12000120)
+[2026-11-20 21:47:31+0000]   línea de tiempo tras la promoción: 2
+[2026-11-20 21:47:31+0000]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 21:47:31+0000]   validación espacial: 8/8 capas OK
+[2026-11-20 21:47:31+0000]   registro global de identificadores coherente
+[2026-11-20 21:47:31+0000]   RESULTADO limon: copia física RECUPERABLE

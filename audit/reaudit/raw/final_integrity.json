@@ -1,0 +1,16 @@
+{
+  "unchanged_original_sql_snapshots": {
+    "central": true,
+    "cartago": true,
+    "san_jose": true,
+    "san_carlos": true,
+    "alajuela": true,
+    "limon": true,
+    "recovery": true
+  },
+  "existing_files_checked": 322,
+  "changed_existing_files": [],
+  "removed_preexisting_named_volumes": [],
+  "originals_and_remediation_lab_healthy": true,
+  "final_inventory": "inventory_final.json"
+}

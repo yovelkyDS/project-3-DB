@@ -1,0 +1,37 @@
+[
+  {
+    "name": "sigtec_five_campus_signatures_match",
+    "passed": true,
+    "evidence": {
+      "rows": [
+        48,
+        48,
+        48,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "sigtec_remed_five_campus_signatures_match",
+    "passed": true,
+    "evidence": {
+      "rows": [
+        48,
+        48,
+        48,
+        48,
+        48
+      ]
+    }
+  },
+  {
+    "name": "publication_8_layers_excludes_ops",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "local_san_jose|accesibilidad\nlocal_san_jose|aceras\nlocal_san_jose|carreteras\nlocal_san_jose|edificios\nlocal_san_jose|iluminacion\nlocal_san_jose|parqueos\nlocal_san_jose|puntos_interes\nlocal_san_jose|zonas_verdes\n",
+      "stderr": ""
+    }
+  }
+]

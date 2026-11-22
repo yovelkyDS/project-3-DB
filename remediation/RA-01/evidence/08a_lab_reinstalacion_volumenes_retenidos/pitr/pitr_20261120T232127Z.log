@@ -1,0 +1,47 @@
+
+[2026-11-20 17:21:27-0600] == 0. precondiciones (nodo san_carlos, servicio pg-san-carlos, corrida 20261120T232127Z) ==
+
+[2026-11-20 17:21:27-0600] == 1. respaldo físico base ==
+[2026-11-20 17:21:28-0600] pg_basebackup san_carlos (pg-san-carlos) -> physical/san_carlos/20261120T232128Z/data
+[2026-11-20 17:21:28-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 17:21:28-0600]   OK san_carlos: 54 MiB, inicio 0/9000028 (file 000000010000000000000009), verificado
+[2026-11-20 17:21:29-0600] copia base: /backups/physical/san_carlos/20261120T232128Z
+inicio=2026-11-20 17:21:28 CST
+wal_inicio=0/9000028 (file 000000010000000000000009)
+verificacion=backup successfully verified
+conteos=edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+
+[2026-11-20 17:21:29-0600] == 2. cambio A ==
+[2026-11-20 17:21:30-0600] A: puntos_interes.id=3000000052 nombre='PITR-A 20261120T232127Z' confirmado en 2026-11-20 23:21:30.449158+00
+
+[2026-11-20 17:21:30-0600] == 3. instante objetivo ==
+[2026-11-20 17:21:32-0600] OBJETIVO: 2026-11-20 23:21:32.818840+00 (LSN 0/A001158)
+
+[2026-11-20 17:21:32-0600] == 4. cambio B ==
+[2026-11-20 17:21:35-0600] B: puntos_interes.id=3000000053 nombre='PITR-B 20261120T232127Z' + actualización de 3000000052, confirmado en 2026-11-20 23:21:35.190820+00
+
+[2026-11-20 17:21:35-0600] == 5. disponibilidad del WAL ==
+[2026-11-20 17:23:08-0600] segmento con A, objetivo y B archivado: 
+-rw------- 1 postgres postgres 16777216 Nov 20 17:14 000000010000000000000018
+-rw------- 1 postgres postgres      350 Nov 20 17:14 000000010000000000000018.00000028.backup
+-rw------- 1 postgres postgres 16777216 Nov 20 17:16 000000010000000000000019
+-rw------- 1 postgres postgres 16777216 Nov 20 17:18 00000001000000000000001A
+
+[2026-11-20 17:23:09-0600] == 6. falla simulada ==
+ Container sigtec_remed-pg-san-carlos-1 Killing 
+ Container sigtec_remed-pg-san-carlos-1 Killed 
+[2026-11-20 17:23:11-0600] estado de pg-san-carlos: unhealthy
+NAME                           IMAGE                              COMMAND                  SERVICE         CREATED         STATUS                       PORTS
+sigtec_remed-pg-san-carlos-1   sigtec-remed/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-san-carlos   4 minutes ago   Exited (137) 2 seconds ago   
+
+[2026-11-20 17:23:11-0600] == 7. recuperación PITR en instancia aislada pg-recovery ==
+ Volume sigtec_remed_walarchive_recovery Creating 
+ Volume sigtec_remed_walarchive_recovery Created 
+ Volume sigtec_remed_pgdata_recovery Creating 
+ Volume sigtec_remed_pgdata_recovery Created 
+ Container sigtec_remed-pg-recovery-1 Creating 
+ Container sigtec_remed-pg-recovery-1 Created 
+ Container sigtec_remed-pg-recovery-1 Starting 
+ Container sigtec_remed-pg-recovery-1 Started 
+[2026-11-20 17:26:17-0600] ERROR: la instancia recovery no terminó la recuperación
+

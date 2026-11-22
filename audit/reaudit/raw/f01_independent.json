@@ -1,0 +1,20 @@
+[
+  {
+    "name": "F01_logical",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "SCRIPT_RC=1\nPUBLISHED=0\nfecha\tnodo\toperacion\truta\tresultado\tdetalle\n2026-11-20 15:45:25-0600\tcentral\tpg_dump\t-\tERROR\trespaldo NO generado (c\u00f3digo 1); ver salida del comando\n",
+      "stderr": " Container sigtec_remed-sigtec-tools-run-a2a3d0c16476 Creating \n Container sigtec_remed-sigtec-tools-run-a2a3d0c16476 Created \n[2026-11-20 15:45:25-0600] pg_dump central (pg-central) -> logical/central/20261120T214525Z\n      | pg_dump: error: connection to server at \"pg-central\" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user \"sigtec_backup\"\n      | connection to server at \"pg-central\" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user \"sigtec_backup\"\n[2026-11-20 15:45:25-0600]   FALLA: pg_dump termin\u00f3 con error\n[2026-11-20 15:45:25-0600]   ERROR respaldando central: no se public\u00f3 ning\u00fan respaldo\n[2026-11-20 15:45:25-0600] RESULTADO: uno o m\u00e1s respaldos l\u00f3gicos FALLARON\n"
+    }
+  },
+  {
+    "name": "F01_physical",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "SCRIPT_RC=1\nPUBLISHED=0\nfecha\tnodo\toperacion\truta\tresultado\tdetalle\n2026-11-20 15:45:26-0600\tcentral\tpg_basebackup\t-\tERROR\tcopia NO generada (c\u00f3digo 1); ver salida del comando\n",
+      "stderr": " Container sigtec_remed-sigtec-tools-run-9736fd848fcc Creating \n Container sigtec_remed-sigtec-tools-run-9736fd848fcc Created \n[2026-11-20 15:45:26-0600] pg_basebackup central (pg-central) -> physical/central/20261120T214526Z/data\n      | pg_basebackup: error: connection to server at \"pg-central\" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user \"sigtec_backup\"\n      | connection to server at \"pg-central\" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user \"sigtec_backup\"\n[2026-11-20 15:45:26-0600]   FALLA: pg_basebackup termin\u00f3 con error\n[2026-11-20 15:45:26-0600]   ERROR respaldando central: no se public\u00f3 ninguna copia\n[2026-11-20 15:45:26-0600] RESULTADO: una o m\u00e1s copias f\u00edsicas FALLARON\n"
+    }
+  }
+]

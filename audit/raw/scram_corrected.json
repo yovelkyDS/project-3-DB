@@ -1,0 +1,38 @@
+[
+  {
+    "node": "central",
+    "rc": 0,
+    "stdout": "postgres|t\nsigtec_backup|t\n",
+    "stderr": ""
+  },
+  {
+    "node": "cartago",
+    "rc": 0,
+    "stdout": "postgres|t\nsigtec_backup|t\n",
+    "stderr": ""
+  },
+  {
+    "node": "san-jose",
+    "rc": 0,
+    "stdout": "postgres|t\nsigtec_backup|t\n",
+    "stderr": ""
+  },
+  {
+    "node": "san-carlos",
+    "rc": 0,
+    "stdout": "postgres|t\nsigtec_backup|t\n",
+    "stderr": ""
+  },
+  {
+    "node": "alajuela",
+    "rc": 0,
+    "stdout": "postgres|t\nsigtec_backup|t\n",
+    "stderr": ""
+  },
+  {
+    "node": "limon",
+    "rc": 0,
+    "stdout": "postgres|t\nsigtec_backup|t\n",
+    "stderr": ""
+  }
+]

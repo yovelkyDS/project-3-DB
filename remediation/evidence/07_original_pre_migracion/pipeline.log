@@ -1,0 +1,128 @@
+[2026-11-20 15:25:34-0600] scripts/backup/logical_backup.sh all  (registro: remediation/evidence/07_original_pre_migracion/backups/logical_backup_20261120_152534.log)
+[2026-11-20 15:25:35-0600] pg_dump central (pg-central) -> logical/central/20261120T212535Z
+[2026-11-20 15:25:35-0600]   OK central: 8616 bytes, 23 entradas TOC, validado
+[2026-11-20 15:25:35-0600] pg_dump cartago (pg-cartago) -> logical/cartago/20261120T212535Z
+[2026-11-20 15:25:35-0600]   OK cartago: 75624 bytes, 140 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:35-0600] pg_dump san_jose (pg-san-jose) -> logical/san_jose/20261120T212535Z
+[2026-11-20 15:25:35-0600]   OK san_jose: 75958 bytes, 140 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:35-0600] pg_dump san_carlos (pg-san-carlos) -> logical/san_carlos/20261120T212535Z
+[2026-11-20 15:25:36-0600]   OK san_carlos: 76817 bytes, 140 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:36-0600] pg_dump alajuela (pg-alajuela) -> logical/alajuela/20261120T212536Z
+[2026-11-20 15:25:36-0600]   OK alajuela: 75910 bytes, 140 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:36-0600] pg_dump limon (pg-limon) -> logical/limon/20261120T212536Z
+[2026-11-20 15:25:36-0600]   OK limon: 75004 bytes, 140 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:36-0600] resultado: OK
+[2026-11-20 15:25:36-0600] scripts/backup/physical_backup.sh all  (registro: remediation/evidence/07_original_pre_migracion/backups/physical_backup_20261120_152536.log)
+[2026-11-20 15:25:36-0600] pg_basebackup central (pg-central) -> physical/central/20261120T212536Z/data
+[2026-11-20 15:25:37-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:37-0600]   OK central: 53 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+[2026-11-20 15:25:37-0600] pg_basebackup cartago (pg-cartago) -> physical/cartago/20261120T212537Z/data
+[2026-11-20 15:25:37-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:37-0600]   OK cartago: 54 MiB, inicio 0/C000028 (file 00000001000000000000000C), verificado
+[2026-11-20 15:25:37-0600] pg_basebackup san_jose (pg-san-jose) -> physical/san_jose/20261120T212537Z/data
+[2026-11-20 15:25:38-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:38-0600]   OK san_jose: 54 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+[2026-11-20 15:25:38-0600] pg_basebackup san_carlos (pg-san-carlos) -> physical/san_carlos/20261120T212538Z/data
+[2026-11-20 15:25:38-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:38-0600]   OK san_carlos: 54 MiB, inicio 0/10000028 (file 000000010000000000000010), verificado
+[2026-11-20 15:25:38-0600] pg_basebackup alajuela (pg-alajuela) -> physical/alajuela/20261120T212538Z/data
+[2026-11-20 15:25:38-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:38-0600]   OK alajuela: 54 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+[2026-11-20 15:25:38-0600] pg_basebackup limon (pg-limon) -> physical/limon/20261120T212538Z/data
+[2026-11-20 15:25:39-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:39-0600]   OK limon: 54 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+[2026-11-20 15:25:39-0600] resultado: OK
+== backup rc=0
+[2026-11-20 15:25:39-0600] scripts/backup/logical_restore_test.sh all  (registro: remediation/evidence/07_original_pre_migracion/backups/logical_restore_test_20261120_152539.log)
+[2026-11-20 15:25:39-0600] restauración lógica de prueba: central <- logical/central/20261120T212535Z
+[2026-11-20 15:25:39-0600]   SHA-256 verificado
+[2026-11-20 15:25:40-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:40-0600]   RESULTADO central: restauración lógica VÁLIDA
+[2026-11-20 15:25:41-0600] restauración lógica de prueba: cartago <- logical/cartago/20261120T212535Z
+[2026-11-20 15:25:41-0600]   SHA-256 verificado
+[2026-11-20 15:25:42-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:42-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:42-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:42-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 15:25:42-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:42-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:42-0600]   RESULTADO cartago: restauración lógica VÁLIDA
+[2026-11-20 15:25:42-0600] restauración lógica de prueba: san_jose <- logical/san_jose/20261120T212535Z
+[2026-11-20 15:25:42-0600]   SHA-256 verificado
+[2026-11-20 15:25:43-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:43-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:43-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:43-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 15:25:43-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:43-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:43-0600]   RESULTADO san_jose: restauración lógica VÁLIDA
+[2026-11-20 15:25:43-0600] restauración lógica de prueba: san_carlos <- logical/san_carlos/20261120T212535Z
+[2026-11-20 15:25:43-0600]   SHA-256 verificado
+[2026-11-20 15:25:44-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:44-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:44-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:44-0600]   secuencia de ids restaurada (último consecutivo 82)
+[2026-11-20 15:25:44-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:44-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:44-0600]   RESULTADO san_carlos: restauración lógica VÁLIDA
+[2026-11-20 15:25:44-0600] restauración lógica de prueba: alajuela <- logical/alajuela/20261120T212536Z
+[2026-11-20 15:25:44-0600]   SHA-256 verificado
+[2026-11-20 15:25:45-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:46-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:46-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:46-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 15:25:46-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:46-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:46-0600]   RESULTADO alajuela: restauración lógica VÁLIDA
+[2026-11-20 15:25:46-0600] restauración lógica de prueba: limon <- logical/limon/20261120T212536Z
+[2026-11-20 15:25:46-0600]   SHA-256 verificado
+[2026-11-20 15:25:47-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:47-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:47-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:47-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 15:25:47-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:47-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:47-0600]   RESULTADO limon: restauración lógica VÁLIDA
+[2026-11-20 15:25:47-0600] resultado: OK
+[2026-11-20 15:25:47-0600] scripts/backup/physical_restore_test.sh all  (registro: remediation/evidence/07_original_pre_migracion/backups/physical_restore_test_20261120_152547.log)
+[2026-11-20 15:25:48-0600] recuperación física de prueba: central <- physical/central/20261120T212536Z + WAL /archives/central
+[2026-11-20 15:25:48-0600]   recuperación completada y promovida (consistent recovery state reached at 0/D000120)
+[2026-11-20 15:25:48-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 15:25:48-0600]   RESULTADO central: copia física RECUPERABLE
+[2026-11-20 15:25:48-0600] recuperación física de prueba: cartago <- physical/cartago/20261120T212537Z + WAL /archives/cartago
+[2026-11-20 15:25:49-0600]   recuperación completada y promovida (consistent recovery state reached at 0/C000120)
+[2026-11-20 15:25:49-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 15:25:49-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:49-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:49-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:49-0600]   RESULTADO cartago: copia física RECUPERABLE
+[2026-11-20 15:25:49-0600] recuperación física de prueba: san_jose <- physical/san_jose/20261120T212537Z + WAL /archives/san_jose
+[2026-11-20 15:25:50-0600]   recuperación completada y promovida (consistent recovery state reached at 0/D000120)
+[2026-11-20 15:25:50-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 15:25:50-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:50-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:50-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:50-0600]   RESULTADO san_jose: copia física RECUPERABLE
+[2026-11-20 15:25:50-0600] recuperación física de prueba: san_carlos <- physical/san_carlos/20261120T212538Z + WAL /archives/san_carlos
+[2026-11-20 15:25:51-0600]   recuperación completada y promovida (consistent recovery state reached at 0/10000120)
+[2026-11-20 15:25:51-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 15:25:51-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:51-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:51-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:51-0600]   RESULTADO san_carlos: copia física RECUPERABLE
+[2026-11-20 15:25:51-0600] recuperación física de prueba: alajuela <- physical/alajuela/20261120T212538Z + WAL /archives/alajuela
+[2026-11-20 15:25:53-0600]   recuperación completada y promovida (consistent recovery state reached at 0/D000120)
+[2026-11-20 15:25:53-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 15:25:53-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:53-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:53-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:53-0600]   RESULTADO alajuela: copia física RECUPERABLE
+[2026-11-20 15:25:53-0600] recuperación física de prueba: limon <- physical/limon/20261120T212538Z + WAL /archives/limon
+[2026-11-20 15:25:55-0600]   recuperación completada y promovida (consistent recovery state reached at 0/D000120)
+[2026-11-20 15:25:55-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 15:25:55-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:55-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:55-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:55-0600]   RESULTADO limon: copia física RECUPERABLE
+[2026-11-20 15:25:55-0600] resultado: OK
+== restore-test rc=0

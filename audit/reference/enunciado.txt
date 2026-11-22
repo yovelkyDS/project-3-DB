@@ -1,0 +1,263 @@
+
+--- PÁGINA 1 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 1 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+●
+●
+●
+●
+●
+Instituto Tecnológico de Costa Rica
+Campus Tecnológico San Carlos
+Unidad de Computación
+Ingeniería en Computación
+Msc. Leonardo Víquez Acuña
+Tercer Proyecto
+SIG-TEC: Sistema Distribuido de Gestión de Información 
+Geográfica de los Campus del Tecnológico de Costa Rica.
+Curso: Bases de Datos II
+Fecha Inicio: Martes 10 de noviembre 2026.
+Fecha de entrega: Lunes 30 de noviembre 2026, 08:00 am
+Descripción General
+Diseñar e implementar un sistema distribuido de bases de datos geográficas que permita 
+administrar la información espacial de los diferentes campus del Tecnológico de Costa 
+Rica, garantizando la disponibilidad de información global, la autonomía de edición de cada 
+campus, la consistencia de los datos y la recuperación ante fallos.
+El sistema permitirá administrar información geográfica de los cinco campus del TEC:
+Campus Tecnológico Central, Cartago.
+Campus Tecnológico Local San José.
+Campus Tecnológico Local San Carlos.
+Campus Tecnológico Local Alajuela.
+Campus Tecnológico Local Limón.
+Los usuarios utilizarán QGIS como interfaz de trabajo para consultar, visualizar y editar 
+información geográfica, mientras que PostgreSQL y PostGIS proporcionarán la 
+infraestructura de almacenamiento y procesamiento distribuido.
+
+--- PÁGINA 2 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 2 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+
+--- PÁGINA 3 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 3 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+Requerimiento funcionales
+Deberán implementar una arquitectura de cinco nodos operativos y un nodo central de 
+autenticación y coordinación.
+Diseño de bases de datos
+Cada campus contará con su propia instancia PostgreSQL con la extensión PostGIS.
+Por ejemplo, si un usuario del campus San Carlos ingresa al sistema:
+Ejecuta QGIS y abre el complemento SIG-TEC.
+Se autentica contra el servidor central.
+El servidor central valida sus credenciales.
+Se determina que el usuario pertenece al campus San Carlos.
+El complemento establece la conexión con el nodo de San Carlos.
+Se cargan las capas geográficas disponibles.
+Las capas permiten consultar información de todos los campus.
+
+--- PÁGINA 4 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 4 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+
+--- PÁGINA 5 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 5 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+8.Las operaciones de edición se restringen a los objetos pertenecientes a San Carlos.
+La idea fundamental es que cada campus administra sus propios datos, pero todos pueden 
+consultar la información geográfica institucional.
+
+--- PÁGINA 6 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 6 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+
+--- PÁGINA 7 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 7 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+Capas geográficas
+El sistema debe administrar un conjunto de capas comunes a todos los campus.
+Capa Geometría
+Ejemplos de 
+información
+Edificios Polygon
+Nombre, código, área, 
+cantidad de pisos
+Carreteras LineString Nombre, tipo, superficie
+Aceras LineString
+Material, ancho, 
+condición
+Parqueos Polygon
+Capacidad, tipo, 
+disponibilidad
+Zonas verdes Polygon
+Área, tipo de 
+vegetación
+Puntos de interés Point
+Cajeros, laboratorios, 
+sodas
+Iluminación Point
+Código, potencia, 
+estado
+Accesibilidad LineString
+Rampas, pasos 
+accesibles
+Es importante que todas las capas utilicen un sistema de referencia espacial definido 
+institucionalmente, con transformación cuando corresponda.
+Cada objeto geográfico tendrá un identificador global y un atributo que indique su campus 
+de pertenencia.
+Por ejemplo:
+Tabla: edificios
+id campus_id nombre area geom
+101 1 Biblioteca 1200 POLYGON
+
+--- PÁGINA 8 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 8 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+
+--- PÁGINA 9 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 9 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+●
+●
+●
+●
+102 1
+Escuela de 
+Computación
+850 POLYGON
+201 4
+Edificio 
+Académico
+600 POLYGON
+301 3 Laboratorios 450 POLYGON
+El atributo campus_id será fundamental para establecer las restricciones de edición.
+Requerimientos Técnicos
+PostgreSQL no ofrece replicación lógica multimaestro automática, por eso, los cinco nodos 
+no pueden escribir sobre una misma tabla replicada entre sí. Se debe seguir una estrategia 
+de dos niveles:
+Nivel 1. Replicación desde cada campus hacia la infraestructura central.
+Cartago publica sus edificios, carreteras, aceras, etc.
+San José publica sus propios elementos.
+Alajuela, San Carlos y Limón hacen lo mismo.
+El servidor central mantiene una copia física de los datos de cada campus, en 
+esquemas independientes.
+Nivel 2. Distribución de la información global hacia los campus. Cada nodo recibe una 
+copia de consulta de la información institucional consolidada, mediante publicaciones y 
+suscripciones lógicas. De esta manera, los datos originales siempre pertenecen a un solo 
+campus y las copias distribuidas se utilizan para consulta.
+Vistas distribuidas y disparadores INSTEAD OF
+En lugar de que QGIS cargue directamente las tablas físicas, se deben crear vistas que 
+integren los datos de los diferentes campus. QGIS visualizará una sola capa, aunque los 
+registros provengan de diferentes fuentes.
+¿Cómo controlar las modificaciones?
+Deberán utilizar utilización de disparadores INSTEAD OF. Cuando el usuario intente 
+insertar, actualizar o eliminar un objeto geográfico desde QGIS, el disparador determinará 
+
+--- PÁGINA 10 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 10 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+
+--- PÁGINA 11 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 11 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+●
+●
+●
+el campus al que pertenece el registro.
+Autenticación mediante PyQGIS
+El ingreso al sistema se implementaría mediante un complemento de QGIS desarrollado en 
+Python utilizando PyQGIS.
+El complemento presentaría una ventana de autenticación:
+Nombre de usuario.
+Contraseña.
+Botón de ingresar.
+La autenticación se realizará contra una base de datos central. Al ingresar y para el 
+proyecto actual de QGIs se añadirán automáticamente todas las tablas (Vistas) asociadas 
+al campus donde pertenece el usuario.
+Estilos de QGIS almacenados en la base de datos
+QGIS permite guardar estilos de capas en PostgreSQL mediante su mecanismo de 
+almacenamiento de estilos, conocido como layer_styles.
+La propuesta sería almacenar los estilos en el nodo central y distribuirlos a los demás 
+nodos.
+Así, independientemente de que un usuario esté trabajando desde Cartago o San Carlos, 
+la capa de edificios tendrá la misma simbología. 
+También se podrían almacenar diferentes versiones de un estilo para facilitar su evolución 
+institucional.
+
+--- PÁGINA 12 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 12 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+
+--- PÁGINA 13 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 13 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+1.
+2.
+3.
+4.
+5.
+Respaldo y recuperación
+Cada nodo tendrá que implementar sus propias estrategias de respaldo.
+Mecanismo Aplicación
+Respaldo lógico
+pg_dump de bases de datos y 
+esquemas
+Respaldo físico pg_basebackup
+Recuperación PITR
+Recuperación a un instante 
+específico
+WAL Registro de modificaciones
+Replicación lógica
+Recuperación de información 
+entre nodos
+Pruebas de recuperación
+Restaurar un nodo ante una falla 
+simulada
+Aspectos Administrativos
+El proyecto puede ser desarrollado en grupos de 3 personas, cualquier intento de 
+copia o plagio será castigado con la anulación del proyecto.
+Los fuentes del proyecto junto con la documentación deberán ser entregados a más 
+tardar el día lunes 30 de junio 2026, 08:00 am, por medio de la plataforma moodle 
+propuesta para el curso. D e b e r á n  c r e a r  u n  v í d e o  d e  n o  m á s  d e  1 0  m i n  
+demostrando el funcionamiento de la arquitectura y del sistema.
+Retrasos en la fecha y hora de entrega se castigará en la nota final del proyecto. Cada 
+hora de retraso disminuirá en un 10%  la nota final del proyecto.
+Se recomienda el uso de algún sistema de control de versiones que los estudiantes 
+definan. 
+Cada fuente y referencia bibliográfica utilizada deberá documentarse según lo indica el 
+siguiente apartado, de lo contrario se considerará como fraude. Se recomienda hacer 
+
+--- PÁGINA 14 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 14 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+
+--- PÁGINA 15 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 15 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0
+uso de las bases de datos digitales de la biblioteca en el sitio Web
+ https://www.tec.ac.cr/sistema-bibliotecas-tec
+Evaluación
+Rubro Valor porcentual
+Diseño de arquitectura distribuida y modelo 
+geográfico
+15%
+Implementación de los cinco nodos y 
+estructura PostGIS
+15%
+Replicación lógica y vistas distribuidas 20%
+Edición geográfica desde QGIS y 
+complemento PyQGIS
+20%
+Transacciones distribuidas, respaldos y 
+recuperación
+20%
+Documentación y demostración integral 10%
+
+--- PÁGINA 16 ---
+20/11/26, 10:34 AMTercer Proyecto Bases II
+Page 16 of 16https://leoviquez.com/drive/d/s/1AdR6zYFtQEC8knoW8Ma95r4YEGPf5sS/mFDpzmnY8-zvSmHdD2uWTcc4qAtzZKnw-FbrgtBtXpQ0

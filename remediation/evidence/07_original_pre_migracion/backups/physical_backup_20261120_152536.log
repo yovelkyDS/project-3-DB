@@ -1,0 +1,20 @@
+[2026-11-20 15:25:36-0600] scripts/backup/physical_backup.sh all  (registro: remediation/evidence/07_original_pre_migracion/backups/physical_backup_20261120_152536.log)
+[2026-11-20 15:25:36-0600] pg_basebackup central (pg-central) -> physical/central/20261120T212536Z/data
+[2026-11-20 15:25:37-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:37-0600]   OK central: 53 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+[2026-11-20 15:25:37-0600] pg_basebackup cartago (pg-cartago) -> physical/cartago/20261120T212537Z/data
+[2026-11-20 15:25:37-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:37-0600]   OK cartago: 54 MiB, inicio 0/C000028 (file 00000001000000000000000C), verificado
+[2026-11-20 15:25:37-0600] pg_basebackup san_jose (pg-san-jose) -> physical/san_jose/20261120T212537Z/data
+[2026-11-20 15:25:38-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:38-0600]   OK san_jose: 54 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+[2026-11-20 15:25:38-0600] pg_basebackup san_carlos (pg-san-carlos) -> physical/san_carlos/20261120T212538Z/data
+[2026-11-20 15:25:38-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:38-0600]   OK san_carlos: 54 MiB, inicio 0/10000028 (file 000000010000000000000010), verificado
+[2026-11-20 15:25:38-0600] pg_basebackup alajuela (pg-alajuela) -> physical/alajuela/20261120T212538Z/data
+[2026-11-20 15:25:38-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:38-0600]   OK alajuela: 54 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+[2026-11-20 15:25:38-0600] pg_basebackup limon (pg-limon) -> physical/limon/20261120T212538Z/data
+[2026-11-20 15:25:39-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:25:39-0600]   OK limon: 54 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+[2026-11-20 15:25:39-0600] resultado: OK

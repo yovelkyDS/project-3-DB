@@ -1,0 +1,32 @@
+sigtec-recovery: restaurando /backups/physical/san_carlos/20261120T172854Z/data -> /var/lib/postgresql/data
+sigtec-recovery: recovery.signal creado; PostgreSQL reproducirá el WAL hasta el objetivo
+
+PostgreSQL Database directory appears to contain a database; Skipping initialization
+
+2026-11-20 11:29:07.464 CST [1] LOG:  starting PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-11-20 11:29:07.464 CST [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-11-20 11:29:07.464 CST [1] LOG:  listening on IPv6 address "::", port 5432
+2026-11-20 11:29:07.467 CST [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-11-20 11:29:07.470 CST [47] LOG:  database system was interrupted; last known up at 2026-11-20 11:28:55 CST
+2026-11-20 11:29:07.656 CST [47] LOG:  starting backup recovery with redo LSN 0/7000028, checkpoint LSN 0/7000080, on timeline ID 1
+2026-11-20 11:29:07.669 CST [47] LOG:  restored log file "000000010000000000000007" from archive
+2026-11-20 11:29:07.693 CST [47] LOG:  starting point-in-time recovery to 2026-11-20 11:29:00.365787-06
+2026-11-20 11:29:07.697 CST [47] LOG:  redo starts at 0/7000028
+2026-11-20 11:29:07.711 CST [47] LOG:  restored log file "000000010000000000000008" from archive
+2026-11-20 11:29:07.727 CST [47] LOG:  completed backup recovery with redo LSN 0/7000028 and end LSN 0/7000120
+2026-11-20 11:29:07.727 CST [47] LOG:  consistent recovery state reached at 0/7000120
+2026-11-20 11:29:07.727 CST [1] LOG:  database system is ready to accept read-only connections
+2026-11-20 11:29:07.742 CST [47] LOG:  recovery stopping before commit of transaction 793, time 2026-11-20 11:29:00.987157-06
+2026-11-20 11:29:07.742 CST [47] LOG:  redo done at 0/816B740 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.04 s
+2026-11-20 11:29:07.742 CST [47] LOG:  last completed transaction was at log time 2026-11-20 11:28:57.799862-06
+cp: cannot stat '/archives/san_carlos/00000002.history': No such file or directory
+2026-11-20 11:29:07.746 CST [47] LOG:  selected new timeline ID: 2
+cp: cannot stat '/archives/san_carlos/00000001.history': No such file or directory
+2026-11-20 11:29:07.776 CST [47] LOG:  archive recovery complete
+2026-11-20 11:29:07.780 CST [45] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-11-20 11:29:07.803 CST [45] LOG:  checkpoint complete: wrote 892 buffers (5.4%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.010 s, sync=0.007 s, total=0.028 s; sync files=20, longest=0.005 s, average=0.001 s; distance=17837 kB, estimate=17837 kB; lsn=0/816B740, redo lsn=0/816B740
+2026-11-20 11:29:07.808 CST [1] LOG:  database system is ready to accept connections
+2026-11-20 11:29:14.454 CST [85] postgres@sigtec ERROR:  syntax error at or near ":" at character 73
+2026-11-20 11:29:14.454 CST [85] postgres@sigtec STATEMENT:  INSERT INTO ops.recovery_markers (run_id, marker, detalle, lsn) VALUES (:'run', 'RECUPERADA', :'det', pg_current_wal_lsn())
+2026-11-20 11:34:07.891 CST [45] LOG:  checkpoint starting: time
+2026-11-20 11:34:09.207 CST [45] LOG:  checkpoint complete: wrote 14 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.282 s, sync=0.006 s, total=1.316 s; sync files=13, longest=0.004 s, average=0.001 s; distance=17 kB, estimate=16055 kB; lsn=0/9000060, redo lsn=0/816FE28

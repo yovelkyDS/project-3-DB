@@ -1,0 +1,36 @@
+ Container sigtec_audit_20261120-sigtec-tools-run-3951d234f0b5 Creating 
+ Container sigtec_audit_20261120-sigtec-tools-run-3951d234f0b5 Created 
+[2026-11-20 14:25:30-0600] recuperación física de prueba: central <- physical/central/20261120T202447Z + WAL /archives/central
+[2026-11-20 14:25:32-0600]   recuperación completada y promovida (consistent recovery state reached at 0/6000158)
+[2026-11-20 14:25:32-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 14:25:32-0600]   RESULTADO central: copia física RECUPERABLE
+[2026-11-20 14:25:32-0600] recuperación física de prueba: cartago <- physical/cartago/20261120T202447Z + WAL /archives/cartago
+[2026-11-20 14:25:33-0600]   recuperación completada y promovida (consistent recovery state reached at 0/6000158)
+[2026-11-20 14:25:34-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 14:25:34-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=9 accesibilidad=4
+[2026-11-20 14:25:34-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 14:25:34-0600]   RESULTADO cartago: copia física RECUPERABLE
+[2026-11-20 14:25:34-0600] recuperación física de prueba: san_jose <- physical/san_jose/20261120T202448Z + WAL /archives/san_jose
+[2026-11-20 14:25:37-0600]   recuperación completada y promovida (consistent recovery state reached at 0/6000158)
+[2026-11-20 14:25:37-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 14:25:37-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 14:25:37-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 14:25:37-0600]   RESULTADO san_jose: copia física RECUPERABLE
+[2026-11-20 14:25:37-0600] recuperación física de prueba: san_carlos <- physical/san_carlos/20261120T202448Z + WAL /archives/san_carlos
+[2026-11-20 14:25:39-0600]   recuperación completada y promovida (consistent recovery state reached at 0/9000158)
+[2026-11-20 14:25:39-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 14:25:39-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=8 accesibilidad=4
+[2026-11-20 14:25:39-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 14:25:39-0600]   RESULTADO san_carlos: copia física RECUPERABLE
+[2026-11-20 14:25:39-0600] recuperación física de prueba: alajuela <- physical/alajuela/20261120T202448Z + WAL /archives/alajuela
+[2026-11-20 14:25:40-0600]   recuperación completada y promovida (consistent recovery state reached at 0/6000158)
+[2026-11-20 14:25:40-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 14:25:40-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 14:25:40-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 14:25:40-0600]   RESULTADO alajuela: copia física RECUPERABLE
+[2026-11-20 14:25:40-0600] recuperación física de prueba: limon <- physical/limon/20261120T202449Z + WAL /archives/limon
+[2026-11-20 14:25:42-0600]   recuperación completada y promovida (consistent recovery state reached at 0/6000158)
+[2026-11-20 14:25:42-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 14:25:42-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 14:25:42-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 14:25:42-0600]   RESULTADO limon: copia física RECUPERABLE

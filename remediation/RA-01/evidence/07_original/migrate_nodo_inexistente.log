@@ -1,0 +1,8 @@
+ Container sigtec-sigtec-tools-run-b8686f1333dc Creating 
+ Container sigtec-sigtec-tools-run-b8686f1333dc Created 
+nodo inválido: nodo_inexistente
+[2026-11-20 17:19:13-0600] ERROR: destino inválido: 'nodo_inexistente'. Use all, campus, recovery o uno de: central cartago san_jose san_carlos alajuela limon
+[2026-11-20 17:19:13-0600] RESULTADO: migración FALLIDA (código 2). Cada migración se aplica en una sola transacción: ninguna queda a medias
+
+make: *** [migrate] Error 2
+rc=2

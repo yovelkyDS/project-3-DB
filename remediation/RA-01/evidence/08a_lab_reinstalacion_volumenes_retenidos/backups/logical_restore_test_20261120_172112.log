@@ -1,0 +1,53 @@
+[2026-11-20 17:21:12-0600] scripts/backup/logical_restore_test.sh all  (registro: ./remediation/RA-01/evidence/08_lab_instalacion_limpia/backups/logical_restore_test_20261120_172112.log)
+ Container sigtec_remed-sigtec-tools-run-72dcbe8ae8ee Creating 
+ Container sigtec_remed-sigtec-tools-run-72dcbe8ae8ee Created 
+[2026-11-20 17:21:13-0600] restauración lógica de prueba: central <- logical/central/20261120T232109Z
+[2026-11-20 17:21:13-0600]   SHA-256 verificado
+[2026-11-20 17:21:14-0600]   pg_restore terminado sin errores
+[2026-11-20 17:21:14-0600]   RESULTADO central: restauración lógica VÁLIDA
+[2026-11-20 17:21:14-0600] restauración lógica de prueba: cartago <- logical/cartago/20261120T232109Z
+[2026-11-20 17:21:14-0600]   SHA-256 verificado
+[2026-11-20 17:21:15-0600]   pg_restore terminado sin errores
+[2026-11-20 17:21:15-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:15-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:15-0600]   secuencia de ids restaurada (último consecutivo 51)
+[2026-11-20 17:21:15-0600]   disparadores de identificadores restaurados (24)
+[2026-11-20 17:21:15-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:15-0600]   RESULTADO cartago: restauración lógica VÁLIDA
+[2026-11-20 17:21:15-0600] restauración lógica de prueba: san_jose <- logical/san_jose/20261120T232109Z
+[2026-11-20 17:21:15-0600]   SHA-256 verificado
+[2026-11-20 17:21:16-0600]   pg_restore terminado sin errores
+[2026-11-20 17:21:16-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:16-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:16-0600]   secuencia de ids restaurada (último consecutivo 51)
+[2026-11-20 17:21:16-0600]   disparadores de identificadores restaurados (24)
+[2026-11-20 17:21:16-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:16-0600]   RESULTADO san_jose: restauración lógica VÁLIDA
+[2026-11-20 17:21:17-0600] restauración lógica de prueba: san_carlos <- logical/san_carlos/20261120T232109Z
+[2026-11-20 17:21:17-0600]   SHA-256 verificado
+[2026-11-20 17:21:17-0600]   pg_restore terminado sin errores
+[2026-11-20 17:21:17-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:17-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:18-0600]   secuencia de ids restaurada (último consecutivo 51)
+[2026-11-20 17:21:18-0600]   disparadores de identificadores restaurados (24)
+[2026-11-20 17:21:18-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:18-0600]   RESULTADO san_carlos: restauración lógica VÁLIDA
+[2026-11-20 17:21:18-0600] restauración lógica de prueba: alajuela <- logical/alajuela/20261120T232109Z
+[2026-11-20 17:21:18-0600]   SHA-256 verificado
+[2026-11-20 17:21:19-0600]   pg_restore terminado sin errores
+[2026-11-20 17:21:19-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:19-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:19-0600]   secuencia de ids restaurada (último consecutivo 51)
+[2026-11-20 17:21:19-0600]   disparadores de identificadores restaurados (24)
+[2026-11-20 17:21:19-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:19-0600]   RESULTADO alajuela: restauración lógica VÁLIDA
+[2026-11-20 17:21:19-0600] restauración lógica de prueba: limon <- logical/limon/20261120T232110Z
+[2026-11-20 17:21:19-0600]   SHA-256 verificado
+[2026-11-20 17:21:20-0600]   pg_restore terminado sin errores
+[2026-11-20 17:21:20-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:20-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:20-0600]   secuencia de ids restaurada (último consecutivo 51)
+[2026-11-20 17:21:20-0600]   disparadores de identificadores restaurados (24)
+[2026-11-20 17:21:20-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:20-0600]   RESULTADO limon: restauración lógica VÁLIDA
+[2026-11-20 17:21:20-0600] resultado: OK

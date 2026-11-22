@@ -1,0 +1,40 @@
+ Container sigtec_remed-sigtec-tools-run-39cc73a57450 Creating 
+ Container sigtec_remed-sigtec-tools-run-39cc73a57450 Created 
+PASS|logical.contrasena_incorrecta[6 nodos]|rc=1, 0 publicados, 0 OK, 6 ERROR en bitácora
+PASS|logical.diagnostico_autenticacion|mensaje de PostgreSQL mostrado
+PASS|logical.sin_secretos_en_salida|la contraseña no aparece en la salida
+PASS|logical.usuario_inexistente|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|logical.servidor_inaccesible|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|logical.sin_permiso_escritura|rc=1, nada creado
+PASS|logical.directorio_invalido|rc=1
+PASS|logical.fallo_escritura_parcial|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|logical.sin_archivos_parciales|el directorio .fallido-* no conserva carga útil
+PASS|logical.codigo_en_pipeline|rc=1 a través de | cat
+PASS|physical.contrasena_incorrecta[6 nodos]|rc=1, 0 publicados, 0 OK, 6 ERROR en bitácora
+PASS|physical.diagnostico_autenticacion|mensaje de PostgreSQL mostrado
+PASS|physical.sin_secretos_en_salida|la contraseña no aparece en la salida
+PASS|physical.usuario_inexistente|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|physical.servidor_inaccesible|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|physical.sin_permiso_escritura|rc=1, nada creado
+PASS|physical.directorio_invalido|rc=1
+PASS|physical.fallo_escritura_parcial|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|physical.sin_archivos_parciales|el directorio .fallido-* no conserva carga útil
+PASS|physical.codigo_en_pipeline|rc=1 a través de | cat
+PASS|logical.respaldo_valido[6 nodos]|rc=0, 6 publicados
+PASS|physical.respaldo_valido[6 nodos]|rc=0, 6 publicados
+PASS|logical.validacion[central]|TOC, datos y contenido OK
+PASS|logical.validacion[cartago]|TOC, datos y contenido OK
+PASS|logical.validacion[san_jose]|TOC, datos y contenido OK
+PASS|logical.validacion[san_carlos]|TOC, datos y contenido OK
+PASS|logical.validacion[alajuela]|TOC, datos y contenido OK
+PASS|logical.validacion[limon]|TOC, datos y contenido OK
+PASS|logical.restauracion_aislada|6 restauraciones VÁLIDAS
+PASS|physical.recuperacion_aislada|6 copias RECUPERABLES
+PASS|logical.conserva_respaldo_anterior|el último publicado sigue siendo 20261120T210647Z
+PASS|physical.conserva_respaldo_anterior|el último publicado sigue siendo 20261120T210648Z
+PASS|logical.fallo_parcial|rc=1; central publicado, limon no
+PASS|logical.rechaza_dump_truncado|pg_restore detectó el truncamiento
+PASS|physical.rechaza_copia_alterada|pg_verifybackup detectó la alteración
+PASS|physical.rechaza_sin_manifiesto|falta backup_manifest
+----
+RESUMEN respaldos: 36 PASS, 0 FAIL

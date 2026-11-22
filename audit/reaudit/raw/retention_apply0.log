@@ -1,0 +1,15 @@
+[2026-11-20 15:49:19-0600] central: 1 respaldos, se conservan 2; primer segmento WAL necesario: 000000010000000000000007
+[2026-11-20 15:49:20-0600]   segmentos WAL anteriores a 000000010000000000000007 (eliminables): 6
+[2026-11-20 15:49:21-0600] cartago: 1 respaldos, se conservan 2; primer segmento WAL necesario: 000000010000000000000008
+[2026-11-20 15:49:21-0600]   segmentos WAL anteriores a 000000010000000000000008 (eliminables): 7
+[2026-11-20 15:49:22-0600] san_jose: 1 respaldos, se conservan 2; primer segmento WAL necesario: 000000010000000000000007
+[2026-11-20 15:49:23-0600]   segmentos WAL anteriores a 000000010000000000000007 (eliminables): 6
+[2026-11-20 15:49:23-0600] san_carlos: 4 respaldos, se conservan 2; primer segmento WAL necesario: 000000010000000000000011
+[2026-11-20 15:49:24-0600]   respaldo sobrante: physical/san_carlos/20261120T212410Z/
+[2026-11-20 15:49:24-0600]   respaldo sobrante: physical/san_carlos/20261120T212428Z/
+[2026-11-20 15:49:24-0600]   segmentos WAL anteriores a 000000010000000000000011 (eliminables): 16
+[2026-11-20 15:49:25-0600] alajuela: 1 respaldos, se conservan 2; primer segmento WAL necesario: 000000010000000000000007
+[2026-11-20 15:49:25-0600]   segmentos WAL anteriores a 000000010000000000000007 (eliminables): 6
+[2026-11-20 15:49:26-0600] limon: 1 respaldos, se conservan 2; primer segmento WAL necesario: 000000010000000000000007
+[2026-11-20 15:49:26-0600]   segmentos WAL anteriores a 000000010000000000000007 (eliminables): 6
+[2026-11-20 15:49:27-0600] Simulación: no se eliminó nada (use --apply para aplicar)

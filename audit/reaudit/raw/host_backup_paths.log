@@ -1,0 +1,77 @@
+contraseña de sigtec_backup desincronizada en sigtec_remed-pg-central-1
+PASS|make.backup_logical_autenticacion_invalida|rc=2
+PASS|run_sh.informa_error_logico|run.sh imprimió 'resultado: ERROR'
+PASS|make.backup_physical_autenticacion_invalida|rc=2
+PASS|make.backup_completo_se_detiene|rc=2
+PASS|make.no_ejecuta_etapa_dependiente|make backup no siguió a la copia física tras fallar pg_dump
+PASS|publicados_logicos_sin_cambio|respaldos lógicos publicados de central
+PASS|publicados_fisicos_sin_cambio|copias físicas publicadas de central
+contraseña resincronizada con make migrate (rc=0)
+PASS|make.backup_valido|tras resincronizar
+PASS|publicado_logico_nuevo|un respaldo lógico nuevo
+PASS|publicado_fisico_nuevo|una copia física nueva
+----
+RESUMEN ruta host: 10 PASS, 0 FAIL
+    == /tmp/remed_make_l.log
+    [2026-11-20 15:49:16-0600] scripts/backup/logical_backup.sh central  (registro: evidence/backups/logical_backup_20261120_154916.log)
+     Container sigtec_remed-sigtec-tools-run-1d35ba0e6901 Creating 
+     Container sigtec_remed-sigtec-tools-run-1d35ba0e6901 Created 
+    [2026-11-20 15:49:16-0600] pg_dump central (pg-central) -> logical/central/20261120T214916Z
+          | pg_dump: error: connection to server at "pg-central" (172.24.0.8), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+          | connection to server at "pg-central" (172.24.0.8), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+    [2026-11-20 15:49:16-0600]   FALLA: pg_dump terminó con error
+    [2026-11-20 15:49:16-0600]   ERROR respaldando central: no se publicó ningún respaldo
+    [2026-11-20 15:49:16-0600] RESULTADO: uno o más respaldos lógicos FALLARON
+    
+    [2026-11-20 15:49:17-0600] resultado: ERROR (código 1)
+    make: *** [backup-logical] Error 1
+    == /tmp/remed_make_p.log
+    [2026-11-20 15:49:17-0600] scripts/backup/physical_backup.sh central  (registro: evidence/backups/physical_backup_20261120_154917.log)
+     Container sigtec_remed-sigtec-tools-run-1a4bedd54816 Creating 
+     Container sigtec_remed-sigtec-tools-run-1a4bedd54816 Created 
+    [2026-11-20 15:49:17-0600] pg_basebackup central (pg-central) -> physical/central/20261120T214917Z/data
+          | pg_basebackup: error: connection to server at "pg-central" (172.24.0.8), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+          | connection to server at "pg-central" (172.24.0.8), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+    [2026-11-20 15:49:17-0600]   FALLA: pg_basebackup terminó con error
+    [2026-11-20 15:49:17-0600]   ERROR respaldando central: no se publicó ninguna copia
+    [2026-11-20 15:49:17-0600] RESULTADO: una o más copias físicas FALLARON
+    
+    [2026-11-20 15:49:17-0600] resultado: ERROR (código 1)
+    make: *** [backup-physical] Error 1
+    == /tmp/remed_make_b.log
+    [2026-11-20 15:49:17-0600] scripts/backup/logical_backup.sh central  (registro: evidence/backups/logical_backup_20261120_154917.log)
+     Container sigtec_remed-sigtec-tools-run-00882ae4a49f Creating 
+     Container sigtec_remed-sigtec-tools-run-00882ae4a49f Created 
+    [2026-11-20 15:49:17-0600] pg_dump central (pg-central) -> logical/central/20261120T214917Z
+          | pg_dump: error: connection to server at "pg-central" (172.24.0.8), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+          | connection to server at "pg-central" (172.24.0.8), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+    [2026-11-20 15:49:17-0600]   FALLA: pg_dump terminó con error
+    [2026-11-20 15:49:17-0600]   ERROR respaldando central: no se publicó ningún respaldo
+    [2026-11-20 15:49:17-0600] RESULTADO: uno o más respaldos lógicos FALLARON
+    
+    [2026-11-20 15:49:17-0600] resultado: ERROR (código 1)
+    make: *** [backup-logical] Error 1
+    == /tmp/remed_make_m.log
+     Container sigtec_remed-sigtec-tools-run-163b40784e4b Creating 
+     Container sigtec_remed-sigtec-tools-run-163b40784e4b Created 
+    [2026-11-20 15:49:19-0600] migrando central (pg-central)
+    psql:/opt/sigtec/sql/bootstrap/00_ops_migraciones.sql:8: NOTICE:  schema "ops" already exists, skipping
+    psql:/opt/sigtec/sql/bootstrap/00_ops_migraciones.sql:18: NOTICE:  relation "schema_migrations" already exists, skipping
+    psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+    [2026-11-20 15:49:19-0600]   central: 2 migraciones registradas; rol sigtec_backup sincronizado
+    == /tmp/remed_make_ok.log
+    [2026-11-20 15:49:19-0600] scripts/backup/logical_backup.sh central  (registro: evidence/backups/logical_backup_20261120_154919.log)
+     Container sigtec_remed-sigtec-tools-run-bb4f018960ab Creating 
+     Container sigtec_remed-sigtec-tools-run-bb4f018960ab Created 
+    [2026-11-20 15:49:19-0600] pg_dump central (pg-central) -> logical/central/20261120T214919Z
+    [2026-11-20 15:49:20-0600]   OK central: 8622 bytes, 23 entradas TOC, validado
+    [2026-11-20 15:49:20-0600] resultado: OK
+    [2026-11-20 15:49:20-0600] scripts/backup/physical_backup.sh central  (registro: evidence/backups/physical_backup_20261120_154920.log)
+     Container sigtec_remed-sigtec-tools-run-374e0a7e3a5c Creating 
+     Container sigtec_remed-sigtec-tools-run-374e0a7e3a5c Created 
+    [2026-11-20 15:49:20-0600] pg_basebackup central (pg-central) -> physical/central/20261120T214920Z/data
+    [2026-11-20 15:49:21-0600]   pg_verifybackup: backup successfully verified
+    [2026-11-20 15:49:21-0600]   OK central: 53 MiB, inicio 0/D000028 (file 00000001000000000000000D), verificado
+    [2026-11-20 15:49:21-0600] resultado: OK
+
+HOST_PATHS_RC=0

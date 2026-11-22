@@ -1,0 +1,14 @@
+### migrate cartago con duplicado presente
+[2026-11-20 15:10:48-0600] migrando cartago (pg-cartago)
+psql:/opt/sigtec/sql/bootstrap/00_ops_migraciones.sql:8: NOTICE:  schema "ops" already exists, skipping
+psql:/opt/sigtec/sql/bootstrap/00_ops_migraciones.sql:18: NOTICE:  relation "schema_migrations" already exists, skipping
+psql:/opt/sigtec/sql/migrations/campus/0103_registro_identificadores.sql:127: ERROR:  SIG-TEC 0103: 1 identificador(es) repetido(s) entre capas de local_cartago: 1000000043 en iluminacion+puntos_interes
+HINT:  La migración no modificó nada. Decida qué objeto conserva cada id (ver docs/BACKUP_RECOVERY.md, "Conflictos de identificadores"), resuélvalo y repita make migrate.
+CONTEXT:  PL/pgSQL function inline_code_block line 25 at RAISE
+
+rc=3
+### estado posterior
+registro_existe=false
+migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+disparadores_trg30=0
+funcion_secdef=true

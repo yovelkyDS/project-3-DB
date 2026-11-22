@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# SIG-TEC — entrypoint de la instancia de RECUPERACIÓN AISLADA (servicio pg-recovery).
+#
+# Si el volumen de datos de recuperación está vacío:
+#   1. copia el respaldo físico (pg_basebackup, formato plano) indicado;
+#   2. configura restore_command contra el archivo WAL (montado en solo lectura)
+#      del nodo de origen y el objetivo de recuperación;
+#   3. crea recovery.signal y arranca PostgreSQL, que reproduce el WAL hasta el
+#      objetivo y luego se promueve (nueva línea de tiempo).
+# Si el volumen ya contiene datos, simplemente arranca la instancia recuperada.
+#
+# Variables:
+#   RECOVERY_SOURCE_NODE   central|cartago|san_jose|san_carlos|alajuela|limon
+#   RECOVERY_BASEBACKUP    ruta del respaldo dentro de /backups (directorio con PG_VERSION)
+#   RECOVERY_TARGET_TIME   instante objetivo (timestamptz). Vacío => RECOVERY_TARGET_NAME / LSN / fin del WAL
+#   RECOVERY_TARGET_NAME   punto de restauración creado con pg_create_restore_point (opcional)
+#   RECOVERY_TARGET_LSN    LSN objetivo (opcional)
+#   RECOVERY_TARGET_INCLUSIVE  on|off (por defecto on)
+set -Eeuo pipefail
+
+PGDATA="${PGDATA:-/var/lib/postgresql/data}"
+log() { echo "sigtec-recovery: $*" >&2; }
+
+if [ "$(id -u)" = "0" ] && [ ! -s "$PGDATA/PG_VERSION" ]; then
+    : "${RECOVERY_SOURCE_NODE:?RECOVERY_SOURCE_NODE es obligatorio para la primera recuperación}"
+    : "${RECOVERY_BASEBACKUP:?RECOVERY_BASEBACKUP es obligatorio para la primera recuperación}"
+    case "$RECOVERY_SOURCE_NODE" in
+        central|cartago|san_jose|san_carlos|alajuela|limon) ;;
+        *) log "nodo de origen inválido: $RECOVERY_SOURCE_NODE"; exit 64 ;;
+    esac
+    archive="/archives/${RECOVERY_SOURCE_NODE}"
+    [ -s "$RECOVERY_BASEBACKUP/PG_VERSION" ] || { log "no es un respaldo físico válido: $RECOVERY_BASEBACKUP"; exit 65; }
+    [ -d "$archive" ] || { log "no existe el archivo WAL $archive"; exit 66; }
+
+    log "restaurando $RECOVERY_BASEBACKUP -> $PGDATA"
+    install -d -o postgres -g postgres -m 0700 "$PGDATA"
+    cp -a "$RECOVERY_BASEBACKUP"/. "$PGDATA"/
+    # El manifiesto pertenece al respaldo, no al directorio de datos en servicio.
+    rm -f "$PGDATA/backup_manifest"
+    rm -f "$PGDATA/postmaster.pid"
+
+    {
+        echo ""
+        echo "# --- SIG-TEC: recuperación PITR ($(date -u +%Y-%m-%dT%H:%M:%SZ)) ---"
+        echo "restore_command = 'cp ${archive}/%f \"%p\"'"
+        echo "recovery_target_timeline = 'current'"
+        if [ -n "${RECOVERY_TARGET_TIME:-}" ]; then
+            echo "recovery_target_time = '${RECOVERY_TARGET_TIME}'"
+        elif [ -n "${RECOVERY_TARGET_NAME:-}" ]; then
+            echo "recovery_target_name = '${RECOVERY_TARGET_NAME}'"
+        elif [ -n "${RECOVERY_TARGET_LSN:-}" ]; then
+            echo "recovery_target_lsn = '${RECOVERY_TARGET_LSN}'"
+        fi
+        echo "recovery_target_inclusive = ${RECOVERY_TARGET_INCLUSIVE:-on}"
+        echo "recovery_target_action = 'promote'"
+    } >> "$PGDATA/postgresql.auto.conf"
+    touch "$PGDATA/recovery.signal"
+
+    cat > "$PGDATA/SIGTEC_RECOVERY_INFO" <<EOF
+source_node=${RECOVERY_SOURCE_NODE}
+base_backup=${RECOVERY_BASEBACKUP}
+wal_archive=${archive}
+target_time=${RECOVERY_TARGET_TIME:-}
+target_name=${RECOVERY_TARGET_NAME:-}
+target_lsn=${RECOVERY_TARGET_LSN:-}
+prepared_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+EOF
+    chown -R postgres:postgres "$PGDATA"
+    chmod 0700 "$PGDATA"
+    log "recovery.signal creado; PostgreSQL reproducirá el WAL hasta el objetivo"
+fi
+
+exec sigtec-entrypoint "$@"

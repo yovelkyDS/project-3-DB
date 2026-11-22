@@ -1,0 +1,100 @@
+[
+  {
+    "path": "scripts/check_prereqs.sh",
+    "original_sha256": "62ed6cf63741be5b7270e26d7df1f278726af3e8368dc440ff65f77749fbe473",
+    "current_sha256": "93b0cb16f7a5a6de0a8d8fba2f7a3c8ee2454706b638b533168668a93f0309d1"
+  },
+  {
+    "path": "scripts/recovery/pitr_steps.sh",
+    "original_sha256": "5f0b6a3e75df89286221fdcb68883eb6d76caa27836dac420370d3b689124ecd",
+    "current_sha256": "85298eef2bb949e987e093814292dad07b94c6f423c2d98581a522a1b3da3fca"
+  },
+  {
+    "path": "scripts/recovery/pitr_demo.sh",
+    "original_sha256": "ac38e7ca1d02d9e02218836dbd6bbf0ad05787b18e08a8bf0bb18785aa6b01b3",
+    "current_sha256": "ad7a4c6d5e29753d12d20ae42b0ae5f4e479e654573e40d160923bbbc82cb2b3"
+  },
+  {
+    "path": "scripts/lib/db.sh",
+    "original_sha256": "16882331ff256b81a19f981e3eac5e16beabd45d6716718de9df4bab992b0ec2",
+    "current_sha256": "de23cc105c2b5374c41b8a5a594f1a1c775bd6e449b00e70bfe8e234073807cb"
+  },
+  {
+    "path": "scripts/lib/backup.sh",
+    "original_sha256": "3d34447c07f8b94e6c1d6b7eee9ed67aca1b201c9a066f4a63b3ddc268002f4a",
+    "current_sha256": "159ab830aeefdd214042795ba496967ae8034ade06ded63125fff03e059049b0"
+  },
+  {
+    "path": "scripts/lib/host.sh",
+    "original_sha256": "088832094b396340083678e02d3dbb93e91d3e0e0cefdfd9b9fa445d914b1164",
+    "current_sha256": "d0afa249b062194a12e719d5fc300996e0d7e57addda487902cc67cf0c889cea"
+  },
+  {
+    "path": "scripts/db/verify.sh",
+    "original_sha256": "678fa1bb02c73e673a617e0774deabb0b70f56c99608bafed32ef37f7d496fa7",
+    "current_sha256": "c69086c6790cfc39c59e042a952d27794da99da76f273746a0dc3de14da40828"
+  },
+  {
+    "path": "scripts/backup/physical_backup.sh",
+    "original_sha256": "c7b8c9595bf8c68c3c8101fc4f5bad814c712bcc2dcca5805f1768e014c11b47",
+    "current_sha256": "9ee605ed3594827635b9a16147c0504ec8135a6952c33cf766109fa3eca4e1bf"
+  },
+  {
+    "path": "scripts/backup/physical_restore_test.sh",
+    "original_sha256": "7dc647d16a7d66a86f1db916125f97889c50857456643fe8956e2e6ee17dc1cd",
+    "current_sha256": "58a71b746dbe9b2eb49f505881891f0d30b69d4cb9d9efdea0c397c7b93c6684"
+  },
+  {
+    "path": "scripts/backup/logical_backup.sh",
+    "original_sha256": "2c4cc6d5e8f435416dbf5fccc0efad2d6a9dde7754dd8a3b9aef3c87154bcf00",
+    "current_sha256": "e0b180df5b5b69efd7806a4912ec0a9ee8981ea4d746f4763511b5ccdde547d9"
+  },
+  {
+    "path": "scripts/backup/logical_restore_test.sh",
+    "original_sha256": "aba7a97ee4e3cddfa1055c369c77153e4a12f76843ca2e71fbcb0fd8c435f917",
+    "current_sha256": "216b0637a743a6579a0a8bbfe50bfeb958b61b794a3b61dc284993f3f5457ac8"
+  },
+  {
+    "path": "sql/checks/verificar_registro_ids.sql",
+    "original_sha256": null,
+    "current_sha256": "8f329782939449877d1a0062ad62fa67422b1d25d62f404c3b141cf9ca71c60c"
+  },
+  {
+    "path": "sql/templates/ajustar_secuencia_tras_recuperacion.sql",
+    "original_sha256": "81a4fb320b1bd8c076f1ab7ea98172feaa380cfd50be402c95f3baf8515f55c7",
+    "current_sha256": "40bc54700a288ab2bdf6da4fe86562623dc57aea0fd56e30078c069e3cdcc762"
+  },
+  {
+    "path": "sql/migrations/campus/0103_registro_identificadores.sql",
+    "original_sha256": null,
+    "current_sha256": "f8b078c4596fce3f0c10b2b62539bb7aa49425c8e5e9a34ab59aed8bedb99978"
+  },
+  {
+    "path": "tests/run_tests.sh",
+    "original_sha256": "166ff6a8fe3e4d1ab6236d4766f7511b060f66fae29b5657aa7b4bfdcbe6a6d0",
+    "current_sha256": "17ef6bdd4a927f4a71497408f89028c296e5d326a9fec3c3c3ebb7ac3aeb32c2"
+  },
+  {
+    "path": "tests/container/run_sql_tests.sh",
+    "original_sha256": "9dece0a9511bf8d086d7e51d85c5bcf72be6b168462ce2517fb84a3f976e13f5",
+    "current_sha256": "9af83162a513663e473351d56f7d775c64a9e2b91f2d0fa2f3f8fbc54c2e8ef3"
+  },
+  {
+    "path": "tests/container/test_ids_aislado.sh",
+    "original_sha256": null,
+    "current_sha256": "916a3e41fd960b00b14781b1233fdbcd7e9cb6f2389117e1776cdd05e9b4e1ad"
+  },
+  {
+    "path": "tests/container/test_backup_failures.sh",
+    "original_sha256": null,
+    "current_sha256": "05e719a33a43b4d2b901dcd6fe4c43f5981bd9aecf5d10916c6d0ae559a637bc"
+  },
+  {
+    "path": "tests/sql/40_registro_ids.sql",
+    "original_sha256": null,
+    "current_sha256": "d1d6e439a752e069ec8a4d2285d97c06c4c99d750c018466799671ff3dac56b3"
+  },
+  {
+    "path": "Makefile"
+  }
+]

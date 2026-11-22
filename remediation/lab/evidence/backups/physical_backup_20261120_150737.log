@@ -1,0 +1,11 @@
+[2026-11-20 15:07:37-0600] scripts/backup/physical_backup.sh central  (registro: evidence/backups/physical_backup_20261120_150737.log)
+ Container sigtec_remed-sigtec-tools-run-ba84bcda7c54 Creating 
+ Container sigtec_remed-sigtec-tools-run-ba84bcda7c54 Created 
+[2026-11-20 15:07:38-0600] pg_basebackup central (pg-central) -> physical/central/20261120T210738Z/data
+      | pg_basebackup: error: connection to server at "pg-central" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+      | connection to server at "pg-central" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+[2026-11-20 15:07:38-0600]   FALLA: pg_basebackup terminó con error
+[2026-11-20 15:07:38-0600]   ERROR respaldando central: no se publicó ninguna copia
+[2026-11-20 15:07:38-0600] RESULTADO: una o más copias físicas FALLARON
+
+[2026-11-20 15:07:38-0600] resultado: ERROR (código 1)

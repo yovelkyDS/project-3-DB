@@ -1,0 +1,51 @@
+
+[2026-11-22 12:48:35-0600] == 0. precondiciones (nodo san_carlos, servicio pg-san-carlos, corrida 20261122T184835Z) ==
+
+[2026-11-22 12:48:36-0600] == 1. respaldo físico base ==
+[2026-11-22 12:48:38-0600] pg_basebackup san_carlos (pg-san-carlos) -> physical/san_carlos/20261122T184838Z/data
+[2026-11-22 12:48:39-0600]   pg_verifybackup: backup successfully verified
+[2026-11-22 12:48:39-0600]   OK san_carlos: 55 MiB, inicio 0/5000028 (file 000000010000000000000005), verificado
+[2026-11-22 12:48:43-0600] copia base: /backups/physical/san_carlos/20261122T184838Z
+inicio=2026-11-22 12:48:38 CST
+wal_inicio=0/5000028 (file 000000010000000000000005)
+verificacion=backup successfully verified
+conteos=edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+
+[2026-11-22 12:48:43-0600] == 2. cambio A ==
+[2026-11-22 12:48:46-0600] A: puntos_interes.id=3000000060 nombre='PITR-A 20261122T184835Z' confirmado en 2026-11-22 18:48:46.389054+00
+
+[2026-11-22 12:48:46-0600] == 3. instante objetivo ==
+[2026-11-22 12:48:50-0600] OBJETIVO: 2026-11-22 18:48:50.176612+00 (LSN 0/6002288)
+
+[2026-11-22 12:48:50-0600] == 4. cambio B ==
+[2026-11-22 12:48:54-0600] B: puntos_interes.id=3000000061 nombre='PITR-B 20261122T184835Z' + actualización de 3000000060, confirmado en 2026-11-22 18:48:54.023080+00
+
+[2026-11-22 12:48:54-0600] == 5. disponibilidad del WAL ==
+[2026-11-22 12:48:56-0600] segmento con A, objetivo y B archivado: 000000010000000000000006
+-rw------- 1 postgres postgres 16777216 Nov 22 12:48 000000010000000000000004
+-rw------- 1 postgres postgres 16777216 Nov 22 12:48 000000010000000000000005
+-rw------- 1 postgres postgres      347 Nov 22 12:48 000000010000000000000005.00000028.backup
+-rw------- 1 postgres postgres 16777216 Nov 22 12:48 000000010000000000000006
+
+[2026-11-22 12:48:57-0600] == 6. falla simulada ==
+ Container sigtec-pg-san-carlos-1 Killing 
+ Container sigtec-pg-san-carlos-1 Killed 
+[2026-11-22 12:49:01-0600] estado de pg-san-carlos: unhealthy
+NAME                     IMAGE                        COMMAND                  SERVICE         CREATED         STATUS                       PORTS
+sigtec-pg-san-carlos-1   sigtec/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-san-carlos   8 minutes ago   Exited (137) 3 seconds ago   
+
+[2026-11-22 12:49:01-0600] == 7. recuperación PITR en instancia aislada pg-recovery ==
+ Volume sigtec_pgdata_recovery Creating 
+ Volume sigtec_pgdata_recovery Creating 
+ Volume sigtec_walarchive_recovery Creating 
+ Volume sigtec_walarchive_recovery Creating 
+ Volume sigtec_pgdata_recovery Created 
+ Volume sigtec_pgdata_recovery Created 
+ Volume sigtec_walarchive_recovery Created 
+ Volume sigtec_walarchive_recovery Created 
+ Container sigtec-pg-recovery-1 Creating 
+ Container sigtec-pg-recovery-1 Created 
+ Container sigtec-pg-recovery-1 Starting 
+ Container sigtec-pg-recovery-1 Started 
+promovida
+scripts/recovery/pitr_demo.sh: line 121: syntax error near unexpected token `('

@@ -1,0 +1,107 @@
+{
+  "sigtec/central": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710306676152639534\n1\nf\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n",
+    "stderr": ""
+  },
+  "sigtec/cartago": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710306699658305582\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n41|41|78e6f7ac58af88c05a91fa81e9885138\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec/san_jose": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710306700276629550\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n41|41|416aa3c34b6c63e7fdf1434d7c8dbcf7\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec/san_carlos": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710306699997868078\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n43|43|06548d5ccd3388f18926f86ae60bc571\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec/alajuela": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710306699801866286\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n41|41|13e44435465a09af2ca58588c02e04ea\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec/limon": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710306700802437167\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n41|41|b6440db450e89aaf6636a8c12582b512\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec/recovery": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710306699997868078\n2\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n42|42|b416efb46a624faacb25b3d1b3f158e2\n16|0\n\n",
+    "stderr": ""
+  },
+  "sigtec_remed/central": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710367123454042158\n1\nf\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n",
+    "stderr": ""
+  },
+  "sigtec_remed/cartago": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710367147905540141\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n225|225|63d67d4720dd627d14be9d86c46b5c9c\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec_remed/san_jose": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710367147443257390\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n41|41|416aa3c34b6c63e7fdf1434d7c8dbcf7\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec_remed/san_carlos": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710367148061052974\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n45|45|5a221827d1b9499a638ab1016619fc57\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec_remed/alajuela": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710367147784847406\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n41|41|13e44435465a09af2ca58588c02e04ea\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec_remed/limon": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710367147766120494\n1\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n41|41|b6440db450e89aaf6636a8c12582b512\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "sigtec_remed/recovery": {
+    "rc": 0,
+    "stdout": "PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit\nPOSTGIS=\"3.5.4 2fc837e\" [EXTENSION] PGSQL=\"170\" GEOS=\"3.15.0-CAPI-1.21.0\" PROJ=\"9.9.0 NETWORK_ENABLED=OFF URL_ENDPOINT=https://cdn.proj.org USER_WRITABLE_DIRECTORY=/var/lib/postgresql/.local/share/proj DATABASE_PATH=/usr/share/proj/proj.db\" (compiled against PROJ 9.9.0) LIBXML=\"2.9.14\" LIBJSON=\"0.18\"\n7710367148061052974\n2\nf\ncampus/0101_capas_locales\ncampus/0102_identificadores\ncampus/0103_registro_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nlogical|0|16\n42|42|e036db8370a0ca7dd6364a25f325dfa2\n24|0\nops.identificadores_globales\n",
+    "stderr": ""
+  },
+  "original_global_ids": {
+    "objects": 207,
+    "distinct": 207,
+    "duplicates": 0
+  },
+  "docker": {
+    "rc": 0,
+    "stdout": "sigtec_remed-pg-recovery-1\tsigtec/postgis:17.12-3.5.4\tUp About a minute (healthy)\t127.0.0.1:57436->5432/tcp\nsigtec_remed-pg-cartago-1\tsigtec/postgis:17.12-3.5.4\tUp 5 minutes (healthy)\t127.0.0.1:57431->5432/tcp\nsigtec_remed-pg-alajuela-1\tsigtec/postgis:17.12-3.5.4\tUp 5 minutes (healthy)\t127.0.0.1:57434->5432/tcp\nsigtec_remed-pg-san-jose-1\tsigtec/postgis:17.12-3.5.4\tUp 5 minutes (healthy)\t127.0.0.1:57432->5432/tcp\nsigtec_remed-pg-limon-1\tsigtec/postgis:17.12-3.5.4\tUp 5 minutes (healthy)\t127.0.0.1:57435->5432/tcp\nsigtec_remed-pg-san-carlos-1\tsigtec/postgis:17.12-3.5.4\tUp 2 minutes (healthy)\t127.0.0.1:57433->5432/tcp\nsigtec_remed-pg-central-1\tsigtec/postgis:17.12-3.5.4\tUp 5 minutes (healthy)\t127.0.0.1:57430->5432/tcp\nsigtec-pg-recovery-1\tcc0beda012c0\tUp 4 hours (healthy)\t127.0.0.1:55436->5432/tcp\nsigtec-pg-alajuela-1\tcc0beda012c0\tUp 20 minutes (healthy)\t127.0.0.1:55434->5432/tcp\nsigtec-pg-cartago-1\tcc0beda012c0\tUp 20 minutes (healthy)\t127.0.0.1:55431->5432/tcp\nsigtec-pg-limon-1\tcc0beda012c0\tUp 20 minutes (healthy)\t127.0.0.1:55435->5432/tcp\nsigtec-pg-san-carlos-1\tcc0beda012c0\tUp 20 minutes (healthy)\t127.0.0.1:55433->5432/tcp\nsigtec-pg-san-jose-1\tcc0beda012c0\tUp 20 minutes (healthy)\t127.0.0.1:55432->5432/tcp\nsigtec-pg-central-1\tcc0beda012c0\tUp 20 minutes (healthy)\t127.0.0.1:55430->5432/tcp\n",
+    "stderr": ""
+  },
+  "volumes": {
+    "rc": 0,
+    "stdout": "3ed76a877142b162f74c72b50c3b4f9465b4ef20cbc6e8ec6a572f781bbb3c47\n9c2173aef488ee8f241266ed621872e9735e36da36d3118c615fb7e9ff569535\n28cfcb62a28b7d136969cc4a8949605c3981b95ad7a5d9e7b44f7b17ee614b64\n39c0580ccb7930b46863a09047dc1060f0d0640357a6a9ccd6bb292d09b9c712\n46eca4e34a51e234ed75cea363562d27ad0459194d8a1dd8fecd7c595f998c4a\n78ffb402f1c2a72628bd9bb84d08fad49ac2da6d7ff01d72debd670018c1f4ff\n394d5aefe8284fcdd3cdb164782e4d555bfe316c4d75729b9aebc0f1f5fd3bde\n0898ef927725a930ec3ec4ad750568b509b22c1ac9d5e938f3482de9b804f4a5\n9758c0db2f8d4c190fb0c864dbab34cf1db2d3c9a2ccbde7c33ed3d38471b3fd\n62158d5db720aad0b781a863ccf1f149bb18839e66283caa2b9e7336b2a86914\nb624160c023cd1c9ff699a8ccf7277b7bdfb3a327f293eb2e972fb74ee89de31\nbases2-repro-202610281642_mongo_data\nbases2-repro-202610281642_postgres_data\nbases2-repro-202610281642_sqlserver_data\nbases2_postgres_data\nbases2_sqlserver_data\ndd1b891ebc109551b4fa8d0532b4db70a0f35b386dba72aa2878eabfc573db2b\neb87969179392275bd32b471c645b41854e609df439700f75556122841b2c059\nestudios-medicos-reportes_datos\nlogitrans_lab_bi_data\nlogitrans_lab_central_data\nlogitrans_lab_regional_data\nn8n_data\npostgres_data\nsigtec_audit_20261120_backups\nsigtec_audit_20261120_pgdata_alajuela\nsigtec_audit_20261120_pgdata_cartago\nsigtec_audit_20261120_pgdata_central\nsigtec_audit_20261120_pgdata_limon\nsigtec_audit_20261120_pgdata_recovery\nsigtec_audit_20261120_pgdata_san_carlos\nsigtec_audit_20261120_pgdata_san_jose\nsigtec_audit_20261120_walarchive_alajuela\nsigtec_audit_20261120_walarchive_cartago\nsigtec_audit_20261120_walarchive_central\nsigtec_audit_20261120_walarchive_limon\nsigtec_audit_20261120_walarchive_recovery\nsigtec_audit_20261120_walarchive_san_carlos\nsigtec_audit_20261120_walarchive_san_jose\nsigtec_backups\nsigtec_pgdata_alajuela\nsigtec_pgdata_cartago\nsigtec_pgdata_central\nsigtec_pgdata_limon\nsigtec_pgdata_recovery\nsigtec_pgdata_san_carlos\nsigtec_pgdata_san_jose\nsigtec_reaudit_20261120_pgdata\nsigtec_reaudit_20261120_wal\nsigtec_remed_backups\nsigtec_remed_pgdata_alajuela\nsigtec_remed_pgdata_cartago\nsigtec_remed_pgdata_central\nsigtec_remed_pgdata_limon\nsigtec_remed_pgdata_recovery\nsigtec_remed_pgdata_san_carlos\nsigtec_remed_pgdata_san_jose\nsigtec_remed_walarchive_alajuela\nsigtec_remed_walarchive_cartago\nsigtec_remed_walarchive_central\nsigtec_remed_walarchive_limon\nsigtec_remed_walarchive_recovery\nsigtec_remed_walarchive_san_carlos\nsigtec_remed_walarchive_san_jose\nsigtec_walarchive_alajuela\nsigtec_walarchive_cartago\nsigtec_walarchive_central\nsigtec_walarchive_limon\nsigtec_walarchive_recovery\nsigtec_walarchive_san_carlos\nsigtec_walarchive_san_jose\n",
+    "stderr": ""
+  },
+  "images": {
+    "rc": 0,
+    "stdout": "sigtec-audit/postgis:17.12-3.5.4\tsha256:bd16f08b29d56bcd31724c5ed994371616fce8b8f361d6be370bbfa23f6925d8\nsigtec-remed/postgis:17.12-3.5.4\tsha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c\nsigtec/postgis:17.12-3.5.4\tsha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c\npostgres:17.12-bookworm\tsha256:837bed18782820fe967067cb5328b02b0d9992c1be9a37ee0c9c492cfc03af3b\nredis:8\tsha256:2c2dff791878316e3b083188be0d578423b24813cdda5de0e80ea4f7b3e6bfd6\npostgres:17\tsha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675\n",
+    "stderr": ""
+  },
+  "running_image_ids": {
+    "rc": 0,
+    "stdout": "/sigtec-pg-central-1 sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af\n/sigtec-pg-cartago-1 sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af\n/sigtec-pg-san-jose-1 sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af\n/sigtec-pg-san-carlos-1 sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af\n/sigtec-pg-alajuela-1 sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af\n/sigtec-pg-limon-1 sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af\n/sigtec_remed-pg-central-1 sha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c\n/sigtec_remed-pg-cartago-1 sha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c\n/sigtec_remed-pg-san-jose-1 sha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c\n/sigtec_remed-pg-san-carlos-1 sha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c\n/sigtec_remed-pg-alajuela-1 sha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c\n/sigtec_remed-pg-limon-1 sha256:fd04b3df6c21a4f2d7c34afb2f8280bacf0035dd031c754eb1caae90e1ed455c\n",
+    "stderr": ""
+  },
+  "sigtec/binaries": {
+    "rc": 0,
+    "stdout": "c55241d686a6c21644906cd86a99d26ad0f7ccff774bfb525418846ba69a24ca  /usr/lib/postgresql/17/bin/postgres\nd84030d9835e575d35261d903873d87c87694e46062c0604b40f86f17983b316  /usr/lib/postgresql/17/lib/postgis-3.so\nlibgeos-c1t64:arm64\t3.15.0-2.pgdg13+1\nlibproj25:arm64\t9.9.0-1.pgdg13+1\npostgresql-17\t17.12-1.pgdg13+1\n",
+    "stderr": ""
+  },
+  "sigtec_remed/binaries": {
+    "rc": 0,
+    "stdout": "c55241d686a6c21644906cd86a99d26ad0f7ccff774bfb525418846ba69a24ca  /usr/lib/postgresql/17/bin/postgres\n6350f30a3842a2d369dfd87d19f9c18d1caa45fa94d123a0c1fef04637b93af3  /usr/lib/postgresql/17/lib/postgis-3.so\nlibgeos-c1t64:arm64\t3.15.0-2.pgdg13+1\nlibproj25:arm64\t9.9.0-1.pgdg13+1\npostgresql-17\t17.12-1.pgdg13+1\n",
+    "stderr": ""
+  }
+}

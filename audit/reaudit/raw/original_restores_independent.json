@@ -1,0 +1,11 @@
+[
+  {
+    "name": "original_backups_restored_with_current_image",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "logical": 6,
+      "physical": 6
+    }
+  }
+]

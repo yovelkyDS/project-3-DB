@@ -1,0 +1,212 @@
+
+--- PÁGINA 1 ---
+Integrante Bloque principal Responsabilidad en el cierre 
+1 
+Arquitectura, modelo geográfico y 
+despliegue de los cinco campus y el 
+nodo central 
+Liderar respaldos y recuperación. Entregar la 
+guía de instalación y restauración. 
+2 Replicación lógica, consolidación, vistas y control de edición en PostgreSQL Liderar la prueba de transacción distribuida y verificar la reincorporación del nodo restaurado. 
+3 Autenticación central, complemento PyQGIS y estilos institucionales Verificar el sistema recuperado desde QGIS, preparar el manual de usuario y ensamblar el video. 
+ 
+Integrante 1 · Arquitectura, PostGIS y recuperación 
+1. Levantar seis nodos. Preparar una instancia PostgreSQL con PostGIS para cada campus: 
+Cartago, San José, San Carlos, Alajuela y Limón. Levantar el sexto nodo para autenticación, 
+coordinación y consolidación. Documentar red, puertos, bases, configuración y orden de 
+arranque. Dibujar la topología mostrando dónde se escribe, cómo circulan las copias y a 
+qué nodo se conecta QGIS. 
+2. Crear el modelo común y los datos de prueba. Implementar las ocho capas en los cinco 
+campus. Cada objeto debe tener un identificador global estable, campus_id y una 
+geometría con el tipo y el SRID acordados. Documentar el sistema de referencia 
+institucional y transformar los datos de entrada cuando corresponda. Cargar ejemplos 
+válidos de cada capa para que los otros integrantes puedan probar desde el inicio. 
+Capa Geometría Atributos o ejemplos del enunciado 
+Edificios Polygon Nombre, código, área y pisos 
+Carreteras LineString Nombre, tipo y superficie 
+Aceras LineString Material, ancho y condición 
+Parqueos Polygon Capacidad, tipo y disponibilidad 
+Zonas verdes Polygon Área y tipo de vegetación 
+Puntos de interés Point Cajeros, laboratorios y sodas 
+Iluminación Point Código, potencia y estado 
+Accesibilidad LineString Rampas y pasos accesibles 
+
+--- PÁGINA 2 ---
+3. Preparar los respaldos de cada nodo. Dejar un procedimiento reproducible de respaldo y 
+restauración lógica con pg_dump, respaldo físico con pg_basebackup, archivado WAL y 
+recuperación a un instante específico (PITR). Definir cómo se ejecuta y verifica en los cinco 
+campus y en el central. 
+4. Simular una falla y recuperar un nodo. Ejecutar la restauración en un entorno aislado. 
+Para PITR, registrar el instante objetivo y demostrar con dos cambios identificables que el 
+dato anterior se recuperó y que el cambio posterior quedó fuera. Entregar el nodo 
+recuperado al integrante 2 para reincorporarlo y al 3 para comprobarlo desde QGIS. 
+Entrega y criterio de aceptación. Diagrama, diccionario de datos, scripts de arranque y creación, 
+datos de prueba y guía de respaldo y recuperación. El integrante 2 debe poder desplegar los seis 
+nodos siguiendo las instrucciones y comprobar que las ocho capas y los datos de prueba están 
+disponibles. 
+Integrante 2 · Replicación, vistas y transacciones 
+1. Implementar la replicación en los dos sentidos previstos. En el primer nivel, cada campus 
+publica sus tablas originales hacia esquemas independientes del central. En el segundo, el 
+central consolida los cinco orígenes en tablas de consulta y las distribuye a los cinco 
+campus mediante publicaciones y suscripciones lógicas. Mantener originales y copias en 
+tablas separadas. Crear las tablas destino con nombres compatibles y definir la identidad 
+de réplica para que se propaguen actualizaciones y eliminaciones. postgresql.org 
+2. Crear ocho vistas de consulta y edición por nodo. Exponer a QGIS una vista por capa, con 
+clave única estable, columna geométrica y campus_id. Una implementación propuesta 
+combina los originales locales con las copias de los otros cuatro campus. Así, cada objeto 
+aparece una sola vez y el usuario puede ver su edición local mientras se propaga. Entregar 
+al integrante 3 los nombres de las vistas, las columnas y las credenciales de prueba. 
+3. Implementar INSTEAD OF para altas, cambios y bajas. Determinar el campus permitido a 
+partir de la identidad autenticada en PostgreSQL. En INSERT, asignar o validar el campus. 
+En UPDATE y DELETE, comprobar el propietario del registro existente. Impedir que una 
+actualización cambie el dueño del objeto y limitar la escritura a las tablas originales locales 
+a través de las vistas. Con el integrante 3, probar desde QGIS las tres operaciones propias y 
+los tres intentos equivalentes sobre datos ajenos. 
+4. Demostrar la transacción distribuida. El rubro aparece en la evaluación y el enunciado 
+deja abierto el escenario. Confirmen su alcance con el docente desde el primer día. La 
+propuesta es probar una operación autorizada entre un campus y el central, con un caso 
+de confirmación en ambos y otro de reversión completa ante una falla. Si implementan 
+confirmación en dos fases, incluyan un coordinador que registre la decisión y resuelva las 
+transacciones preparadas pendientes tras una interrupción. postgresql.org 
+5. Verificar propagación y reincorporación. Probar una inserción, una actualización y una 
+eliminación. Para cada operación, registrar el resultado en el campus dueño, el central y 
+los otros cuatro campus. Coordinar también la distribución de layer_styles con el 
+
+--- PÁGINA 3 ---
+integrante 3. Tras la falla simulada, verificar la recuperación de ambas rutas y comparar 
+filas por identificador para detectar pérdidas o duplicados. 
+Entrega y criterio de aceptación. Scripts de publicaciones, suscripciones, consolidación, vistas, 
+disparadores, permisos y pruebas. Otra persona debe poder reproducir el recorrido de un cambio 
+desde el campus dueño hasta las copias de consulta y comprobar que los intentos de edición ajena 
+fueron rechazados. 
+Integrante 3 · Autenticación, complemento PyQGIS y estilos 
+1. Implementar el inicio de sesión. Crear la configuración de autenticación central y una 
+cuenta de prueba por campus. Desarrollar el complemento SIG-TEC en Python con PyQGIS. 
+El formulario debe incluir usuario, contraseña y botón Ingresar. El central valida la 
+identidad, determina el campus y el complemento abre la conexión a ese nodo con los 
+permisos correspondientes. Probar las cinco cuentas, una contraseña incorrecta y el caso 
+de un nodo inaccesible. 
+2. Cargar automáticamente las ocho capas. Al ingresar, añadir al proyecto actual de QGIS las 
+ocho vistas del nodo correspondiente. Configurar nombre, clave, geometría y SRID. 
+Verificar que las capas se dibujen, que incluyan objetos de todos los campus y que un 
+nuevo inicio de sesión evite duplicarlas. 
+3. Aplicar los estilos institucionales. Definir una simbología por capa, guardarla en 
+layer_styles en el central y coordinar su distribución con el integrante 2. Verificar que las 
+vistas queden vinculadas a su estilo por defecto. Abrir la misma capa con cuentas de dos 
+campus y comprobar que se vea igual. Mostrar que un cambio de estilo se distribuye. El 
+enunciado plantea el versionado de estilos como opcional. QGIS Documentation 
+documentation 
+4. Probar el flujo completo desde QGIS. Crear, modificar y eliminar un objeto propio. Repetir 
+los intentos para un campus ajeno y comprobar en PostgreSQL que sus datos quedaron 
+intactos. Después de restaurar y reincorporar el nodo, volver a iniciar sesión, cargar las 
+capas con sus estilos y realizar una edición permitida. 
+5. Preparar el manual y montar el video. Documentar instalación, configuración, inicio de 
+sesión, consulta, edición y mensajes de error. Recibir los segmentos de los otros 
+integrantes, unirlos y comprobar que se distingan los resultados en pantalla. 
+Entrega y criterio de aceptación. Complemento instalable, configuración de ejemplo, scripts de 
+autenticación y estilos, manual y evidencias. Con un perfil limpio de QGIS, otro integrante debe 
+poder instalar el complemento, autenticarse y cargar las ocho capas siguiendo el manual. 
+SIG-TEC · Contrato técnico v1.0 
+Este contrato fija los valores que usarán los tres integrantes en los scripts SQL, la configuración de 
+los nodos y el complemento de QGIS. Las versiones, los puertos, el SRID y el formato de 
+identificadores son decisiones propuestas para el proyecto. El catálogo conserva los identificadores 
+que el enunciado ya usa para Cartago, San Carlos y Alajuela. Enunciado de SIG-TEC 
+
+--- PÁGINA 4 ---
+1. Versiones y conexiones 
+Componente Versión acordada Dónde se usa 
+PostgreSQL 17.12 Los seis nodos 
+PostGIS 3.5.4 En la base sigtec de los seis nodos 
+QGIS Desktop 3.44.15 LTR En los equipos que desarrollan y prueban el complemento 
+Python y 
+PyQGIS 
+Los incluidos en QGIS 
+3.44.15 En el complemento sigtec 
+PostGIS 3.5 es compatible con PostgreSQL 17. QGIS publica la versión 3.44.15 como instalación LTR. 
+Registren el resultado de SELECT version(), postgis_full_version(); en el entorno compartido para 
+comprobar qué quedó instalado. postgresql.org 
+campus_id Código Nombre en QGIS Host interno propuesto Puerto desde la PC 
+— central Nodo central pg-central 55430 
+1 cartago Campus Tecnológico Central, Cartago pg-cartago 55431 
+2 san_jose Campus Tecnológico Local San José pg-san-jose 55432 
+3 san_carlos Campus Tecnológico Local San Carlos pg-san-carlos 55433 
+4 alajuela Campus Tecnológico Local Alajuela pg-alajuela 55434 
+5 limon Campus Tecnológico Local Limón pg-limon 55435 
+• Base de datos: sigtec en los seis nodos. El central carece de campus_id porque cumple 
+funciones de autenticación y coordinación. 
+• Si usan Docker Compose: entre contenedores, usen el host interno de la tabla y el puerto 
+5432. Desde QGIS, usen 127.0.0.1 y el puerto publicado cuando los nodos estén en la 
+misma PC. Si los nodos están en otra máquina, configuren su dirección accesible desde 
+QGIS. 
+• En el complemento: el usuario ingresa sus credenciales. El servidor central devuelve su 
+campus activo y el complemento resuelve el host y puerto según la configuración. Por 
+ejemplo, qgis_san_carlos se autentica en 55430 y carga sus capas desde 55433. 
+
+--- PÁGINA 5 ---
+2. Esquemas y vistas 
+Esquema Contenido Ubicación 
+auth Catálogo campus y asociación usuario_campus Central 
+local_cartago, local_san_jose, 
+local_san_carlos, local_alajuela, 
+local_limon 
+Tablas originales en cada campus y su 
+copia con el mismo nombre calificado en el 
+central 
+Campus dueño 
+y central 
+global Tablas consolidadas que el central distribuye mediante replicación lógica Central y cinco campus 
+qgis Vistas que consume el complemento Cinco campus 
+Mantengan el mismo nombre calificado para cada tabla publicada y su destino. PostgreSQL utiliza 
+el esquema y el nombre de tabla para hacer esa correspondencia. www.postgresql.org 
+Vista en PostgreSQL Nombre visible en QGIS Tipo de geom 
+qgis.v_edificios Edificios geometry(Polygon,5367) 
+qgis.v_carreteras Carreteras geometry(LineString,5367) 
+qgis.v_aceras Aceras geometry(LineString,5367) 
+qgis.v_parqueos Parqueos geometry(Polygon,5367) 
+qgis.v_zonas_verdes Zonas verdes geometry(Polygon,5367) 
+qgis.v_puntos_interes Puntos de interés geometry(Point,5367) 
+qgis.v_iluminacion Iluminación geometry(Point,5367) 
+qgis.v_accesibilidad Accesibilidad geometry(LineString,5367) 
+Columnas comunes: id bigint, campus_id smallint y geom. El complemento configura id como 
+clave de la capa y geom como columna geométrica. Cada vista combina los originales del campus 
+local con las copias de los otros cuatro. Las escrituras pasan por disparadores INSTEAD OF y se 
+autorizan según el campus de la sesión de PostgreSQL. 
+3. SRID e identificadores 
+SRID acordado: EPSG:5367 — CR05 / CRTM05, en metros. Úsenlo en las tablas originales, las 
+copias, las vistas y las capas del complemento. Es una decisión para SIG-TEC que permite reutilizar 
+los datos de la práctica del equipo. Si reciben longitud y latitud en EPSG:4326, asignen primero el 
+SRID de origen y luego transformen a 5367. opengeospatial.github.io 
+-- Laboratorios de computación, San Carlos. 
+
+--- PÁGINA 6 ---
+-- ST_MakePoint recibe longitud primero y latitud después. 
+SELECT ST_Transform( 
+    ST_SetSRID(ST_MakePoint(-84.510307, 10.362791), 4326), 
+    5367 
+); 
+Formato del identificador global: id = campus_id × 1 000 000 000 + consecutivo_local. Cada 
+campus usa una sola secuencia compartida por sus ocho capas, con consecutivos del 1 al 999 999 
+999. PostgreSQL asigna el ID al insertar en el campus dueño y la replicación conserva ese valor. id y 
+campus_id quedan fijos después de crear el objeto. 
+Ejemplo campus_id Consecutivo local id 
+Primer objeto de Cartago 1 1 1000000001 
+Primer objeto de San Carlos 3 1 3000000001 
+Segundo objeto de San Carlos, incluso si pertenece a 
+otra capa 3 2 3000000002 
+4. Cuentas de prueba 
+Usuario Campus autorizado para editar Variable para la contraseña 
+qgis_cartago 1 · Cartago SIGTEC_QGIS_CARTAGO_PASSWORD 
+qgis_san_jose 2 · San José SIGTEC_QGIS_SAN_JOSE_PASSWORD 
+qgis_san_carlos 3 · San Carlos SIGTEC_QGIS_SAN_CARLOS_PASSWORD 
+qgis_alajuela 4 · Alajuela SIGTEC_QGIS_ALAJUELA_PASSWORD 
+qgis_limon 5 · Limón SIGTEC_QGIS_LIMON_PASSWORD 
+• Central: crear las cinco cuentas LOGIN y asociarlas en auth.usuario_campus. Cada cuenta 
+puede autenticarse y consultar su propia asignación. Campus asignado: crear el mismo 
+usuario con la misma contraseña de prueba para que el complemento pueda abrir la 
+segunda conexión. 
+• Permisos: cada cuenta consulta los cinco campus a través de las vistas de su nodo. Puede 
+insertar, actualizar y eliminar objetos propios mediante esas vistas. Los disparadores 
+validan la identidad de la sesión y las cuentas carecen de acceso directo de escritura a las 
+tablas originales y a las copias. 
+• Contraseñas: generar cinco contraseñas distintas al instalar. Versionar .env.example con los 
+nombres de las variables y mantener los valores en la configuración local. 

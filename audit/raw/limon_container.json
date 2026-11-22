@@ -1,0 +1,92 @@
+{
+  "Id": "487e1637b90252c014d9e1f2d717da84d45e5b5db789bc42388c0e9aa84ce575",
+  "Image": "sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af",
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "sigtec_pgdata_limon",
+      "Source": "/var/lib/docker/volumes/sigtec_pgdata_limon/_data",
+      "Destination": "/var/lib/postgresql/data",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_limon",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_limon/_data",
+      "Destination": "/var/lib/postgresql/wal_archive",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 64126,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-20T17:28:20.354821172Z",
+    "FinishedAt": "2026-11-20T17:28:20.014393089Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-11-20T18:51:05.569848876Z",
+          "End": "2026-11-20T18:51:05.636981043Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:10.639201129Z",
+          "End": "2026-11-20T18:51:10.706855004Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:15.708008048Z",
+          "End": "2026-11-20T18:51:15.777885089Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:20.778226508Z",
+          "End": "2026-11-20T18:51:20.845343342Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:25.846681844Z",
+          "End": "2026-11-20T18:51:25.903866636Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "Ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "55435"
+      }
+    ]
+  },
+  "Networks": {
+    "sigtec_net": {
+      "IPAddress": "172.22.0.7",
+      "Aliases": [
+        "sigtec-pg-limon-1",
+        "pg-limon"
+      ]
+    }
+  }
+}

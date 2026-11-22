@@ -1,0 +1,39 @@
+NAME                   IMAGE                                                                     COMMAND                  SERVICE       CREATED       STATUS                 PORTS
+sigtec-pg-recovery-1   sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af   "sigtec-recovery-ent…"   pg-recovery   6 hours ago   Up 6 hours (healthy)   127.0.0.1:55436->5432/tcp
+ Container sigtec-sigtec-tools-run-90195329f6b2 Creating 
+ Container sigtec-sigtec-tools-run-90195329f6b2 Created 
+
+== recovery (pg-recovery) · nodo=san_carlos campus_id=3 ==
+           postgresql            | postgis | wal_level | archive_mode | wal_archivados | archivado_fallido | en_recuperacion 
+---------------------------------+---------+-----------+--------------+----------------+-------------------+-----------------
+ 17.12 (Debian 17.12-1.pgdg13+1) | 3.5.4   | logical   | on           |             15 |                 0 | f
+(1 row)
+
+migraciones: todas aplicadas (5)
+      capa      | filas | geom_nula | geom_vacia | srid_incorrecto | tipo_incorrecto | geom_invalida | campus_incorrecto | id_fuera_formato | ids_duplicados | estado 
+----------------+-------+-----------+------------+-----------------+-----------------+---------------+-------------------+------------------+----------------+--------
+ edificios      |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ carreteras     |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ aceras         |     5 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ parqueos       |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ zonas_verdes   |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ puntos_interes |     7 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ iluminacion    |     8 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ accesibilidad  |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+(8 rows)
+ objetos | repetidos_entre_capas | sin_registro | registrados_eliminados | estado_ids 
+---------+-----------------------+--------------+------------------------+------------
+      42 |                     0 |            0 |                      0 | OK
+(1 row)
+  PASS|0103_aplicada|registrada 2026-11-20 17:19:01
+  PASS|registro_primary_key|PRIMARY KEY (id)
+  PASS|ids_unicos_entre_capas|0 ids repetidos
+  PASS|objetos_registrados|42 objetos; 0 sin registro o con otra capa
+  PASS|registro_campus_y_formato|0 filas con otro campus o fuera de formato
+  PASS|disparadores_habilitados|24 (esperado 24: trg_10, trg_20, trg_30 × 8 capas); deshabilitados: 0
+  PASS|modo_de_seguridad_funciones|sigtec_id_autorizar_explicito=DEFINER sigtec_id_siguiente=DEFINER tg_asignar_identificador=INVOKER tg_registrar_identificador=DEFINER
+  PASS|permisos_mantenimiento|rol sigtec_mantenimiento_id NOLOGIN; autorización solo para ese rol; PUBLIC sin escritura en el registro
+  PASS|secuencia_cubre_ids|último consecutivo emitido 82 >= máximo usado 50 (objetos 50, registro 50)
+  PASS|siguiente_id_libre|el próximo id automático sería 3000000083
+pg-recovery: promovida, esquema al día, capas válidas y registro de ids íntegro: apta para entregar al Integrante 2 (la reincorporación a la replicación no está demostrada)
+rc=0

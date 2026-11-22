@@ -1,0 +1,6 @@
+[2026-11-20 15:49:19-0600] scripts/backup/logical_backup.sh central  (registro: evidence/backups/logical_backup_20261120_154919.log)
+ Container sigtec_remed-sigtec-tools-run-bb4f018960ab Creating 
+ Container sigtec_remed-sigtec-tools-run-bb4f018960ab Created 
+[2026-11-20 15:49:19-0600] pg_dump central (pg-central) -> logical/central/20261120T214919Z
+[2026-11-20 15:49:20-0600]   OK central: 8622 bytes, 23 entradas TOC, validado
+[2026-11-20 15:49:20-0600] resultado: OK

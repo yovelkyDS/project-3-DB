@@ -1,0 +1,10 @@
+ Container sigtec-sigtec-tools-run-ccc1334756e1 Creating 
+ Container sigtec-sigtec-tools-run-ccc1334756e1 Created 
+PASS|cambio A presente|3000000060 PITR-A 20261122T184835Z
+PASS|A conserva su valor previo al objetivo|Cambio A: confirmado ANTES del instante objetivo (debe recuperarse).
+PASS|cambio B ausente (inserción)|0 filas PITR-B
+PASS|cambio B ausente (actualización de A)|0 filas modificadas por B
+PASS|marcas ops.recovery_markers|A
+PASS|instancia promovida (lectura/escritura)|pg_is_in_recovery=false
+INFO|línea de tiempo|2
+INFO|nodo recuperado|san_carlos (campus_id 3)

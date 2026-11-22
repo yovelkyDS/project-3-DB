@@ -1,0 +1,160 @@
+laboratorio: remediation/lab (proyecto sigtec_remed)  fecha: 2026-11-20 17:04:11-0600
+== 0. precondiciones
+PASS|pre.promovida|f
+PASS|pre.identidad|san_carlos/3
+PASS|pre.sin_0103|0
+PASS|pre.registro_ausente|t
+INFO|pre.ids_repetidos|1 (duplicado creado por la reproducción RA-01b)
+== 1. destinos inválidos
+    | nodo inválido: nodo_x
+    | [2026-11-20 17:04:12-0600] ERROR: destino inválido: 'nodo_x'. Use all, campus, recovery o uno de: central cartago san_jose san_carlos alajuela limon
+    | [2026-11-20 17:04:12-0600] RESULTADO: migración FALLIDA (código 2). Cada migración se aplica en una sola transacción: ninguna queda a medias
+    | 
+    | make: *** [migrate] Error 2
+PASS|f1.nodo_inexistente|make rc=2
+    | nodo inválido: nodo_x
+    | [2026-11-20 17:04:13-0600] ERROR: destino inválido: 'recovery,nodo_x'. Use all, campus, recovery o uno de: central cartago san_jose san_carlos alajuela limon
+    | [2026-11-20 17:04:13-0600] RESULTADO: migración FALLIDA (código 2). Cada migración se aplica en una sola transacción: ninguna queda a medias
+    | 
+    | make: *** [migrate] Error 2
+PASS|f1.lista_con_nodo_inexistente|make rc=2
+PASS|f1.seed_no_admite_recovery|make rc=2
+== 2. credenciales rechazadas (el clon conserva la contraseña del proyecto original)
+    | [2026-11-20 17:04:13-0600] migrando recovery (pg-recovery)
+    | [2026-11-20 17:04:13-0600] ERROR: no se pudo conectar a pg-recovery como postgres: password authentication failed for user "postgres"
+    | [2026-11-20 17:04:13-0600] RESULTADO: migración FALLIDA en recovery (código 3). Cada migración se aplica en una sola transacción: ninguna queda a medias
+    | 
+    | make: *** [migrate] Error 3
+PASS|f2.credenciales_incorrectas|make rc=2
+PASS|f2.sin_secretos_en_salida|la contraseña no aparece en la salida
+PASS|f2.nada_aplicado|0
+== 3. paso de laboratorio: alinear la contraseña de postgres del clon con la del laboratorio
+INFO|lab.contraseña_alineada|hecho (sin mostrarla)
+== 4. ids repetidos en la copia: la migración se detiene sin modificar nada
+    | [2026-11-20 17:04:14-0600] migrando recovery (pg-recovery)
+    | [2026-11-20 17:04:14-0600]   pg-recovery: copia promovida de san_carlos (campus_id 3, esquema local_san_carlos; SIGTEC_RECOVERY_INFO: san_carlos; línea de tiempo 3)
+    | [2026-11-20 17:04:14-0600]   inspección previa de pg-recovery:
+    | [2026-11-20 17:04:14-0600]     migraciones registradas: campus/0101_capas_locales, campus/0102_identificadores, common/0001_postgis, common/0002_ops_nodo
+    | [2026-11-20 17:04:14-0600]     migraciones pendientes: campus/0103_registro_identificadores
+    | [2026-11-20 17:04:14-0600]     objetos por capa: accesibilidad=4 aceras=5 carreteras=4 edificios=6 iluminacion=9 parqueos=4 puntos_interes=8 zonas_verdes=4 (total 44)
+    | [2026-11-20 17:04:14-0600]     disparadores habilitados en local_san_carlos: 16 de 16
+    | [2026-11-20 17:04:14-0600]     secuencia local_san_carlos.objeto_id_seq: último 83; consecutivo máximo usado: 83
+    | [2026-11-20 17:04:14-0600]     registro global de ids: ausente (anterior a 0103)
+    | [2026-11-20 17:04:14-0600]     ids repetidos entre capas: 3000000083 en iluminacion+puntos_interes
+    | [2026-11-20 17:04:14-0600] ERROR: pg-recovery tiene ids repetidos entre capas: no se migra ni se modifica ningún dato. Resuélvalo según docs/BACKUP_RECOVERY.md ("Conflictos de identificadores") y repita
+    | [2026-11-20 17:04:14-0600] RESULTADO: migración FALLIDA en recovery (código 5). Cada migración se aplica en una sola transacción: ninguna queda a medias
+    | 
+    | make: *** [migrate] Error 5
+PASS|i4.duplicados_detienen_migracion|make rc=2
+PASS|i4.nada_aplicado|0
+PASS|i4.datos_sin_cambios|huella de las ocho capas idéntica
+PASS|i4.sin_respaldo_publicado|0
+== 5. resolución del conflicto (procedimiento documentado; filas de prueba de la reproducción)
+PASS|i5.sin_repetidos|0
+== 6. pg-recovery detenida / inaccesible
+    | [2026-11-20 17:04:15-0600] migrando recovery (pg-recovery)
+    | [2026-11-20 17:04:15-0600] ERROR: pg-recovery no existe o no está en ejecución en este proyecto (estado: make recovery-status; crear: make pitr-demo o docker compose --profile recovery up -d pg-recovery)
+    | [2026-11-20 17:04:15-0600] RESULTADO: migración FALLIDA en recovery (código 3). Cada migración se aplica en una sola transacción: ninguna queda a medias
+    | 
+    | make: *** [migrate] Error 3
+PASS|f6.recovery_detenida|make rc=2
+PASS|f6.sin_cambios_tras_fallo|0
+== 7. make migrate NODE=recovery aplica 0103
+    | [2026-11-20 17:04:16-0600] migrando recovery (pg-recovery)
+    | [2026-11-20 17:04:16-0600]   pg-recovery: copia promovida de san_carlos (campus_id 3, esquema local_san_carlos; SIGTEC_RECOVERY_INFO: san_carlos; línea de tiempo 3)
+    | [2026-11-20 17:04:16-0600]   inspección previa de pg-recovery:
+    | [2026-11-20 17:04:16-0600]     migraciones registradas: campus/0101_capas_locales, campus/0102_identificadores, common/0001_postgis, common/0002_ops_nodo
+    | [2026-11-20 17:04:16-0600]     migraciones pendientes: campus/0103_registro_identificadores
+    | [2026-11-20 17:04:16-0600]     objetos por capa: accesibilidad=4 aceras=5 carreteras=4 edificios=6 iluminacion=8 parqueos=4 puntos_interes=7 zonas_verdes=4 (total 42)
+    | [2026-11-20 17:04:16-0600]     disparadores habilitados en local_san_carlos: 16 de 16
+    | [2026-11-20 17:04:16-0600]     secuencia local_san_carlos.objeto_id_seq: último 83; consecutivo máximo usado: 50
+    | [2026-11-20 17:04:16-0600]     registro global de ids: ausente (anterior a 0103)
+    | [2026-11-20 17:04:16-0600]     ids repetidos entre capas: 0
+    | [2026-11-20 17:04:17-0600]   respaldo previo validado: recovery_pre_migracion/20261120T230416Z (76K)
+    | psql:/opt/sigtec/sql/bootstrap/00_ops_migraciones.sql:8: NOTICE:  schema "ops" already exists, skipping
+    | psql:/opt/sigtec/sql/bootstrap/00_ops_migraciones.sql:18: NOTICE:  relation "schema_migrations" already exists, skipping
+    | psql:/opt/sigtec/sql/migrations/campus/0103_registro_identificadores.sql:127: NOTICE:  SIG-TEC 0103: 42 identificadores existentes registrados en ops.identificadores_globales
+    | [2026-11-20 17:04:17-0600]   recovery: aplicada campus/0103_registro_identificadores
+    | psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+    |     PASS|0103_aplicada|registrada 2026-11-20 17:04:17
+    |     PASS|registro_primary_key|PRIMARY KEY (id)
+    |     PASS|ids_unicos_entre_capas|0 ids repetidos
+    |     PASS|objetos_registrados|42 objetos; 0 sin registro o con otra capa
+    |     PASS|registro_campus_y_formato|0 filas con otro campus o fuera de formato
+    |     PASS|disparadores_habilitados|24 (esperado 24: trg_10, trg_20, trg_30 × 8 capas); deshabilitados: 0
+    |     PASS|modo_de_seguridad_funciones|sigtec_id_autorizar_explicito=DEFINER sigtec_id_siguiente=DEFINER tg_asignar_identificador=INVOKER tg_registrar_identificador=DEFINER
+    |     PASS|permisos_mantenimiento|rol sigtec_mantenimiento_id NOLOGIN; autorización solo para ese rol; PUBLIC sin escritura en el registro
+    |     PASS|secuencia_cubre_ids|último consecutivo emitido 83 >= máximo usado 50 (objetos 50, registro 50)
+    |     PASS|siguiente_id_libre|el próximo id automático sería 3000000084
+    | [2026-11-20 17:04:17-0600]   recovery: 5 migraciones registradas, ninguna pendiente; rol sigtec_backup sincronizado
+PASS|f7.rc_cero|0
+PASS|f7.0103_aplicada|1
+PASS|f7.respaldo_previo|recovery_pre_migracion/20261120T230416Z (76K)
+PASS|f7.respaldo_publicado|1
+PASS|f7.datos_preservados|huella de las ocho capas idéntica (42 objetos)
+PASS|f7.identidad_conservada|san_carlos|pg-san-carlos|3|local_san_carlos
+PASS|f7.registro_completo|42
+PASS|f7.verificacion_posterior|10
+PASS|f7.sin_fail|0 FAIL en verificar_0103
+PASS|f7.secuencia_no_retrocede|t
+== 8. segunda ejecución (idempotencia)
+    | [2026-11-20 17:04:18-0600] migrando recovery (pg-recovery)
+    | [2026-11-20 17:04:18-0600]   pg-recovery: copia promovida de san_carlos (campus_id 3, esquema local_san_carlos; SIGTEC_RECOVERY_INFO: san_carlos; línea de tiempo 3)
+    | [2026-11-20 17:04:18-0600]   inspección previa de pg-recovery:
+    | [2026-11-20 17:04:18-0600]     migraciones registradas: campus/0101_capas_locales, campus/0102_identificadores, campus/0103_registro_identificadores, common/0001_postgis, common/0002_ops_nodo
+    | [2026-11-20 17:04:18-0600]     migraciones pendientes: 
+    | [2026-11-20 17:04:18-0600]     objetos por capa: accesibilidad=4 aceras=5 carreteras=4 edificios=6 iluminacion=8 parqueos=4 puntos_interes=7 zonas_verdes=4 (total 42)
+    | [2026-11-20 17:04:18-0600]     disparadores habilitados en local_san_carlos: 24 de 24
+    | [2026-11-20 17:04:18-0600]     secuencia local_san_carlos.objeto_id_seq: último 83; consecutivo máximo usado: 50
+    | [2026-11-20 17:04:18-0600]     registro global de ids: presente
+    | [2026-11-20 17:04:18-0600]     ids repetidos entre capas: 0
+    | psql:/opt/sigtec/sql/bootstrap/00_ops_migraciones.sql:8: NOTICE:  schema "ops" already exists, skipping
+    | psql:/opt/sigtec/sql/bootstrap/00_ops_migraciones.sql:18: NOTICE:  relation "schema_migrations" already exists, skipping
+    | psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+    |     PASS|0103_aplicada|registrada 2026-11-20 17:04:17
+    |     PASS|registro_primary_key|PRIMARY KEY (id)
+    |     PASS|ids_unicos_entre_capas|0 ids repetidos
+    |     PASS|objetos_registrados|42 objetos; 0 sin registro o con otra capa
+    |     PASS|registro_campus_y_formato|0 filas con otro campus o fuera de formato
+    |     PASS|disparadores_habilitados|24 (esperado 24: trg_10, trg_20, trg_30 × 8 capas); deshabilitados: 0
+    |     PASS|modo_de_seguridad_funciones|sigtec_id_autorizar_explicito=DEFINER sigtec_id_siguiente=DEFINER tg_asignar_identificador=INVOKER tg_registrar_identificador=DEFINER
+    |     PASS|permisos_mantenimiento|rol sigtec_mantenimiento_id NOLOGIN; autorización solo para ese rol; PUBLIC sin escritura en el registro
+    |     PASS|secuencia_cubre_ids|último consecutivo emitido 83 >= máximo usado 50 (objetos 50, registro 50)
+    |     PASS|siguiente_id_libre|el próximo id automático sería 3000000084
+    | [2026-11-20 17:04:18-0600]   recovery: 5 migraciones registradas, ninguna pendiente; rol sigtec_backup sincronizado
+PASS|f8.rc_cero|0
+PASS|f8.nada_reaplicado|ninguna migración reaplicada
+PASS|f8.sin_nuevo_respaldo|sin pendientes no se respalda
+PASS|f8.datos_preservados|ea820673bcd63894280511eed2e4d45f
+== 9. make verify NODE=recovery
+PASS|v9.rc_cero|0
+PASS|v9.apta|pg-recovery declarada apta
+== 10. ataques F-02 sobre la recuperación migrada
+PASS|i10.editor_sin_secuencia|f
+PASS|i10.editor_guc_id_explicito|42501
+PASS|i10.editor_no_autoriza|42501
+PASS|i10.editor_no_escribe_registro|42501
+PASS|i10.editor_no_deshabilita|42501
+PASS|i10.editor_no_modo_replica|42501
+PASS|i10.editor_no_se_concede_mant|42501
+PASS|i10.siguiente_id_automatico|3000000085
+PASS|i10.registrado|puntos_interes/insercion
+PASS|i10.id_existente_rechazado|23505
+== 11. carrera autorizada: mismo id en dos capas desde dos conexiones
+PASS|i11.primera_confirma|rc=0
+PASS|i11.segunda_23505|ERROR:  23505: SIG-TEC: el id 3000000086 ya existe en el registro global del campus (asignado en puntos_interes; los ids
+PASS|i11.segunda_espero|esperó 3 s a la primera
+PASS|i11.una_fila|1
+== 12. concurrencia: 8 conexiones independientes × 25 inserciones automáticas
+PASS|i12.sesiones_superpuestas|transacciones abiertas a la vez según pg_stat_activity
+PASS|i12.sesiones_confirmadas|8
+PASS|i12.filas_registradas|200
+PASS|i12.ids_unicos|0
+PASS|i12.sin_registro|0
+== 13. reinicio de pg-recovery
+PASS|r13.datos_tras_reinicio|858963c2b3d93441dfd36d05288654f3
+PASS|r13.0103_tras_reinicio|1
+PASS|r13.verify_tras_reinicio|0
+PASS|r13.insercion_tras_reinicio|id=3000000287 (> último emitido)
+----
+RESUMEN RA-01 laboratorio: 56 PASS, 0 FAIL

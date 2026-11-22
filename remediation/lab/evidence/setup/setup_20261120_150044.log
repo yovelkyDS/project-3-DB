@@ -1,0 +1,14 @@
+[2026-11-20 15:00:44-0600] == SIG-TEC · instalación (registro: evidence/setup/setup_20261120_150044.log) ==
+[2026-11-20 15:00:44-0600] [1/9] requisitos del host
+SIG-TEC · requisitos (sistema detectado: macos, arm64)
+  [OK]    bash 3.2.57(1)-release
+  [OK]    docker CLI 29.2.1, build a5c7197
+  [OK]    docker compose 5.0.2
+  [OK]    daemon Docker activo (servidor 29.2.1, 7836 MiB, aarch64)
+  [OK]    generador de contraseñas disponible (openssl)
+  [OK]    make 3.81
+  [OK]    espacio en disco suficiente
+  [FALTA] puertos ocupados: 55430 55431 55432 55433 55434 55435 55436 (cámbielos en .env)
+  [AVISO] el proyecto está en una carpeta sincronizada en la nube. Los datos y respaldos viven en volúmenes Docker (no se sincronizan); solo el código fuente está en esta carpeta.
+Requisitos: INCOMPLETOS
+[2026-11-20 15:00:46-0600] ERROR: corrija los requisitos indicados y vuelva a ejecutar

@@ -1,0 +1,16 @@
+Identidad de la imagen (20 nov 2026, 15:30 -0600)
+
+* Los siete contenedores originales (sigtec-pg-*) se crearon con la imagen sha256:cc0beda0…402af
+  (valor observado también por la auditoría) y la siguen ejecutando.
+* La instalación limpia del laboratorio (remediation/lab, scripts/setup.sh) construyó la misma
+  Dockerfile con la misma etiqueta sigtec/postgis:17.12-3.5.4 (id sha256:fd04b3df…e455c, capas
+  idénticas a las de sigtec-audit/postgis, construida por la auditoría). Con el almacén de imágenes
+  containerd de Docker 29.2.1, el registro de cc0beda0 dejó de existir al reasignarse la etiqueta;
+  los contenedores originales no se vieron afectados (usan su propio snapshot).
+* No fue posible devolver la etiqueta a cc0beda0. Comparación de binarios:
+    postgres (17.12)       original c55241d6…  laboratorio c55241d6…  (idéntico)
+    postgis-3.so (3.5.4)   original d84030d9…  laboratorio 6350f30a…  (misma fuente fijada; compilación no reproducible bit a bit)
+* Consecuencia: si los contenedores originales se recrean (p. ej. make up tras un cambio de
+  configuración), usarán fd04b3df, con las mismas versiones (PostgreSQL 17.12, PostGIS 3.5.4,
+  GEOS/PROJ del mismo digest base). Los volúmenes de datos no se tocan.
+* Prevención: remediation/lab/.env usa ahora SIGTEC_IMAGE=sigtec-remed/postgis:17.12-3.5.4.

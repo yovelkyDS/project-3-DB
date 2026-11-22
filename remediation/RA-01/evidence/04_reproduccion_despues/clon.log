@@ -1,0 +1,25 @@
+== 1-2. copia de laboratorio del respaldo 20261120T225613Z (origen en solo lectura)
+0
+fin de la copia (End-LSN del manifiesto): 0/12000120
+== 3. se recrea SOLO el pg-recovery del laboratorio
+Se eliminará la instancia de recuperación pg-recovery y sus volúmenes: sigtec_remed_pgdata_recovery sigtec_remed_walarchive_recovery
+Esta operación NO se puede deshacer.
+eliminado sigtec_remed_pgdata_recovery
+eliminado sigtec_remed_walarchive_recovery
+Limpieza terminada.
+ Volume sigtec_remed_pgdata_recovery Creating 
+ Volume sigtec_remed_pgdata_recovery Created 
+ Volume sigtec_remed_walarchive_recovery Creating 
+ Volume sigtec_remed_walarchive_recovery Created 
+ Container sigtec_remed-pg-recovery-1 Creating 
+ Container sigtec_remed-pg-recovery-1 Created 
+ Container sigtec_remed-pg-recovery-1 Starting 
+ Container sigtec_remed-pg-recovery-1 Started 
+== 4. promoción
+nodo=san_carlos campus_id=3
+migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+registro_0103=false
+linea_de_tiempo=3
+== 5. contraseña de postgres del clon = la del laboratorio (no se muestra)
+hecho
+CLON_LISTO

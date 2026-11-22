@@ -1,0 +1,65 @@
+[
+  {
+    "name": "F09_reproduced_live_manifest_mismatch",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "RESTORE_RC=1\n",
+      "stderr": " Container sigtec_remed-sigtec-tools-run-9d4cdda7d033 Creating \n Container sigtec_remed-sigtec-tools-run-9d4cdda7d033 Created \n[2026-11-20 15:48:25-0600] pg_dump cartago (pg-cartago) -> logical/cartago/20261120T214825Z\n[2026-11-20 15:48:31-0600]   OK cartago: 90463 bytes, 169 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=99 iluminacion=99 accesibilidad=4\n[2026-11-20 15:48:31-0600] restauraci\u00f3n l\u00f3gica de prueba: cartago <- logical/cartago/20261120T214825Z\n[2026-11-20 15:48:31-0600]   SHA-256 verificado\n[2026-11-20 15:48:32-0600]   pg_restore terminado sin errores\n[2026-11-20 15:48:32-0600]   FALLA conteos: esperado [edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=99 iluminacion=99 accesibilidad=4] obtenido [edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=98 iluminacion=99 accesibilidad=4]\n[2026-11-20 15:48:32-0600]   validaci\u00f3n espacial: 8/8 capas OK\n[2026-11-20 15:48:32-0600]   FALLA secuencia 249 != 248\n[2026-11-20 15:48:32-0600]   disparadores de identificadores restaurados (24)\n[2026-11-20 15:48:33-0600]   registro global de identificadores coherente\n[2026-11-20 15:48:33-0600]   RESULTADO cartago: FALL\u00d3 (c\u00f3digo 1)\n"
+    }
+  },
+  {
+    "name": "F06_plain_TCP_still_accepted",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "f\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "F05_expansion_0",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "case \"0\" in \\\n\t   \"\"|0) a=\"\" ;; \\\n\t   1) a=\"--apply\" ;; \\\n\t   *) echo \"APPLY debe ser 1 (eliminar) o 0/vac\u00edo (simulaci\u00f3n); recibido: 0\" >&2; exit 2 ;; \\\n\t esac; \\\n\t scripts/backup/wal_retention.sh all --keep ${KEEP:-2} $a\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "F05_expansion_1",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "case \"1\" in \\\n\t   \"\"|0) a=\"\" ;; \\\n\t   1) a=\"--apply\" ;; \\\n\t   *) echo \"APPLY debe ser 1 (eliminar) o 0/vac\u00edo (simulaci\u00f3n); recibido: 1\" >&2; exit 2 ;; \\\n\t esac; \\\n\t scripts/backup/wal_retention.sh all --keep ${KEEP:-2} $a\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "F05_expansion_banana",
+    "passed": true,
+    "evidence": {
+      "rc": 0,
+      "stdout": "case \"banana\" in \\\n\t   \"\"|0) a=\"\" ;; \\\n\t   1) a=\"--apply\" ;; \\\n\t   *) echo \"APPLY debe ser 1 (eliminar) o 0/vac\u00edo (simulaci\u00f3n); recibido: banana\" >&2; exit 2 ;; \\\n\t esac; \\\n\t scripts/backup/wal_retention.sh all --keep ${KEEP:-2} $a\n",
+      "stderr": ""
+    }
+  },
+  {
+    "name": "F05_invalid_value_fails_before_retention",
+    "passed": true,
+    "evidence": {
+      "rc": 2,
+      "stdout": "",
+      "stderr": "APPLY debe ser 1 (eliminar) o 0/vac\u00edo (simulaci\u00f3n); recibido: banana\nmake: *** [wal-retention] Error 2\n"
+    }
+  },
+  {
+    "name": "F04_reads_lab_env_without_export",
+    "passed": true,
+    "evidence": {
+      "rc": 1,
+      "stdout": "SIG-TEC \u00b7 requisitos (sistema detectado: macos, arm64)\n  [OK]    bash 3.2.57(1)-release\n  [OK]    docker CLI 29.2.1, build a5c7197\n  [OK]    docker compose 5.0.2\n  [OK]    daemon Docker activo (servidor 29.2.1, 7836 MiB, aarch64)\n  [OK]    generador de contrase\u00f1as disponible (openssl)\n  [OK]    make 3.81\n  [OK]    espacio en disco suficiente\n  [FALTA] puertos ocupados: 57430 57431 57432 57433 57434 57435 57436 (c\u00e1mbielos en .env; configuraci\u00f3n le\u00edda de .env)\n  [AVISO] el proyecto est\u00e1 en una carpeta sincronizada en la nube. Los datos y respaldos viven en vol\u00famenes Docker (no se sincronizan); solo el c\u00f3digo fuente est\u00e1 en esta carpeta.\nRequisitos: INCOMPLETOS\n",
+      "stderr": ""
+    }
+  }
+]

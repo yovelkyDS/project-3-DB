@@ -1,0 +1,14 @@
+== make migrate NODE=nodo_x
+nodo inválido: nodo_x
+[2026-11-20 17:02:17-0600] ERROR: destino inválido: 'nodo_x'. Use all, campus, recovery o uno de: central cartago san_jose san_carlos alajuela limon
+[2026-11-20 17:02:17-0600] RESULTADO: migración FALLIDA (código 2); las migraciones no registradas se revirtieron completas
+
+make: *** [migrate] Error 2
+rc=
+== make migrate NODE=recovery (credenciales del original en el clon)
+[2026-11-20 17:02:18-0600] migrando recovery (pg-recovery)
+[2026-11-20 17:02:18-0600] ERROR: no se pudo conectar a pg-recovery como postgres: password authentication failed for user "postgres"
+[2026-11-20 17:02:18-0600] RESULTADO: migración FALLIDA en recovery (código 3); las migraciones no registradas se revirtieron completas
+
+make: *** [migrate] Error 3
+rc=

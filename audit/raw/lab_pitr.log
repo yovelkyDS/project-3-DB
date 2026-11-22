@@ -1,0 +1,108 @@
+
+[2026-11-20 14:23:35-0600] == 0. precondiciones (nodo san_carlos, servicio pg-san-carlos, corrida 20261120T202335Z) ==
+
+[2026-11-20 14:23:35-0600] == 1. respaldo físico base ==
+ Container sigtec_audit_20261120-sigtec-tools-run-6b769b4825e9 Creating 
+ Container sigtec_audit_20261120-sigtec-tools-run-6b769b4825e9 Created 
+[2026-11-20 14:23:36-0600] pg_basebackup san_carlos (pg-san-carlos) -> physical/san_carlos/20261120T202336Z/data
+[2026-11-20 14:23:36-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 14:23:36-0600]   OK san_carlos: 54 MiB, inicio 0/6000028 (file 000000010000000000000006)
+[2026-11-20 14:23:37-0600] copia base: /backups/physical/san_carlos/20261120T202336Z
+inicio=2026-11-20 14:23:36 CST
+wal_inicio=0/6000028 (file 000000010000000000000006)
+verificacion=backup successfully verified
+conteos=edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+
+[2026-11-20 14:23:37-0600] == 2. cambio A ==
+[2026-11-20 14:23:39-0600] A: puntos_interes.id=3000000050 nombre='PITR-A 20261120T202335Z' confirmado en 2026-11-20 20:23:39.092490+00
+
+[2026-11-20 14:23:39-0600] == 3. instante objetivo ==
+[2026-11-20 14:23:41-0600] OBJETIVO: 2026-11-20 20:23:41.550941+00 (LSN 0/7000968)
+
+[2026-11-20 14:23:41-0600] == 4. cambio B ==
+[2026-11-20 14:23:44-0600] B: puntos_interes.id=3000000051 nombre='PITR-B 20261120T202335Z' + actualización de 3000000050, confirmado en 2026-11-20 20:23:43.971695+00
+
+[2026-11-20 14:23:44-0600] == 5. disponibilidad del WAL ==
+[2026-11-20 14:23:45-0600] segmento con A, objetivo y B archivado: 000000010000000000000007
+ Container sigtec_audit_20261120-sigtec-tools-run-c3b669900113 Creating 
+ Container sigtec_audit_20261120-sigtec-tools-run-c3b669900113 Created 
+-rw------- 1 postgres postgres 16777216 Nov 20 14:23 000000010000000000000005
+-rw------- 1 postgres postgres 16777216 Nov 20 14:23 000000010000000000000006
+-rw------- 1 postgres postgres      347 Nov 20 14:23 000000010000000000000006.00000028.backup
+-rw------- 1 postgres postgres 16777216 Nov 20 14:23 000000010000000000000007
+
+[2026-11-20 14:23:45-0600] == 6. falla simulada ==
+ Container sigtec_audit_20261120-pg-san-carlos-1 Killing 
+ Container sigtec_audit_20261120-pg-san-carlos-1 Killed 
+[2026-11-20 14:23:48-0600] estado de pg-san-carlos: unhealthy
+NAME                                    IMAGE                              COMMAND                  SERVICE         CREATED          STATUS                       PORTS
+sigtec_audit_20261120-pg-san-carlos-1   sigtec-audit/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-san-carlos   15 minutes ago   Exited (137) 2 seconds ago   
+
+[2026-11-20 14:23:48-0600] == 7. recuperación PITR en instancia aislada pg-recovery ==
+ Volume sigtec_audit_20261120_pgdata_recovery Creating 
+ Volume sigtec_audit_20261120_pgdata_recovery Created 
+ Volume sigtec_audit_20261120_walarchive_recovery Creating 
+ Volume sigtec_audit_20261120_walarchive_recovery Created 
+ Container sigtec_audit_20261120-pg-recovery-1 Creating 
+ Container sigtec_audit_20261120-pg-recovery-1 Created 
+ Container sigtec_audit_20261120-pg-recovery-1 Starting 
+ Container sigtec_audit_20261120-pg-recovery-1 Started 
+ Container sigtec_audit_20261120-sigtec-tools-run-a18931ecf99e Creating 
+ Container sigtec_audit_20261120-sigtec-tools-run-a18931ecf99e Created 
+promovida
+[2026-11-20 14:23:54-0600] registro de recuperación de PostgreSQL (pg-recovery):
+sigtec-recovery: restaurando /backups/physical/san_carlos/20261120T202336Z/data -> /var/lib/postgresql/data
+sigtec-recovery: recovery.signal creado; PostgreSQL reproducirá el WAL hasta el objetivo
+LOG:  restored log file "000000010000000000000006" from archive
+LOG:  starting point-in-time recovery to 2026-11-20 14:23:41.550941-06
+LOG:  redo starts at 0/6000028
+LOG:  restored log file "000000010000000000000007" from archive
+LOG:  database system is ready to accept read-only connections
+LOG:  recovery stopping before commit of transaction 799, time 2026-11-20 14:23:43.971695-06
+LOG:  last completed transaction was at log time 2026-11-20 14:23:39.09249-06
+LOG:  restored log file "000000010000000000000007" from archive
+LOG:  selected new timeline ID: 2
+LOG:  archive recovery complete
+LOG:  database system is ready to accept connections
+
+[2026-11-20 14:23:54-0600] == 8-9. verificación del nodo recuperado ==
+  PASS  cambio A presente                             3000000050 PITR-A 20261120T202335Z
+  PASS  A conserva su valor previo al objetivo        Cambio A: confirmado ANTES del instante objetivo (debe recuperarse).
+  PASS  cambio B ausente (inserción)                 0 filas PITR-B
+  PASS  cambio B ausente (actualización de A)        0 filas modificadas por B
+  PASS  marcas ops.recovery_markers                   A
+  PASS  instancia promovida (lectura/escritura)       pg_is_in_recovery=false
+  INFO  línea de tiempo                              2
+  INFO  nodo recuperado                               san_carlos (campus_id 3)
+ Container sigtec_audit_20261120-sigtec-tools-run-06da56563b8e Creating 
+ Container sigtec_audit_20261120-sigtec-tools-run-06da56563b8e Created 
+
+== recovery (pg-recovery) · nodo=san_carlos campus_id=3 ==
+           postgresql            | postgis | wal_level | archive_mode | wal_archivados | archivado_fallido | en_recuperacion 
+---------------------------------+---------+-----------+--------------+----------------+-------------------+-----------------
+ 17.12 (Debian 17.12-1.pgdg13+1) | 3.5.4   | logical   | on           |              1 |                 0 | f
+(1 row)
+
+      capa      | filas | geom_nula | geom_vacia | srid_incorrecto | tipo_incorrecto | geom_invalida | campus_incorrecto | id_fuera_formato | ids_duplicados | estado 
+----------------+-------+-----------+------------+-----------------+-----------------+---------------+-------------------+------------------+----------------+--------
+ edificios      |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ carreteras     |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ aceras         |     5 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ parqueos       |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ zonas_verdes   |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ puntos_interes |     7 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ iluminacion    |     8 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ accesibilidad  |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+(8 rows)
+
+[2026-11-20 14:23:56-0600] == 10. nodo original ==
+ Container sigtec_audit_20261120-pg-central-1 Waiting 
+ Container sigtec_audit_20261120-pg-central-1 Healthy 
+ Container sigtec_audit_20261120-pg-san-carlos-1 Starting 
+ Container sigtec_audit_20261120-pg-san-carlos-1 Started 
+PITR-A: MODIFICADO POR EL CAMBIO B (no debe recuperarse).
+PITR-B: 1 fila(s)
+[2026-11-20 14:24:04-0600] el nodo original conserva su estado completo (A modificado por B, B presente): no se sobrescribió
+
+[2026-11-20 14:24:04-0600] == resultado: PITR EXITOSA ==
+[2026-11-20 14:24:04-0600] informe: evidence/pitr/pitr_20261120T202335Z.md

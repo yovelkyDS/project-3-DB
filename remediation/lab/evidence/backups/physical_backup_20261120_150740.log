@@ -1,0 +1,7 @@
+[2026-11-20 15:07:40-0600] scripts/backup/physical_backup.sh central  (registro: evidence/backups/physical_backup_20261120_150740.log)
+ Container sigtec_remed-sigtec-tools-run-0f80b2573eb9 Creating 
+ Container sigtec_remed-sigtec-tools-run-0f80b2573eb9 Created 
+[2026-11-20 15:07:40-0600] pg_basebackup central (pg-central) -> physical/central/20261120T210740Z/data
+[2026-11-20 15:07:41-0600]   pg_verifybackup: backup successfully verified
+[2026-11-20 15:07:41-0600]   OK central: 53 MiB, inicio 0/9000028 (file 000000010000000000000009), verificado
+[2026-11-20 15:07:41-0600] resultado: OK

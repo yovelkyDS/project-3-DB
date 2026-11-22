@@ -1,0 +1,51 @@
+[2026-11-20 15:25:39-0600] scripts/backup/logical_restore_test.sh all  (registro: remediation/evidence/07_original_pre_migracion/backups/logical_restore_test_20261120_152539.log)
+[2026-11-20 15:25:39-0600] restauración lógica de prueba: central <- logical/central/20261120T212535Z
+[2026-11-20 15:25:39-0600]   SHA-256 verificado
+[2026-11-20 15:25:40-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:40-0600]   RESULTADO central: restauración lógica VÁLIDA
+[2026-11-20 15:25:41-0600] restauración lógica de prueba: cartago <- logical/cartago/20261120T212535Z
+[2026-11-20 15:25:41-0600]   SHA-256 verificado
+[2026-11-20 15:25:42-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:42-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:42-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:42-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 15:25:42-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:42-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:42-0600]   RESULTADO cartago: restauración lógica VÁLIDA
+[2026-11-20 15:25:42-0600] restauración lógica de prueba: san_jose <- logical/san_jose/20261120T212535Z
+[2026-11-20 15:25:42-0600]   SHA-256 verificado
+[2026-11-20 15:25:43-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:43-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:43-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:43-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 15:25:43-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:43-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:43-0600]   RESULTADO san_jose: restauración lógica VÁLIDA
+[2026-11-20 15:25:43-0600] restauración lógica de prueba: san_carlos <- logical/san_carlos/20261120T212535Z
+[2026-11-20 15:25:43-0600]   SHA-256 verificado
+[2026-11-20 15:25:44-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:44-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=8 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:44-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:44-0600]   secuencia de ids restaurada (último consecutivo 82)
+[2026-11-20 15:25:44-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:44-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:44-0600]   RESULTADO san_carlos: restauración lógica VÁLIDA
+[2026-11-20 15:25:44-0600] restauración lógica de prueba: alajuela <- logical/alajuela/20261120T212536Z
+[2026-11-20 15:25:44-0600]   SHA-256 verificado
+[2026-11-20 15:25:45-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:46-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:46-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:46-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 15:25:46-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:46-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:46-0600]   RESULTADO alajuela: restauración lógica VÁLIDA
+[2026-11-20 15:25:46-0600] restauración lógica de prueba: limon <- logical/limon/20261120T212536Z
+[2026-11-20 15:25:46-0600]   SHA-256 verificado
+[2026-11-20 15:25:47-0600]   pg_restore terminado sin errores
+[2026-11-20 15:25:47-0600]   conteos por capa idénticos: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 15:25:47-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 15:25:47-0600]   secuencia de ids restaurada (último consecutivo 49)
+[2026-11-20 15:25:47-0600]   disparadores de identificadores restaurados (16)
+[2026-11-20 15:25:47-0600]   respaldo anterior a la migración 0103 (sin registro global de identificadores)
+[2026-11-20 15:25:47-0600]   RESULTADO limon: restauración lógica VÁLIDA
+[2026-11-20 15:25:47-0600] resultado: OK

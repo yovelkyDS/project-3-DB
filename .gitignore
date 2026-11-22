@@ -1,0 +1,29 @@
+# Secretos locales
+.env
+.env.*
+!.env.example
+
+# Copias exportadas de respaldos (los respaldos viven en el volumen Docker sigtec_backups)
+backups_export/
+
+# Archivos del sistema / editores
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Python (no se usa Python en el host, por si alguien lo agrega)
+__pycache__/
+*.pyc
+.venv/
+
+# Diario durable local del coordinador 2PC y rutas de recuperación
+.distributed-state/
+# Intermedios locales
+tmp/
+
+# Respaldos binarios de bases de datos (solo almacenamiento local)
+*.dump
+*.backup
+

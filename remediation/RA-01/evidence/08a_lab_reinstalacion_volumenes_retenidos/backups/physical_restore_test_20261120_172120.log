@@ -1,0 +1,41 @@
+[2026-11-20 17:21:20-0600] scripts/backup/physical_restore_test.sh all  (registro: ./remediation/RA-01/evidence/08_lab_instalacion_limpia/backups/physical_restore_test_20261120_172120.log)
+ Container sigtec_remed-sigtec-tools-run-a1c6075921c6 Creating 
+ Container sigtec_remed-sigtec-tools-run-a1c6075921c6 Created 
+[2026-11-20 17:21:21-0600] recuperación física de prueba: central <- physical/central/20261120T232110Z + WAL /archives/central
+[2026-11-20 17:21:22-0600]   recuperación completada y promovida (consistent recovery state reached at 0/7000120)
+[2026-11-20 17:21:22-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 17:21:22-0600]   RESULTADO central: copia física RECUPERABLE
+[2026-11-20 17:21:22-0600] recuperación física de prueba: cartago <- physical/cartago/20261120T232111Z + WAL /archives/cartago
+[2026-11-20 17:21:22-0600]   recuperación completada y promovida (consistent recovery state reached at 0/8000120)
+[2026-11-20 17:21:23-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 17:21:23-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:23-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:23-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:23-0600]   RESULTADO cartago: copia física RECUPERABLE
+[2026-11-20 17:21:23-0600] recuperación física de prueba: san_jose <- physical/san_jose/20261120T232111Z + WAL /archives/san_jose
+[2026-11-20 17:21:23-0600]   recuperación completada y promovida (consistent recovery state reached at 0/7000120)
+[2026-11-20 17:21:23-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 17:21:23-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:23-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:23-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:23-0600]   RESULTADO san_jose: copia física RECUPERABLE
+[2026-11-20 17:21:24-0600] recuperación física de prueba: san_carlos <- physical/san_carlos/20261120T232111Z + WAL /archives/san_carlos
+pg_ctl: could not start server
+Examine the log output.
+[2026-11-20 17:21:24-0600]   RESULTADO san_carlos: FALLÓ (código 1)
+[2026-11-20 17:21:24-0600] recuperación física de prueba: alajuela <- physical/alajuela/20261120T232112Z + WAL /archives/alajuela
+[2026-11-20 17:21:26-0600]   recuperación completada y promovida (consistent recovery state reached at 0/7000120)
+[2026-11-20 17:21:26-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 17:21:26-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:26-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:26-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:26-0600]   RESULTADO alajuela: copia física RECUPERABLE
+[2026-11-20 17:21:26-0600] recuperación física de prueba: limon <- physical/limon/20261120T232112Z + WAL /archives/limon
+[2026-11-20 17:21:27-0600]   recuperación completada y promovida (consistent recovery state reached at 0/7000120)
+[2026-11-20 17:21:27-0600]   línea de tiempo tras la promoción: 2
+[2026-11-20 17:21:27-0600]   conteos por capa idénticos a la copia: edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-20 17:21:27-0600]   validación espacial: 8/8 capas OK
+[2026-11-20 17:21:27-0600]   registro global de identificadores coherente
+[2026-11-20 17:21:27-0600]   RESULTADO limon: copia física RECUPERABLE
+
+[2026-11-20 17:21:27-0600] resultado: ERROR (código 1)

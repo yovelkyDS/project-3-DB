@@ -1,0 +1,9 @@
+create_unprivileged_editor rc= 0
+ordinary_editor_bypasses_explicit_id_guard rc= 0
+concurrent_insert_lighting rc= 0
+concurrent_insert_points rc= 0
+duplicate_id_persisted rc= 0
+logical_backup_wrong_password rc= 0
+physical_backup_wrong_password rc= 0
+pitr_marker_command rc= 1
+transport_without_tls rc= 0

@@ -1,0 +1,8 @@
+PID                 USER                COMMAND
+64009               999                 postgres -c config_file=/etc/postgresql/postgresql.conf -c cluster_name=pg-central
+64395               999                 postgres: pg-central: checkpointer
+64397               999                 postgres: pg-central: background writer
+64403               999                 postgres: pg-central: walwriter
+64404               999                 postgres: pg-central: autovacuum launcher
+64405               999                 postgres: pg-central: archiver last was 00000001000000000000000A
+64407               999                 postgres: pg-central: logical replication launcher

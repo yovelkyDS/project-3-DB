@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# SIG-TEC — envoltorio del entrypoint oficial de postgres.
+#   1. Genera (si falta) un certificado TLS autofirmado de desarrollo.
+#   2. Garantiza la propiedad del directorio de archivado WAL.
+#   3. Delega en docker-entrypoint.sh (initdb solo si el volumen está vacío).
+set -Eeuo pipefail
+
+if [ "$(id -u)" = "0" ]; then
+    tls_dir=/var/lib/postgresql/tls
+    install -d -o postgres -g postgres -m 0700 "$tls_dir"
+    if [ ! -s "$tls_dir/server.key" ] || [ ! -s "$tls_dir/server.crt" ]; then
+        cn="${SIGTEC_NODE_HOST:-$(hostname)}"
+        openssl req -new -x509 -nodes -days 825 -newkey rsa:2048 \
+            -subj "/O=SIG-TEC desarrollo/CN=${cn}" \
+            -addext "subjectAltName=DNS:${cn},DNS:localhost,IP:127.0.0.1" \
+            -keyout "$tls_dir/server.key" -out "$tls_dir/server.crt" >/dev/null 2>&1
+        chown postgres:postgres "$tls_dir/server.key" "$tls_dir/server.crt"
+        chmod 0600 "$tls_dir/server.key"
+        chmod 0644 "$tls_dir/server.crt"
+    fi
+    archive_dir="${SIGTEC_WAL_ARCHIVE_DIR:-/var/lib/postgresql/wal_archive}"
+    install -d -o postgres -g postgres -m 0700 "$archive_dir"
+    chown postgres:postgres "$archive_dir"
+fi
+
+exec docker-entrypoint.sh "$@"

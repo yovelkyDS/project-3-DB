@@ -1,0 +1,1483 @@
+--- audit/lab/scripts/check_prereqs.sh
++++ scripts/check_prereqs.sh
+@@ -114,6 +114,14 @@
+ fi
+ 
+ # 8. puertos (solo si el proyecto no está corriendo ya)
++# Puertos efectivos: variables ya exportadas > .env > .env.example (primera
++# instalación). Corrección F-04: antes se revisaban siempre los valores por omisión.
++cfg="$ROOT/.env"; [ -f "$cfg" ] || cfg="$ROOT/.env.example"
++while IFS='=' read -r k v; do
++    case "$k" in
++        SIGTEC_PORT_*) eval "[ -n \"\${$k:-}\" ] || export $k=\"\$v\"" ;;
++    esac
++done < <(grep -E '^SIGTEC_PORT_[A-Z_]+=[0-9]+$' "$cfg" 2>/dev/null)
+ running=""
+ if command -v docker >/dev/null 2>&1 && daemon_up; then
+     running="$(docker compose --project-directory "$ROOT" -f "$ROOT/compose.yaml" ps -q 2>/dev/null || true)"
+@@ -128,7 +136,9 @@
+             ss -ltn 2>/dev/null | awk '{print $4}' | grep -q ":$p\$" && busy="$busy $p"
+         fi
+     done
+-    if [ -n "$busy" ]; then fail "puertos ocupados:$busy (cámbielos en .env)"; else pass "puertos 55430-55436 libres"; fi
++    ports="$(for n in $SIGTEC_NODES recovery; do node_port "$n"; done | tr '\n' ' ')"
++    if [ -n "$busy" ]; then fail "puertos ocupados:$busy (cámbielos en .env; configuración leída de ${cfg#"$ROOT"/})"
++    else pass "puertos libres: $ports(de ${cfg#"$ROOT"/})"; fi
+ else
+     pass "el proyecto ya está en ejecución (no se revisan puertos)"
+ fi
+--- audit/lab/scripts/recovery/pitr_steps.sh
++++ scripts/recovery/pitr_steps.sh
+@@ -93,8 +93,16 @@
+     ;;
+ marcar-recuperada)
+     node="$1"; run="$2"; detalle="$3"
+-    psql_su recovery -q -v run="$run" -v det="$detalle" -c \
+-      "INSERT INTO ops.recovery_markers (run_id, marker, detalle, lsn) VALUES (:'run', 'RECUPERADA', :'det', pg_current_wal_lsn())" >/dev/null
++    # Las variables :'run' / :'det' solo se interpolan en SQL leído por psql
++    # (stdin o archivo), no en -c (causa del hallazgo F-03).
++    psql_su recovery -q -v run="$run" -v det="$detalle" >/dev/null <<'SQL'
++INSERT INTO ops.recovery_markers (run_id, marker, detalle, lsn)
++VALUES (:'run', 'RECUPERADA', :'det', pg_current_wal_lsn());
++SQL
++    [ "$(psql_su recovery -tA -v run="$run" <<'SQL'
++SELECT count(*) FROM ops.recovery_markers WHERE run_id = :'run' AND marker = 'RECUPERADA';
++SQL
++)" = 1 ] || die "la marca RECUPERADA no quedó registrada"
+     echo ok
+     ;;
+ *) die "subcomando desconocido: $cmd" ;;
+--- audit/lab/scripts/recovery/pitr_demo.sh
++++ scripts/recovery/pitr_demo.sh
+@@ -39,7 +39,16 @@
+ exec > >(tee -a "$LOG") 2>&1
+ 
+ step() { echo; h_log "== $* =="; }
+-t() { tools "$@" 2>&1 | grep -v -E '^ ?Container sigtec-sigtec-tools-run'; }
++# Ejecuta en sigtec-tools filtrando el ruido de Compose y DEVUELVE EL CÓDIGO DE
++# LA HERRAMIENTA, no el de grep (corrección F-03: el pipeline ocultaba fallos).
++t() {
++    local rc
++    set +e
++    tools "$@" 2>&1 | grep -v -E '^ ?Container .*sigtec-tools-run'
++    rc=${PIPESTATUS[0]}
++    set -e
++    return "$rc"
++}
+ 
+ step "0. precondiciones (nodo $NODE, servicio $SVC, corrida $RUN)"
+ [ "$(health_of "$SVC")" = healthy ] || h_die "$SVC no está healthy"
+@@ -102,24 +111,40 @@
+ step "8-9. verificación del nodo recuperado"
+ VERIF="$(tools scripts/recovery/pitr_steps.sh verificar recovery "$NODE" "$RUN" "$ID_A" 2>/dev/null)"
+ echo "$VERIF" | awk -F'|' '{ printf "  %-5s %-45s %s\n", $1, $2, $3 }'
+-LAYERS="$(t scripts/db/verify.sh recovery || true)"
++FAILS="$(echo "$VERIF" | grep -c '^FAIL' || true)"
++[ "$(echo "$VERIF" | grep -c '^PASS')" -ge 6 ] || { h_warn "la verificación no produjo las 6 comprobaciones esperadas"; FAILS=$((FAILS + 1)); }
++if LAYERS="$(t scripts/db/verify.sh recovery)"; then :; else h_warn "verify.sh recovery falló"; FAILS=$((FAILS + 1)); fi
+ echo "$LAYERS"
+ RINFO="$(compose --profile recovery exec -T pg-recovery cat /var/lib/postgresql/data/SIGTEC_RECOVERY_INFO)"
+-FAILS="$(echo "$VERIF" | grep -c '^FAIL' || true)"
+-echo "$LAYERS" | grep -q 'ERROR' && FAILS=$((FAILS + 1))
++# Orden temporal A < objetivo < B, comprobado por PostgreSQL (no solo impreso)
++ORDEN="$(tools -c ". scripts/lib/db.sh; psql_su recovery -tA -c \"SELECT ('$TS_A'::timestamptz < '$TARGET'::timestamptz) AND ('$TARGET'::timestamptz < '$TS_B'::timestamptz)\"" 2>/dev/null)"
++if [ "$ORDEN" = t ]; then h_log "orden temporal comprobado: A < objetivo < B"
++else h_warn "orden temporal NO comprobado ($ORDEN)"; FAILS=$((FAILS + 1)); fi
++MARCA="no registrada (la verificación falló)"
+ if [ "$FAILS" = 0 ]; then
+-    t scripts/recovery/pitr_steps.sh marcar-recuperada "$NODE" "$RUN" \
+-      "PITR de $NODE a $TARGET desde $BASE; A presente, B ausente" >/dev/null
++    if t scripts/recovery/pitr_steps.sh marcar-recuperada "$NODE" "$RUN" \
++         "PITR de $NODE a $TARGET desde $BASE; A presente, B ausente" >/dev/null; then
++        MARCA="RECUPERADA registrada en ops.recovery_markers"
++    else
++        MARCA="ERROR al registrar la marca RECUPERADA"; FAILS=$((FAILS + 1))
++    fi
+ fi
++h_log "marca de recuperación: $MARCA"
+ 
+ step "10. nodo original"
+-ORIG=""
++ORIG=""; ORIG_MSG="El nodo original no se reinició (--keep-failed)."
+ if [ "$RESTART_ORIGINAL" = 1 ]; then
+     compose start "$SVC"
+     wait_healthy 180 "$SVC" || h_warn "$SVC no volvió a healthy"
+     ORIG="$(tools -c ". scripts/lib/db.sh; psql_su $NODE -tA -c \"SELECT 'PITR-A: ' || descripcion FROM $(node_schema "$NODE").puntos_interes WHERE id = $ID_A\" -c \"SELECT 'PITR-B: ' || count(*) || ' fila(s)' FROM $(node_schema "$NODE").puntos_interes WHERE nombre = 'PITR-B $RUN'\"" 2>/dev/null)"
+     echo "$ORIG"
+-    h_log "el nodo original conserva su estado completo (A modificado por B, B presente): no se sobrescribió"
++    if echo "$ORIG" | grep -q '^PITR-A: MODIFICADO POR EL CAMBIO B' && echo "$ORIG" | grep -qx 'PITR-B: 1 fila(s)'; then
++        h_log "el nodo original conserva su estado completo (A modificado por B, B presente): no se sobrescribió"
++        ORIG_MSG="Comprobado: el nodo original conserva A (con la modificación de B) y B; la recuperación se hizo en una instancia aislada y no sobrescribió el nodo en servicio."
++    else
++        ORIG_MSG="FALLA: el nodo original no tiene el estado esperado (A modificado por B y B presente)."
++        h_warn "el nodo original NO tiene el estado esperado (A modificado y B presente)"; FAILS=$((FAILS + 1))
++    fi
+ else
+     h_log "--keep-failed: $SVC permanece detenido"
+ fi
+@@ -143,7 +168,9 @@
+ | Falla simulada | \`docker compose kill -s SIGKILL $SVC\` (volúmenes de datos y WAL intactos) |
+ | Instancia recuperada | servicio \`pg-recovery\`, volumen \`$(volume_name pgdata_recovery)\`, \`127.0.0.1:$(node_port recovery)\` |
+ 
+-Orden temporal comprobado: commit A ($TS_A) < objetivo ($TARGET) < commit B ($TS_B).
++Orden temporal (comprobado con PostgreSQL: $ORDEN): commit A ($TS_A) < objetivo ($TARGET) < commit B ($TS_B).
++
++Marca de recuperación: $MARCA.
+ 
+ ## Verificación en la instancia recuperada
+ 
+@@ -175,8 +202,7 @@
+ ${ORIG:-(no se reinició: --keep-failed)}
+ \`\`\`
+ 
+-El nodo original conserva A (con la modificación de B) y B: la recuperación se hizo
+-en una instancia aislada y no sobrescribió el nodo en servicio.
++$ORIG_MSG
+ EOF
+ step "resultado: PITR $RESULT"
+ h_log "informe: ${REPORT#"$SIGTEC_ROOT"/}"
+--- audit/lab/scripts/lib/db.sh
++++ scripts/lib/db.sh
+@@ -17,6 +17,18 @@
+ die()  { printf '[%s] ERROR: %s\n' "$(ts)" "$*" >&2; exit 1; }
+ stamp(){ date -u '+%Y%m%dT%H%M%SZ'; }
+ 
++# Ejecuta "$@" en una subshell con errexit/pipefail REALMENTE activos y deja el
++# código en RUN_RC. Debe invocarse como orden simple (nunca en if, !, && o ||):
++# Bash ignora set -e dentro de cualquier función o subshell evaluada en un
++# contexto condicional, incluso si la subshell vuelve a ejecutar set -e
++# (causa raíz de F-01: "if ! ( backup_node ... )" ocultaba los fallos).
++run_step() {
++    set +e
++    ( set -Eeuo pipefail; "$@" )
++    RUN_RC=$?
++    set -e
++}
++
+ # Host destino: nodo del catálogo o "recovery"
+ target_host() {
+     if [ "$1" = "recovery" ]; then echo "pg-recovery"; else node_host "$1"; fi
+@@ -33,7 +45,7 @@
+ psql_backup() {
+     local node="$1"; shift
+     PGPASSWORD="${SIGTEC_BACKUP_PASSWORD:?}" psql -X -q -v ON_ERROR_STOP=1 \
+-        -h "$(target_host "$node")" -p 5432 -U sigtec_backup -d "${SIGTEC_DB}" "$@"
++        -h "$(target_host "$node")" -p 5432 -U "${SIGTEC_BACKUP_USER:-sigtec_backup}" -w -d "${SIGTEC_DB}" "$@"
+ }
+ 
+ # Valor escalar
+--- audit/lab/scripts/lib/backup.sh
++++ scripts/lib/backup.sh
+@@ -15,14 +15,98 @@
+ . "${SIGTEC_HOME:-/opt/sigtec}/scripts/lib/db.sh"
+ 
+ BACKUP_LOG="$BACKUP_ROOT/backup_log.tsv"
++# Usuario de respaldo (configurable solo para pruebas negativas)
++SIGTEC_BACKUP_USER="${SIGTEC_BACKUP_USER:-sigtec_backup}"
+ 
+ backup_log() {   # backup_log <nodo> <operacion> <ruta> <resultado> <detalle>
+     mkdir -p "$BACKUP_ROOT"
+     [ -f "$BACKUP_LOG" ] || printf 'fecha\tnodo\toperacion\truta\tresultado\tdetalle\n' > "$BACKUP_LOG"
+     printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$(ts)" "$1" "$2" "$3" "$4" "$5" >> "$BACKUP_LOG"
+ }
++# Variante que nunca aborta (para registrar un ERROR aun si la bitácora no es escribible)
++backup_log_safe() { ( backup_log "$@" ) 2>/dev/null || log "  AVISO: no se pudo escribir $BACKUP_LOG"; }
+ 
++# Último respaldo PUBLICADO. Los directorios de trabajo (.en-curso-*) y los
++# fallidos (.fallido-*) empiezan con punto y el patrón * no los incluye.
+ latest_dir() { ls -1d "$1"/*/ 2>/dev/null | sort | tail -1 | sed 's|/$||'; }
++
++# Error de una etapa: mensaje y código 1 (dentro de run_step aborta el nodo)
++fail() { printf '[%s]   FALLA: %s\n' "$(ts)" "$*" >&2; return 1; }
++
++# Muestra un archivo de diagnóstico (stderr de pg_dump, etc.) sangrado.
++# Los mensajes de libpq no incluyen la contraseña.
++show_diag() { [ -s "$1" ] && sed 's/^/      | /' "$1" >&2 || true; }
++
++# --- Directorios de trabajo y publicación atómica ---------------------
++# El respaldo se escribe en <base>/.en-curso-<UTC>-<pid>; solo tras validar se
++# renombra a <base>/<UTC> (rename en el mismo sistema de archivos = atómico).
++# Un fallo lo convierte en <base>/.fallido-<UTC>-<pid> sin la carga útil,
++# conservando únicamente los archivos de diagnóstico.
++work_dir_for() { echo "$1/.en-curso-$2-$$"; }
++
++publish_dir() {   # publish_dir <dir-trabajo> <base> <stamp>  -> imprime destino
++    local work="$1" base="$2" st="$3" final
++    final="$base/$st"
++    [ -e "$final" ] && final="$base/$st-$$"
++    [ -e "$final" ] && { fail "el destino $final ya existe"; return 1; }
++    mv -T "$work" "$final" || { fail "no se pudo publicar $final"; return 1; }
++    sync -f "$final" 2>/dev/null || true
++    echo "$final"
++}
++
++discard_work_dir() {   # discard_work_dir <dir-trabajo> <base> <stamp> <carga...>
++    local work="$1" base="$2" st="$3" f; shift 3
++    [ -d "$work" ] || return 0
++    for f in "$@"; do rm -rf "${work:?}/$f" 2>/dev/null || true; done
++    mv -T "$work" "$base/.fallido-$st-$$" 2>/dev/null || rm -rf "$work" 2>/dev/null || true
++}
++
++# --- Validación de un respaldo lógico ----------------------------------
++# validate_logical_dir <dir> <nodo>
++#   * sigtec.dump legible: pg_restore --list (TOC) y lectura COMPLETA de todos
++#     los bloques de datos (pg_restore -f /dev/null), que detecta truncamiento
++#   * contenido mínimo esperado: PostGIS, ops.node_info y, en campus, los datos
++#     de las ocho capas del esquema local
++#   * globals.sql generado por pg_dumpall
++# Escribe toc.txt en <dir>.
++validate_logical_dir() {
++    local dir="$1" node="$2" schema l missing=""
++    [ -s "$dir/sigtec.dump" ] || { fail "sigtec.dump no existe o está vacío"; return 1; }
++    pg_restore --list "$dir/sigtec.dump" > "$dir/toc.txt" 2> "$dir/validacion.stderr" \
++        || { show_diag "$dir/validacion.stderr"; fail "pg_restore --list no pudo leer el TOC"; return 1; }
++    pg_restore --file=/dev/null "$dir/sigtec.dump" 2>> "$dir/validacion.stderr" \
++        || { show_diag "$dir/validacion.stderr"; fail "pg_restore no pudo leer todos los bloques de datos (archivo dañado o truncado)"; return 1; }
++    grep -qE ' EXTENSION - postgis ?$' "$dir/toc.txt" || missing="$missing extension_postgis"
++    grep -qE ' TABLE DATA ops node_info ' "$dir/toc.txt" || missing="$missing ops.node_info"
++    if node_is_campus "$node"; then
++        schema="$(node_schema "$node")"
++        for l in $SIGTEC_LAYERS; do
++            grep -qE " TABLE DATA $schema $l " "$dir/toc.txt" || missing="$missing $schema.$l"
++        done
++    fi
++    [ -z "$missing" ] || { fail "el TOC no contiene:$missing"; return 1; }
++    [ -s "$dir/globals.sql" ] && grep -q '^CREATE ROLE ' "$dir/globals.sql" \
++        || { fail "globals.sql vacío o sin roles"; return 1; }
++    rm -f "$dir/validacion.stderr"
++}
++
++# --- Validación de un respaldo físico ----------------------------------
++# validate_physical_dir <dir>  (contiene data/)
++#   * estructura: PG_VERSION 17, backup_label, backup_manifest
++#   * pg_verifybackup: sumas SHA-256 del manifiesto y WAL necesario
++# Escribe pg_verifybackup.txt en <dir>.
++validate_physical_dir() {
++    local dir="$1" f
++    for f in PG_VERSION backup_label backup_manifest global/pg_control; do
++        [ -s "$dir/data/$f" ] || { fail "falta $f en la copia base"; return 1; }
++    done
++    [ "$(cat "$dir/data/PG_VERSION")" = 17 ] || { fail "PG_VERSION inesperado: $(cat "$dir/data/PG_VERSION")"; return 1; }
++    grep -q '^START WAL LOCATION: ' "$dir/data/backup_label" || { fail "backup_label sin START WAL LOCATION"; return 1; }
++    pg_verifybackup "$dir/data" > "$dir/pg_verifybackup.txt" 2>&1 \
++        || { show_diag "$dir/pg_verifybackup.txt"; fail "pg_verifybackup rechazó la copia"; return 1; }
++    grep -q 'backup successfully verified' "$dir/pg_verifybackup.txt" \
++        || { show_diag "$dir/pg_verifybackup.txt"; fail "pg_verifybackup no confirmó la verificación"; return 1; }
++}
+ 
+ # Conteo de filas por capa ("capa=n ..."); vacío en el central
+ layer_counts() {   # layer_counts <psql-fn> <nodo|destino> <esquema>
+--- audit/lab/scripts/lib/host.sh
++++ scripts/lib/host.sh
+@@ -66,6 +66,8 @@
+ 
+ evidence_file() {
+     # evidence_file <categoria> <nombre>  -> ruta (crea el directorio)
+-    mkdir -p "$SIGTEC_ROOT/evidence/$1"
+-    echo "$SIGTEC_ROOT/evidence/$1/$2"
++    # SIGTEC_EVIDENCE_DIR permite separar corridas (p. ej. remediation/evidence/...)
++    local base="${SIGTEC_EVIDENCE_DIR:-$SIGTEC_ROOT/evidence}"
++    mkdir -p "$base/$1"
++    echo "$base/$1/$2"
+ }
+--- audit/lab/scripts/db/verify.sh
++++ scripts/db/verify.sh
+@@ -29,6 +29,13 @@
+         echo "$out"
+         echo "$out" | grep -q 'ERROR' && rc=1
+         echo "$out" | grep -q '(8 rows)' || rc=1
++        if [ "$(sql_value "$node" "SELECT to_regclass('ops.identificadores_globales') IS NOT NULL")" = t ]; then
++            out="$(psql_su "$node" -P pager=off -v schema="$schema" -f "$SIGTEC_HOME/sql/checks/verificar_registro_ids.sql")"
++            echo "$out"
++            echo "$out" | grep -q ' OK *$' || rc=1
++        else
++            echo "(registro global de identificadores no disponible: datos anteriores a la migración 0103)"
++        fi
+     fi
+ done
+ exit "$rc"
+--- audit/lab/scripts/backup/physical_backup.sh
++++ scripts/backup/physical_backup.sh
+@@ -7,34 +7,50 @@
+ #   data/      copia base en formato plano (-Fp) con el WAL necesario (-X stream)
+ #              y backup_manifest con sumas SHA-256
+ #   info.txt   LSN/segmento de inicio, línea de tiempo, conteos por capa, verificación
+-# Luego ejecuta pg_verifybackup (manifiesto + WAL). La copia sirve como base
+-# del PITR junto con el WAL archivado continuamente en /archives/<nodo>.
++# La copia sirve como base del PITR junto con el WAL archivado en /archives/<nodo>.
+ # Se conecta con sigtec_backup (atributo REPLICATION, sin superusuario).
++#
++# Comportamiento ante fallos (corrección F-01): etapas comprobadas
++# explícitamente y con errexit/pipefail activos (run_step); la copia se escribe
++# en .en-curso-*, se valida (estructura + pg_verifybackup) y solo entonces se
++# publica con un rename atómico y se registra OK. Un fallo deja .fallido-*
++# sin la carga útil y el script termina con código distinto de 0.
+ # =====================================================================
+ . "${SIGTEC_HOME:-/opt/sigtec}/scripts/lib/backup.sh"
+ 
+ backup_node() {
+-    local node="$1" host dir st label start_wal start_time tli counts size seq
++    local node="$1" host base work final st label start_wal start_time tli counts size seq verif
+     host="$(node_host "$node")"; st="$(stamp)"
+-    dir="$BACKUP_ROOT/physical/$node/$st"
++    base="$BACKUP_ROOT/physical/$node"
++    work="$(work_dir_for "$base" "$st")"
+     label="sigtec-$node-$st"
+-    mkdir -p "$dir"
+-    log "pg_basebackup $node ($host) -> ${dir#"$BACKUP_ROOT"/}/data"
+-    PGPASSWORD="${SIGTEC_BACKUP_PASSWORD:?}" pg_basebackup -h "$host" -U sigtec_backup \
+-        -D "$dir/data" -Fp -X stream -c fast -l "$label" --manifest-checksums=SHA256 --no-password 2> "$dir/pg_basebackup.stderr"
+-    [ -s "$dir/pg_basebackup.stderr" ] || rm -f "$dir/pg_basebackup.stderr"
++    mkdir -p "$base" || fail "no se puede crear $base"
++    mkdir "$work" || fail "no se puede crear el directorio de trabajo en $base"
++    trap 'discard_work_dir "$work" "$base" "$st" data info.txt' ERR
++    log "pg_basebackup $node ($host) -> ${base#"$BACKUP_ROOT"/}/$st/data"
+ 
+-    pg_verifybackup "$dir/data" > "$dir/pg_verifybackup.txt" 2>&1
+-    log "  pg_verifybackup: $(tail -1 "$dir/pg_verifybackup.txt")"
++    PGPASSWORD="${SIGTEC_BACKUP_PASSWORD:?}" pg_basebackup -h "$host" -U "$SIGTEC_BACKUP_USER" \
++        -D "$work/data" -Fp -X stream -c fast -l "$label" --manifest-checksums=SHA256 --no-password \
++        2> "$work/pg_basebackup.stderr" \
++        || { show_diag "$work/pg_basebackup.stderr"; fail "pg_basebackup terminó con error"; }
++    [ -s "$work/pg_basebackup.stderr" ] || rm -f "$work/pg_basebackup.stderr"
+ 
+-    start_wal="$(sed -n 's/^START WAL LOCATION: \(.*\)$/\1/p' "$dir/data/backup_label")"
+-    start_time="$(sed -n 's/^START TIME: //p' "$dir/data/backup_label")"
+-    tli="$(sed -n 's/^START TIMELINE: //p' "$dir/data/backup_label")"
+-    size="$(du -sb "$dir/data" | cut -f1)"
++    validate_physical_dir "$work"
++    verif="$(tail -1 "$work/pg_verifybackup.txt")"
++    log "  pg_verifybackup: $verif"
++
++    start_wal="$(sed -n 's/^START WAL LOCATION: \(.*\)$/\1/p' "$work/data/backup_label")"
++    start_time="$(sed -n 's/^START TIME: //p' "$work/data/backup_label")"
++    tli="$(sed -n 's/^START TIMELINE: //p' "$work/data/backup_label")"
++    [ -n "$start_wal" ] && [ -n "$tli" ] || fail "backup_label incompleto"
++    size="$(du -sb "$work/data" | cut -f1)"
++    # Metadatos informativos del nodo (consultados después de la copia).
+     counts="$(layer_counts psql_backup "$node" "$(node_schema "$node")")"
+     seq=""
+-    node_is_campus "$node" && seq="$(psql_backup "$node" -tAc "SELECT coalesce(pg_sequence_last_value('$(node_schema "$node").objeto_id_seq'), 0)")"
+-    cat > "$dir/info.txt" <<EOF
++    if node_is_campus "$node"; then
++        seq="$(psql_backup "$node" -tAc "SELECT coalesce(pg_sequence_last_value('$(node_schema "$node").objeto_id_seq'), 0)")"
++    fi
++    cat > "$work/info.txt" <<EOF
+ tipo=fisico
+ nodo=$node
+ host=$host
+@@ -46,21 +62,26 @@
+ formato=plano (-Fp), WAL incluido (-X stream), manifiesto SHA-256
+ bytes=$size
+ pg_basebackup=$(pg_basebackup --version)
+-verificacion=$(tail -1 "$dir/pg_verifybackup.txt")
++verificacion=$verif
+ archivo_wal=/archives/$node
+ conteos=$counts
+ secuencia_ultimo=$seq
+ EOF
+-    backup_log "$node" pg_basebackup "${dir#"$BACKUP_ROOT"/}" OK "bytes=$size wal_inicio=${start_wal%% *}; $(tail -1 "$dir/pg_verifybackup.txt")"
+-    log "  OK $node: $(( size / 1024 / 1024 )) MiB, inicio $start_wal"
++
++    final="$(publish_dir "$work" "$base" "$st")"
++    trap - ERR
++    backup_log "$node" pg_basebackup "${final#"$BACKUP_ROOT"/}" OK "bytes=$size wal_inicio=${start_wal%% *}; $verif"
++    log "  OK $node: $(( size / 1024 / 1024 )) MiB, inicio $start_wal, verificado"
+ }
+ 
+ rc=0
+ for node in $(nodes_expand "${@:-all}"); do
+-    if ! ( backup_node "$node" ); then
++    run_step backup_node "$node"
++    if [ "$RUN_RC" != 0 ]; then
+         rc=1
+-        backup_log "$node" pg_basebackup "-" ERROR "ver salida del comando"
+-        log "  ERROR respaldando $node"
++        backup_log_safe "$node" pg_basebackup "-" ERROR "copia NO generada (código $RUN_RC); ver salida del comando"
++        log "  ERROR respaldando $node: no se publicó ninguna copia"
+     fi
+ done
++[ "$rc" = 0 ] || log "RESULTADO: una o más copias físicas FALLARON"
+ exit "$rc"
+--- audit/lab/scripts/backup/physical_restore_test.sh
++++ scripts/backup/physical_restore_test.sh
+@@ -56,6 +56,12 @@
+                                  || { log "  FALLA conteos: [$expected] vs [$got]"; errors=$((errors+1)); }
+         got="$(tmp_psql sigtec -tA -v schema="$schema" -v campus_id="$cid" -f "$SIGTEC_HOME/sql/checks/validacion_capas.sql" | awk -F'|' '$NF != "OK"' | wc -l)"
+         [ "$got" = 0 ] && log "  validación espacial: 8/8 capas OK" || { log "  FALLA validación ($got capas)"; errors=$((errors+1)); }
++        if [ "$(tmp_psql sigtec -tAc "SELECT to_regclass('ops.identificadores_globales') IS NOT NULL")" = t ]; then
++            got="$(tmp_psql sigtec -tA -v schema="$schema" -f "$SIGTEC_HOME/sql/checks/verificar_registro_ids.sql" | awk -F'|' 'NF > 1 {print $NF}')"
++            [ "$got" = OK ] && log "  registro global de identificadores coherente" || { log "  FALLA registro de identificadores ($got)"; errors=$((errors+1)); }
++        else
++            log "  respaldo anterior a la migración 0103 (sin registro global de identificadores)"
++        fi
+     fi
+     if [ "$errors" = 0 ]; then
+         backup_log "$node" restore_test_fisico "${dir#"$BACKUP_ROOT"/}" OK "recovery_target=immediate, promovido, datos verificados"
+@@ -69,6 +75,7 @@
+ 
+ rc=0
+ for node in $(nodes_expand "${@:-all}"); do
+-    ( test_node "$node" ) || { rc=1; log "  RESULTADO $node: FALLÓ"; }
++    run_step test_node "$node"
++    if [ "$RUN_RC" != 0 ]; then rc=1; log "  RESULTADO $node: FALLÓ (código $RUN_RC)"; fi
+ done
+ exit "$rc"
+--- audit/lab/scripts/backup/logical_backup.sh
++++ scripts/backup/logical_backup.sh
+@@ -6,32 +6,51 @@
+ # Por nodo genera /backups/logical/<nodo>/<UTC>/ con:
+ #   sigtec.dump   pg_dump formato custom (-Fc) de la base completa sigtec
+ #   globals.sql   roles del clúster (pg_dumpall --globals-only --no-role-passwords)
+-#   toc.txt       contenido del archivo (pg_restore --list): prueba de legibilidad
++#   toc.txt       contenido del archivo (pg_restore --list)
+ #   manifest.txt  nodo, versiones, tamaño, SHA-256, conteo de filas por capa
+ # Se conecta con el rol de mínimo privilegio sigtec_backup.
++#
++# Comportamiento ante fallos (corrección F-01):
++#   * cada etapa crítica se comprueba explícitamente y además corre con
++#     errexit/pipefail activos (run_step); un fallo aborta SOLO ese nodo;
++#   * el respaldo se escribe en .en-curso-*; se valida (TOC + lectura completa
++#     de los datos + contenido esperado) y solo entonces se publica con un
++#     rename atómico y se registra OK; un fallo deja .fallido-* sin la carga útil;
++#   * el código de salida es distinto de 0 si algún nodo falló.
+ # =====================================================================
+ . "${SIGTEC_HOME:-/opt/sigtec}/scripts/lib/backup.sh"
+ 
+ backup_node() {
+-    local node="$1" host dir st size sha counts server seq
++    local node="$1" host base work final st size sha counts server seq toc_n
+     host="$(node_host "$node")"; st="$(stamp)"
+-    dir="$BACKUP_ROOT/logical/$node/$st"
+-    mkdir -p "$dir"
+-    log "pg_dump $node ($host) -> ${dir#"$BACKUP_ROOT"/}"
+-    export PGPASSWORD="${SIGTEC_BACKUP_PASSWORD:?}"
+-    pg_dump -h "$host" -U sigtec_backup -d "$SIGTEC_DB" -Fc -Z 6 -f "$dir/sigtec.dump" 2> "$dir/pg_dump.stderr"
+-    pg_dumpall -h "$host" -U sigtec_backup -l "$SIGTEC_DB" --globals-only --no-role-passwords -f "$dir/globals.sql" 2>> "$dir/pg_dump.stderr"
+-    pg_restore --list "$dir/sigtec.dump" > "$dir/toc.txt"
+-    unset PGPASSWORD
+-    [ -s "$dir/pg_dump.stderr" ] || rm -f "$dir/pg_dump.stderr"
++    base="$BACKUP_ROOT/logical/$node"
++    work="$(work_dir_for "$base" "$st")"
++    mkdir -p "$base" || fail "no se puede crear $base"
++    mkdir "$work" || fail "no se puede crear el directorio de trabajo en $base"
++    trap 'discard_work_dir "$work" "$base" "$st" sigtec.dump globals.sql toc.txt manifest.txt' ERR
++    log "pg_dump $node ($host) -> ${base#"$BACKUP_ROOT"/}/$st"
+ 
+-    size="$(stat -c %s "$dir/sigtec.dump")"
+-    sha="$(sha256sum "$dir/sigtec.dump" | cut -d' ' -f1)"
++    PGPASSWORD="${SIGTEC_BACKUP_PASSWORD:?}" pg_dump -h "$host" -U "$SIGTEC_BACKUP_USER" -d "$SIGTEC_DB" \
++        --no-password -Fc -Z 6 -f "$work/sigtec.dump" 2> "$work/pg_dump.stderr" \
++        || { show_diag "$work/pg_dump.stderr"; fail "pg_dump terminó con error"; }
++    PGPASSWORD="${SIGTEC_BACKUP_PASSWORD:?}" pg_dumpall -h "$host" -U "$SIGTEC_BACKUP_USER" -l "$SIGTEC_DB" \
++        --no-password --globals-only --no-role-passwords -f "$work/globals.sql" 2>> "$work/pg_dump.stderr" \
++        || { show_diag "$work/pg_dump.stderr"; fail "pg_dumpall --globals-only terminó con error"; }
++    [ -s "$work/pg_dump.stderr" ] || rm -f "$work/pg_dump.stderr"
++
++    validate_logical_dir "$work" "$node"
++
++    size="$(stat -c %s "$work/sigtec.dump")"
++    sha="$(sha256sum "$work/sigtec.dump" | cut -d' ' -f1)"
++    toc_n="$(grep -vc '^;' "$work/toc.txt")"
++    # Metadatos informativos del nodo (consultados después de la copia).
+     server="$(psql_backup "$node" -tAc "SELECT current_setting('server_version')")"
+     counts="$(layer_counts psql_backup "$node" "$(node_schema "$node")")"
+     seq=""
+-    node_is_campus "$node" && seq="$(psql_backup "$node" -tAc "SELECT coalesce(pg_sequence_last_value('$(node_schema "$node").objeto_id_seq'), 0)")"
+-    cat > "$dir/manifest.txt" <<EOF
++    if node_is_campus "$node"; then
++        seq="$(psql_backup "$node" -tAc "SELECT coalesce(pg_sequence_last_value('$(node_schema "$node").objeto_id_seq'), 0)")"
++    fi
++    cat > "$work/manifest.txt" <<EOF
+ tipo=logico
+ nodo=$node
+ host=$host
+@@ -43,20 +62,27 @@
+ archivo=sigtec.dump
+ bytes=$size
+ sha256=$sha
+-objetos_toc=$(grep -vc '^;' "$dir/toc.txt")
++objetos_toc=$toc_n
++validacion=pg_restore --list + lectura completa de datos + contenido esperado: OK
+ conteos=$counts
+ secuencia_ultimo=$seq
+ EOF
+-    backup_log "$node" pg_dump "${dir#"$BACKUP_ROOT"/}" OK "bytes=$size sha256=${sha:0:16}…"
+-    log "  OK $node: $size bytes, $(grep -vc '^;' "$dir/toc.txt") entradas TOC${counts:+; $counts}"
++    sync -f "$work/sigtec.dump" 2>/dev/null || true
++
++    final="$(publish_dir "$work" "$base" "$st")"
++    trap - ERR
++    backup_log "$node" pg_dump "${final#"$BACKUP_ROOT"/}" OK "bytes=$size sha256=${sha:0:16}… toc=$toc_n"
++    log "  OK $node: $size bytes, $toc_n entradas TOC, validado${counts:+; $counts}"
+ }
+ 
+ rc=0
+ for node in $(nodes_expand "${@:-all}"); do
+-    if ! ( backup_node "$node" ); then
++    run_step backup_node "$node"
++    if [ "$RUN_RC" != 0 ]; then
+         rc=1
+-        backup_log "$node" pg_dump "-" ERROR "ver salida del comando"
+-        log "  ERROR respaldando $node"
++        backup_log_safe "$node" pg_dump "-" ERROR "respaldo NO generado (código $RUN_RC); ver salida del comando"
++        log "  ERROR respaldando $node: no se publicó ningún respaldo"
+     fi
+ done
++[ "$rc" = 0 ] || log "RESULTADO: uno o más respaldos lógicos FALLARON"
+ exit "$rc"
+--- audit/lab/scripts/backup/logical_restore_test.sh
++++ scripts/backup/logical_restore_test.sh
+@@ -58,7 +58,15 @@
+         got="$(tmp_psql sigtec -tAc "SELECT coalesce(pg_sequence_last_value('$schema.objeto_id_seq'),0)")"
+         [ "$expected" = "$got" ] && log "  secuencia de ids restaurada (último consecutivo $got)" || { log "  FALLA secuencia $expected != $got"; errors=$((errors+1)); }
+         got="$(tmp_psql sigtec -tAc "SELECT count(*) FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='$schema' AND NOT t.tgisinternal")"
+-        [ "$got" = 16 ] && log "  disparadores de identificadores restaurados (16)" || { log "  FALLA disparadores=$got"; errors=$((errors+1)); }
++        # 16 (0102: asignación + inmutabilidad) + 8 (0103: registro global)
++        expected=16; [ "$(tmp_psql sigtec -tAc "SELECT to_regclass('ops.identificadores_globales') IS NOT NULL")" = t ] && expected=24
++        [ "$got" = "$expected" ] && log "  disparadores de identificadores restaurados ($got)" || { log "  FALLA disparadores=$got (esperados $expected)"; errors=$((errors+1)); }
++        if [ "$(tmp_psql sigtec -tAc "SELECT to_regclass('ops.identificadores_globales') IS NOT NULL")" = t ]; then
++            got="$(tmp_psql sigtec -tA -v schema="$schema" -f "$SIGTEC_HOME/sql/checks/verificar_registro_ids.sql" | awk -F'|' 'NF > 1 {print $NF}')"
++            [ "$got" = OK ] && log "  registro global de identificadores coherente" || { log "  FALLA registro de identificadores ($got)"; errors=$((errors+1)); }
++        else
++            log "  respaldo anterior a la migración 0103 (sin registro global de identificadores)"
++        fi
+     fi
+ 
+     if [ "$errors" = 0 ]; then
+@@ -72,6 +80,7 @@
+ 
+ rc=0
+ for node in $(nodes_expand "${args[@]:-all}"); do
+-    ( test_node "$node" ) || { rc=1; log "  RESULTADO $node: FALLÓ"; }
++    run_step test_node "$node"
++    if [ "$RUN_RC" != 0 ]; then rc=1; log "  RESULTADO $node: FALLÓ (código $RUN_RC)"; fi
+ done
+ exit "$rc"
+--- audit/lab/sql/checks/verificar_registro_ids.sql
++++ sql/checks/verificar_registro_ids.sql
+@@ -0,0 +1,29 @@
++-- =====================================================================
++-- SIG-TEC · verificación de la unicidad GLOBAL de identificadores de un campus
++--   psql -v schema=local_san_carlos -f sql/checks/verificar_registro_ids.sql
++-- Una fila: objetos en las ocho capas, ids repetidos ENTRE capas, objetos sin
++-- registro (o registrados en otra capa) en ops.identificadores_globales e
++-- ids registrados sin objeto (eliminados: válido, no se reutilizan).
++-- estado = OK si repetidos = 0 y sin_registro = 0. Sirve también para un
++-- nodo recuperado o restaurado. Requiere la migración 0103.
++-- =====================================================================
++SELECT set_config('sigtec.chk_schema', :'schema', false) AS _sigtec_chk \gset
++DO $v$
++DECLARE s text := current_setting('sigtec.chk_schema'); u text;
++BEGIN
++    SELECT string_agg(format('SELECT id, %L::text AS capa FROM %I.%I', c, s, c), ' UNION ALL ') INTO u
++      FROM unnest(ARRAY['edificios','carreteras','aceras','parqueos','zonas_verdes',
++                        'puntos_interes','iluminacion','accesibilidad']) c;
++    EXECUTE format('CREATE OR REPLACE TEMP VIEW _sigtec_objetos AS %s', u);
++END
++$v$;
++SELECT (SELECT count(*) FROM _sigtec_objetos)                                         AS objetos,
++       (SELECT count(*) FROM (SELECT id FROM _sigtec_objetos GROUP BY id HAVING count(*) > 1) d) AS repetidos_entre_capas,
++       (SELECT count(*) FROM _sigtec_objetos o LEFT JOIN ops.identificadores_globales g USING (id)
++         WHERE g.id IS NULL OR g.capa <> o.capa)                                      AS sin_registro,
++       (SELECT count(*) FROM ops.identificadores_globales g
++         WHERE NOT EXISTS (SELECT 1 FROM _sigtec_objetos o WHERE o.id = g.id))        AS registrados_eliminados,
++       CASE WHEN (SELECT count(*) FROM (SELECT id FROM _sigtec_objetos GROUP BY id HAVING count(*) > 1) d) = 0
++             AND (SELECT count(*) FROM _sigtec_objetos o LEFT JOIN ops.identificadores_globales g USING (id)
++                   WHERE g.id IS NULL OR g.capa <> o.capa) = 0
++            THEN 'OK' ELSE 'ERROR' END                                                AS estado_ids;
+--- audit/lab/sql/templates/ajustar_secuencia_tras_recuperacion.sql
++++ sql/templates/ajustar_secuencia_tras_recuperacion.sql
+@@ -17,10 +17,16 @@
+ -- =====================================================================
+ SELECT :'schema' || '.objeto_id_seq' AS seq \gset
+ 
+-SELECT coalesce(pg_sequence_last_value(:'seq'::regclass), 0) AS antes,
+-       (:max_id::bigint - :campus_id::bigint * 1000000000)    AS consecutivo_central;
++-- Desde la migración 0103 también se considera el registro ops.identificadores_globales
++-- (ids emitidos en este nodo, incluidos los de objetos eliminados).
++SELECT coalesce(pg_sequence_last_value(:'seq'::regclass), 0)                          AS antes,
++       (:max_id::bigint - :campus_id::bigint * 1000000000)                            AS consecutivo_central,
++       (SELECT coalesce(max(id), 0) - :campus_id::bigint * 1000000000
++          FROM ops.identificadores_globales WHERE campus_id = :campus_id)             AS consecutivo_registro;
+ 
+ SELECT setval(:'seq'::regclass,
+               greatest(coalesce(pg_sequence_last_value(:'seq'::regclass), 0),
+                        :max_id::bigint - :campus_id::bigint * 1000000000,
++                       (SELECT coalesce(max(id), 0) - :campus_id::bigint * 1000000000
++                          FROM ops.identificadores_globales WHERE campus_id = :campus_id),
+                        1)) AS despues;
+--- audit/lab/sql/migrations/campus/0103_registro_identificadores.sql
++++ sql/migrations/campus/0103_registro_identificadores.sql
+@@ -0,0 +1,253 @@
++-- =====================================================================
++-- SIG-TEC · migración de campus 0103 — registro transaccional de
++-- identificadores globales y autorización real del modo de mantenimiento
++-- (corrección del hallazgo F-02 de la auditoría).
++--
++-- Problemas que corrige (verificados en laboratorio):
++--   a) El modo de id explícito dependía solo de la variable de sesión
++--      sigtec.permitir_id_explicito, que cualquier rol puede fijar, y la
++--      función era SECURITY DEFINER: un rol sin privilegios insertaba ids.
++--   b) La unicidad entre las ocho capas se comprobaba con SELECT EXISTS:
++--      dos transacciones concurrentes no ven sus filas sin confirmar y cada
++--      clave primaria es independiente; ambas confirmaban el mismo id.
++--
++-- Mecanismo definitivo:
++--   * ops.identificadores_globales (id PRIMARY KEY): un id por objeto del
++--     campus, sin importar la capa. Lo alimenta un disparador AFTER INSERT
++--     (SECURITY DEFINER, no invocable ni reutilizable por otros roles) con
++--     INSERT ... ON CONFLICT DO NOTHING. Ante una inserción concurrente del
++--     mismo id, PostgreSQL espera a la otra transacción y, si confirma,
++--     rechaza esta (23505). Las filas eliminadas conservan su registro: un
++--     id nunca se reutiliza.
++--   * tg_asignar_identificador pasa a SECURITY INVOKER: current_user es el
++--     rol que realmente inserta (también tras SET ROLE). El id explícito
++--     exige sigtec.permitir_id_explicito = on Y pertenecer al rol
++--     sigtec_mantenimiento_id; además invoca una función cuyo EXECUTE solo
++--     tiene ese rol (doble control con el sistema de privilegios).
++--   * nextval y la lectura de la secuencia se hacen en funciones SECURITY
++--     DEFINER mínimas: las cuentas de edición siguen sin privilegios sobre
++--     la secuencia.
++-- Migración NO destructiva: si existen ids repetidos entre capas, aborta sin
++-- modificar nada e informa los conflictos (no borra ni renumera).
++--
++-- Variables: :schema, :campus_id, :seq
++-- =====================================================================
++
++-- ---------------------------------------------------------------------
++-- 1. Rol de grupo para mantenimiento de identificadores (sin LOGIN)
++-- ---------------------------------------------------------------------
++DO $rol$
++BEGIN
++    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'sigtec_mantenimiento_id') THEN
++        CREATE ROLE sigtec_mantenimiento_id NOLOGIN;
++    END IF;
++END
++$rol$;
++COMMENT ON ROLE sigtec_mantenimiento_id IS
++  'SIG-TEC: autoriza insertar ids explícitos ya emitidos (reincorporación tras recuperación). Sin LOGIN; se otorga a operadores con GRANT.';
++
++-- ---------------------------------------------------------------------
++-- 2. Registro de identificadores
++-- ---------------------------------------------------------------------
++CREATE TABLE ops.identificadores_globales (
++    id             bigint      NOT NULL,
++    campus_id      smallint    NOT NULL,
++    capa           text        NOT NULL,
++    origen         text        NOT NULL,
++    registrado_en  timestamptz NOT NULL DEFAULT clock_timestamp(),
++    sesion         text        NOT NULL DEFAULT session_user,
++    CONSTRAINT identificadores_globales_pkey PRIMARY KEY (id),
++    CONSTRAINT identificadores_globales_campus_ck CHECK (campus_id = :campus_id),
++    CONSTRAINT identificadores_globales_formato_ck
++        CHECK (id BETWEEN campus_id::bigint * 1000000000 + 1 AND campus_id::bigint * 1000000000 + 999999999),
++    CONSTRAINT identificadores_globales_capa_ck
++        CHECK (capa IN ('edificios','carreteras','aceras','parqueos','zonas_verdes',
++                        'puntos_interes','iluminacion','accesibilidad')),
++    CONSTRAINT identificadores_globales_origen_ck CHECK (origen IN ('migracion_0103','insercion'))
++);
++COMMENT ON TABLE ops.identificadores_globales IS
++  'SIG-TEC: identificadores globales emitidos en este campus (uno por objeto, en cualquiera de las ocho capas). La PK garantiza la unicidad entre capas bajo concurrencia. Las filas no se borran al eliminar el objeto: un id no se reutiliza. Esquema ops: no se publica.';
++REVOKE ALL ON ops.identificadores_globales FROM PUBLIC;
++
++-- ---------------------------------------------------------------------
++-- 3. Comprobaciones previas y carga de los ids existentes
++-- ---------------------------------------------------------------------
++SELECT set_config('sigtec.schema', :'schema', true),
++       set_config('sigtec.campus_id', :'campus_id', true),
++       set_config('sigtec.seq', :'seq', true) AS _sigtec_vars \gset
++
++DO $carga$
++DECLARE
++    s       text     := current_setting('sigtec.schema');
++    cid     bigint   := current_setting('sigtec.campus_id')::bigint;
++    sq      regclass := current_setting('sigtec.seq')::regclass;
++    capas   text[]   := ARRAY['edificios','carreteras','aceras','parqueos','zonas_verdes',
++                              'puntos_interes','iluminacion','accesibilidad'];
++    u       text;
++    v_n     bigint;
++    v_dups  text;
++    v_filas bigint;
++    v_reg   bigint;
++    v_max   bigint;
++    v_last  bigint;
++BEGIN
++    SELECT string_agg(format('SELECT id, %L::text AS capa FROM %I.%I', c, s, c), ' UNION ALL ')
++      INTO u FROM unnest(capas) AS c;
++
++    -- a) ids repetidos entre capas: se informa y se aborta (nada queda aplicado)
++    EXECUTE format('SELECT count(*), string_agg(id || '' en '' || capas, ''; '' ORDER BY id)
++                      FROM (SELECT id, string_agg(capa, ''+'' ORDER BY capa) AS capas
++                              FROM (%s) t GROUP BY id HAVING count(*) > 1) d', u)
++       INTO v_n, v_dups;
++    IF v_n > 0 THEN
++        RAISE EXCEPTION 'SIG-TEC 0103: % identificador(es) repetido(s) entre capas de %: %', v_n, s, v_dups
++            USING ERRCODE = 'unique_violation',
++                  HINT = 'La migración no modificó nada. Decida qué objeto conserva cada id (ver docs/BACKUP_RECOVERY.md, "Conflictos de identificadores"), resuélvalo y repita make migrate.';
++    END IF;
++
++    -- b) consistencia con la secuencia: ningún id existente puede estar por
++    --    encima del último consecutivo emitido (chocaría con nextval futuros)
++    EXECUTE format('SELECT count(*), coalesce(max(id %% 1000000000), 0) FROM (%s) t', u) INTO v_filas, v_max;
++    v_last := coalesce(pg_sequence_last_value(sq), 0);
++    IF v_max > v_last THEN
++        PERFORM setval(sq, v_max);
++        RAISE NOTICE 'SIG-TEC 0103: la secuencia % estaba en % y existen consecutivos hasta %; se adelantó a % (no se modificó ningún dato)',
++                     sq, v_last, v_max, v_max;
++    END IF;
++
++    -- c) registro de los ids existentes
++    EXECUTE format('INSERT INTO ops.identificadores_globales (id, campus_id, capa, origen, sesion)
++                    SELECT id, %s, capa, ''migracion_0103'', session_user FROM (%s) t', cid, u);
++    SELECT count(*) INTO v_reg FROM ops.identificadores_globales;
++    IF v_reg <> v_filas THEN
++        RAISE EXCEPTION 'SIG-TEC 0103: se registraron % ids pero existen % objetos', v_reg, v_filas;
++    END IF;
++    RAISE NOTICE 'SIG-TEC 0103: % identificadores existentes registrados en ops.identificadores_globales', v_reg;
++END
++$carga$;
++
++-- ---------------------------------------------------------------------
++-- 4. Funciones auxiliares (SECURITY DEFINER mínimas) y disparadores
++-- ---------------------------------------------------------------------
++DO $fn$
++DECLARE
++    s    text   := current_setting('sigtec.schema');
++    cid  bigint := current_setting('sigtec.campus_id')::bigint;
++    sq   text   := current_setting('sigtec.seq');
++    t    text;
++BEGIN
++    -- 4.1 siguiente id del campus (nextval sin dar privilegios de secuencia)
++    EXECUTE format($f$
++        CREATE FUNCTION %1$I.sigtec_id_siguiente()
++        RETURNS bigint LANGUAGE sql VOLATILE SECURITY DEFINER
++        SET search_path = pg_catalog, pg_temp
++        AS $s$SELECT %2$s::bigint * 1000000000 + nextval(%3$L::regclass)$s$
++    $f$, s, cid, sq);
++    EXECUTE format('COMMENT ON FUNCTION %I.sigtec_id_siguiente() IS %L', s,
++        'SIG-TEC: id = campus_id*1e9 + nextval(secuencia del campus). Lo usa el disparador de asignación.');
++    EXECUTE format('REVOKE ALL ON FUNCTION %I.sigtec_id_siguiente() FROM PUBLIC', s);
++    EXECUTE format('GRANT EXECUTE ON FUNCTION %I.sigtec_id_siguiente() TO PUBLIC', s);
++
++    -- 4.2 autorización de un id explícito: SOLO el rol de mantenimiento
++    EXECUTE format($f$
++        CREATE FUNCTION %1$I.sigtec_id_autorizar_explicito(p_id bigint)
++        RETURNS void LANGUAGE plpgsql SECURITY DEFINER
++        SET search_path = pg_catalog, pg_temp
++        AS $b$
++        DECLARE
++            v_base  bigint := %2$s::bigint * 1000000000;
++            v_last  bigint := coalesce(pg_sequence_last_value(%3$L::regclass), 0);
++        BEGIN
++            IF p_id IS NULL OR p_id <= v_base OR p_id > v_base + v_last THEN
++                RAISE EXCEPTION 'SIG-TEC: id %% no fue emitido por la secuencia del campus %2$s (último consecutivo: %%)', p_id, v_last
++                    USING ERRCODE = 'check_violation',
++                          HINT = 'Avance la secuencia con setval() antes de reinsertar identificadores posteriores.';
++            END IF;
++        END
++        $b$
++    $f$, s, cid, sq);
++    EXECUTE format('COMMENT ON FUNCTION %I.sigtec_id_autorizar_explicito(bigint) IS %L', s,
++        'SIG-TEC: valida un id explícito (ya emitido por la secuencia). EXECUTE solo para sigtec_mantenimiento_id.');
++    EXECUTE format('REVOKE ALL ON FUNCTION %I.sigtec_id_autorizar_explicito(bigint) FROM PUBLIC', s);
++    EXECUTE format('GRANT EXECUTE ON FUNCTION %I.sigtec_id_autorizar_explicito(bigint) TO sigtec_mantenimiento_id', s);
++
++    -- 4.3 disparador BEFORE INSERT, ahora SECURITY INVOKER
++    EXECUTE format($f$
++        CREATE OR REPLACE FUNCTION %1$I.tg_asignar_identificador()
++        RETURNS trigger LANGUAGE plpgsql SECURITY INVOKER
++        SET search_path = pg_catalog, pg_temp
++        AS $b$
++        DECLARE
++            v_campus smallint := TG_ARGV[0]::smallint;
++        BEGIN
++            IF NEW.campus_id IS NULL THEN
++                NEW.campus_id := v_campus;
++            ELSIF NEW.campus_id <> v_campus THEN
++                RAISE EXCEPTION 'SIG-TEC: campus_id %% no pertenece a este nodo (campus %%)', NEW.campus_id, v_campus
++                    USING ERRCODE = 'check_violation',
++                          HINT = 'Las tablas originales solo aceptan objetos del campus propietario.';
++            END IF;
++
++            IF NEW.id IS NULL THEN
++                NEW.id := %1$I.sigtec_id_siguiente();
++                RETURN NEW;
++            END IF;
++
++            IF coalesce(current_setting('sigtec.permitir_id_explicito', true), 'off') <> 'on' THEN
++                RAISE EXCEPTION 'SIG-TEC: el identificador global lo asigna PostgreSQL (se recibió id %%)', NEW.id
++                    USING ERRCODE = 'check_violation',
++                          HINT = 'Omita la columna id o envíe NULL.';
++            END IF;
++            -- current_user es el rol que inserta (función SECURITY INVOKER)
++            IF NOT pg_has_role(current_user, 'sigtec_mantenimiento_id', 'USAGE') THEN
++                RAISE EXCEPTION 'SIG-TEC: el rol %% no está autorizado para insertar identificadores explícitos', current_user
++                    USING ERRCODE = 'insufficient_privilege',
++                          HINT = 'Solo los miembros de sigtec_mantenimiento_id pueden usar sigtec.permitir_id_explicito.';
++            END IF;
++            PERFORM %1$I.sigtec_id_autorizar_explicito(NEW.id);
++            -- La unicidad entre capas la garantiza ops.identificadores_globales (disparador AFTER).
++            RETURN NEW;
++        END
++        $b$
++    $f$, s);
++    EXECUTE format('COMMENT ON FUNCTION %I.tg_asignar_identificador() IS %L', s,
++        'SIG-TEC: asigna id = campus_id*1e9 + nextval en INSERT y valida campus_id. Id explícito solo con sigtec.permitir_id_explicito=on y rol sigtec_mantenimiento_id (SECURITY INVOKER).');
++
++    -- 4.4 disparador AFTER INSERT: reserva atómica en el registro
++    EXECUTE format($f$
++        CREATE FUNCTION %1$I.tg_registrar_identificador()
++        RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
++        SET search_path = pg_catalog, pg_temp
++        AS $b$
++        DECLARE
++            v_capa text;
++        BEGIN
++            INSERT INTO ops.identificadores_globales (id, campus_id, capa, origen, sesion)
++            VALUES (NEW.id, NEW.campus_id, TG_TABLE_NAME, 'insercion', session_user)
++            ON CONFLICT (id) DO NOTHING;
++            IF NOT FOUND THEN
++                SELECT capa INTO v_capa FROM ops.identificadores_globales WHERE id = NEW.id;
++                RAISE EXCEPTION 'SIG-TEC: el id %% ya existe en el registro global del campus (asignado en %%; los ids eliminados tampoco se reutilizan)', NEW.id, v_capa
++                    USING ERRCODE = 'unique_violation',
++                          HINT = 'Omita la columna id para que PostgreSQL asigne uno nuevo.';
++            END IF;
++            RETURN NULL;
++        END
++        $b$
++    $f$, s);
++    EXECUTE format('COMMENT ON FUNCTION %I.tg_registrar_identificador() IS %L', s,
++        'SIG-TEC: registra cada id en ops.identificadores_globales (PK) dentro de la misma transacción; rechaza ids ya registrados.');
++    EXECUTE format('REVOKE ALL ON FUNCTION %I.tg_registrar_identificador() FROM PUBLIC', s);
++
++    FOREACH t IN ARRAY ARRAY['edificios','carreteras','aceras','parqueos','zonas_verdes',
++                             'puntos_interes','iluminacion','accesibilidad']
++    LOOP
++        EXECUTE format('CREATE TRIGGER trg_30_registrar_identificador AFTER INSERT ON %I.%I
++                            FOR EACH ROW EXECUTE FUNCTION %I.tg_registrar_identificador()', s, t, s);
++    END LOOP;
++
++    -- 4.5 privilegios explícitos del rol de mantenimiento (sin UPDATE/DELETE)
++    EXECUTE format('GRANT USAGE ON SCHEMA %I TO sigtec_mantenimiento_id', s);
++    EXECUTE format('GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA %I TO sigtec_mantenimiento_id', s);
++END
++$fn$;
+--- audit/lab/tests/run_tests.sh
++++ tests/run_tests.sh
+@@ -2,7 +2,8 @@
+ # =====================================================================
+ # SIG-TEC · ejecutor de pruebas (host)
+ #
+-#   tests/run_tests.sh           healthchecks + pruebas SQL/PostGIS + higiene del repo
++#   tests/run_tests.sh           healthchecks + pruebas SQL/PostGIS + regresión F-01/F-02
++#                                (respaldos fallidos, unicidad de ids) + higiene del repo
+ #   tests/run_tests.sh --full    además: idempotencia (migrar/cargar de nuevo) y
+ #                                persistencia (reinicio de los seis contenedores)
+ #
+@@ -49,6 +50,14 @@
+ h_log "[2] pruebas SQL y PostGIS en los seis nodos"
+ if tools tests/container/run_sql_tests.sh all; then :; else FAILS=$((FAILS + 1)); fi
+ 
++# --- 2b. Regresión de los hallazgos de auditoría F-01 y F-02 -------------
++# Ambas suites trabajan en entornos aislados (BACKUP_ROOT temporal, clústeres
++# temporales): no escriben en /backups ni en los nodos en servicio.
++h_log "[2b] regresión F-01: los respaldos fallidos fallan (negativos y positivos, seis nodos)"
++if tools tests/container/test_backup_failures.sh; then :; else FAILS=$((FAILS + 1)); fi
++h_log "[2b] regresión F-02: unicidad global de ids, concurrencia y mantenimiento (clústeres temporales)"
++if tools tests/container/test_ids_aislado.sh campus; then :; else FAILS=$((FAILS + 1)); fi
++
+ # --- 3. Higiene del repositorio ----------------------------------------
+ h_log "[3] higiene del repositorio (secretos, rutas absolutas)"
+ files="$(cd "$SIGTEC_ROOT" && find . -type f ! -path './.env' ! -path './.git/*' ! -name '.DS_Store' | sed 's|^\./||')"
+@@ -62,7 +71,8 @@
+     fi
+ done < "$SIGTEC_ROOT/.env"
+ [ "$leaks" = 0 ] && res PASS repo.sin_secretos "ningún valor de .env aparece en otros archivos" || res FAIL repo.sin_secretos "$leaks secretos encontrados fuera de .env"
+-abs="$(cd "$SIGTEC_ROOT" && echo "$files" | grep -v '^evidence/' | tr '\n' '\0' | xargs -0 grep -l -E '/Users/[A-Za-z]|/home/[a-z]|C:\\\\Users' 2>/dev/null || true)"
++# audit/ es evidencia de la auditoría externa (solo lectura, no se modifica): se excluye
++abs="$(cd "$SIGTEC_ROOT" && echo "$files" | grep -v -e '^evidence/' -e '^audit/' | tr '\n' '\0' | xargs -0 grep -l -E '/Users/[A-Za-z]|/home/[a-z]|C:\\\\Users' 2>/dev/null || true)"
+ [ -z "$abs" ] && res PASS repo.sin_rutas_absolutas "sin rutas de usuario en el código" || res FAIL repo.sin_rutas_absolutas "$abs"
+ if grep -q '^\.env$' "$SIGTEC_ROOT/.gitignore"; then res PASS repo.env_ignorado ".env en .gitignore"; else res FAIL repo.env_ignorado ".env no está en .gitignore"; fi
+ envperm="$(ls -l "$SIGTEC_ROOT/.env" | cut -c1-10)"
+--- audit/lab/tests/container/run_sql_tests.sh
++++ tests/container/run_sql_tests.sh
+@@ -27,6 +27,8 @@
+         run_sql "$node" "$T/sql/20_modelo.sql" -v node="$node" -v schema="$(node_schema "$node")" \
+             -v campus_id="$cid" -v code_prefix="$(node_code_prefix "$node")"
+         run_sql "$node" "$T/sql/30_reglas_identificadores.sql" -v node="$node" \
++            -v schema="$(node_schema "$node")" -v campus_id="$cid"
++        run_sql "$node" "$T/sql/40_registro_ids.sql" -v node="$node" \
+             -v schema="$(node_schema "$node")" -v campus_id="$cid"
+     fi
+ done
+--- audit/lab/tests/container/test_ids_aislado.sh
++++ tests/container/test_ids_aislado.sh
+@@ -0,0 +1,269 @@
++#!/usr/bin/env bash
++# =====================================================================
++# SIG-TEC · pruebas de regresión F-02 (identificadores globales) en
++# clústeres PostgreSQL TEMPORALES dentro de sigtec-tools.
++#   tests/container/test_ids_aislado.sh [all|campus|<nodo> ...]
++#
++# Para cada campus:
++#   * levanta un clúster nuevo en 127.0.0.1:5432 DENTRO de este contenedor
++#     efímero y redirige el nombre pg-<campus> a él en /etc/hosts; antes de
++#     ejecutar los scripts reales (migrate.sh, seed.sh) comprueba que el
++#     destino es el clúster temporal (cluster_name) y aborta si no lo es;
++#   * instalación limpia con TODAS las migraciones + datos de prueba;
++#   * concurrencia REAL: varias conexiones psql independientes con
++#     transacciones superpuestas;
++#   * roles, mantenimiento, rollback, eliminación, reinicio, pg_dump/restore,
++#     publicación lógica;
++#   * ruta de actualización: base con 0101–0102 + datos + un id repetido
++#     entre capas -> 0103 aborta sin cambios; resuelto -> 0103 se aplica.
++# Ningún nodo en servicio se toca. Salida PASS|FAIL|<caso>|<detalle>.
++# =====================================================================
++. "${SIGTEC_HOME:-/opt/sigtec}/scripts/lib/db.sh"
++set +e
++
++RESULTS="$(mktemp)"
++rec() { echo "$1|$2|$3" | tee -a "$RESULTS"; }
++chk() { if [ "$2" = "$3" ]; then rec PASS "$1" "${4:-$2}"; else rec FAIL "$1" "esperado [$3] obtenido [$2] ${4:-}"; fi; }
++
++PGPORT=5432; DBH=127.0.0.1
++cp /etc/hosts /tmp/sigtec-hosts.orig
++restore_hosts() { cat /tmp/sigtec-hosts.orig > /etc/hosts; }
++
++q()   { psql -X -q -v ON_ERROR_STOP=1 -h "$DBH" -p "$PGPORT" -U postgres -d "${DB:-sigtec}" -tA "$@"; }
++# err <sql>  -> "NO_ERROR" o el SQLSTATE del primer error (sesión propia)
++err() {
++    local out
++    out="$(psql -X -q -v ON_ERROR_STOP=1 -v VERBOSITY=verbose -h "$DBH" -p "$PGPORT" -U postgres -d "${DB:-sigtec}" -tA -c "$1" 2>&1)"
++    if [ $? = 0 ]; then echo NO_ERROR; else echo "$out" | sed -n 's/^ERROR:  \([0-9A-Z]\{5\}\):.*/\1/p' | head -1; fi
++}
++# bg <salida> <archivo.sql> : ejecuta el SQL en una conexión independiente, en segundo plano
++# (se invoca como orden simple, nunca dentro de un pipeline, para que "wait" la espere)
++bg() { ( psql -X -q -v ON_ERROR_STOP=1 -v VERBOSITY=verbose -h "$DBH" -p "$PGPORT" -U postgres -d "${DB:-sigtec}" -tA -f "$2" > "$1" 2>&1; echo "rc=$?" >> "$1" ) & }
++
++start_cluster() {
++    TMP="$(mktemp -d /tmp/sigtec-ids.XXXXXX)"; chown postgres:postgres "$TMP"; chmod 0755 "$TMP"
++    gosu postgres initdb -D "$TMP/data" -U postgres --auth=trust --data-checksums >/dev/null
++    gosu postgres pg_ctl -D "$TMP/data" -l "$TMP/log" -w -o \
++        "-c listen_addresses=127.0.0.1 -c port=$PGPORT -c unix_socket_directories=$TMP -c cluster_name=sigtec-prueba-ids -c wal_level=logical -c max_connections=60" start >/dev/null
++}
++stop_cluster() { gosu postgres pg_ctl -D "$TMP/data" -m fast -w stop >/dev/null 2>&1; rm -rf "$TMP"; restore_hosts; }
++guard() {   # el nombre del nodo DEBE resolver al clúster temporal
++    local cn
++    cn="$(PGPASSWORD=x psql -X -h "$(node_host "$1")" -p 5432 -U postgres -d postgres -tAc "SHOW cluster_name" 2>/dev/null)"
++    [ "$cn" = "sigtec-prueba-ids" ] || { echo "ABORTO: $(node_host "$1") no apunta al clúster temporal (cluster_name='$cn')"; stop_cluster; exit 2; }
++}
++prepare_node() {   # prepare_node <nodo> [sin0103]
++    local node="$1" home="$SIGTEC_HOME"
++    start_cluster
++    echo "127.0.0.1 $(node_host "$node")" >> /etc/hosts
++    guard "$node"
++    q -d postgres -c "CREATE DATABASE sigtec" >/dev/null
++    if [ "${2:-}" = sin0103 ]; then
++        home="$TMP/home"; mkdir -p "$home"; cp -a "$SIGTEC_HOME/scripts" "$SIGTEC_HOME/sql" "$home/"
++        rm -f "$home"/sql/migrations/campus/0103_*.sql
++    fi
++    SIGTEC_HOME="$home" bash "$home/scripts/db/migrate.sh" "$node" > "$TMP/migrate.log" 2>&1 || { cat "$TMP/migrate.log"; return 1; }
++    SIGTEC_HOME="$home" bash "$home/scripts/db/seed.sh" "$node" > "$TMP/seed.log" 2>&1 || { cat "$TMP/seed.log"; return 1; }
++}
++
++UNION_IDS() {  # SQL: todas las filas (id, capa) del esquema
++    local s="$1" l u=""
++    for l in $SIGTEC_LAYERS; do u="$u${u:+ UNION ALL }SELECT id, '$l' AS capa FROM $s.$l"; done
++    echo "$u"
++}
++invariantes() {   # invariantes <caso> <esquema> : ids únicos entre capas y todos registrados con su capa
++    local s="$1" r
++    r="$(q -c "WITH o AS ($(UNION_IDS "$s"))
++              SELECT (SELECT count(*) FROM o) || ':' ||
++                     (SELECT count(*) FROM (SELECT id FROM o GROUP BY id HAVING count(*) > 1) d) || ':' ||
++                     (SELECT count(*) FROM o LEFT JOIN ops.identificadores_globales g USING (id)
++                       WHERE g.id IS NULL OR g.capa <> o.capa)")"
++    echo "$r"
++}
++
++pt() { echo "ST_SetSRID(ST_MakePoint(${1:-500000}, ${2:-1100000}), 5367)"; }
++
++run_campus() {
++    local node="$1" s cid base n last id r f1 f2 t0 waited
++    s="$(node_schema "$node")"; cid="$(node_campus_id "$node")"; base=$((cid * 1000000000))
++    local P="$node"
++    if ! prepare_node "$node"; then rec FAIL "$P.instalacion_limpia" "migrate/seed falló"; stop_cluster; return; fi
++    chk "$P.instalacion_limpia" "$(q -c "SELECT count(*) FROM ops.schema_migrations WHERE version LIKE 'campus/%'")" 3 "0101, 0102 y 0103 aplicadas"
++    r="$(invariantes "$s")"; chk "$P.registro_inicial" "$r" "41:0:0" "41 objetos, 0 repetidos, 0 sin registro"
++
++    # Roles de prueba (solo en el clúster temporal)
++    q -c "CREATE ROLE t_editor NOLOGIN; GRANT USAGE ON SCHEMA $s TO t_editor;
++          GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA $s TO t_editor;
++          CREATE ROLE t_mant NOLOGIN IN ROLE sigtec_mantenimiento_id;
++          CREATE ROLE t_nada NOLOGIN;" >/dev/null
++
++    # 1. inserción normal por un rol de edición sin privilegios de secuencia
++    chk "$P.editor_sin_privilegio_secuencia" "$(q -c "SELECT has_sequence_privilege('t_editor','$s.objeto_id_seq','USAGE')")" f
++    last="$(q -c "SELECT pg_sequence_last_value('$s.objeto_id_seq')")"
++    id="$(q -c "SET ROLE t_editor; INSERT INTO $s.puntos_interes(nombre,tipo,geom) VALUES ('T normal','otro',$(pt)) RETURNING id" | tail -1)"
++    chk "$P.insercion_normal_id_generado" "$id" "$((base + last + 1))" "id=$id"
++    chk "$P.insercion_normal_registrada" "$(q -c "SELECT capa || '/' || origen FROM ops.identificadores_globales WHERE id=$id")" "puntos_interes/insercion"
++
++    # 2. inserciones simultáneas en las ocho capas (8 conexiones, transacciones superpuestas)
++    n0="$(q -c "SELECT count(*) FROM ops.identificadores_globales")"
++    local i=0 l sql
++    for l in $SIGTEC_LAYERS; do
++        i=$((i + 1))
++        case "$l" in
++          edificios)      sql="INSERT INTO $s.edificios(nombre,codigo,area,pisos,geom) SELECT 'T', 'TC-'||g, 10, 1, ST_MakeEnvelope(500000+g,1100000,500001+g,1100001,5367) FROM generate_series(1,25) g;" ;;
++          carreteras)     sql="INSERT INTO $s.carreteras(nombre,tipo,superficie,geom) SELECT 'T','interna','asfalto',ST_MakeLine($(pt),ST_SetSRID(ST_MakePoint(500010+g,1100010),5367)) FROM generate_series(1,25) g;" ;;
++          aceras)         sql="INSERT INTO $s.aceras(material,ancho,condicion,geom) SELECT 'concreto',2,'buena',ST_MakeLine($(pt),ST_SetSRID(ST_MakePoint(500010+g,1100010),5367)) FROM generate_series(1,25) g;" ;;
++          parqueos)       sql="INSERT INTO $s.parqueos(capacidad,tipo,disponibilidad,geom) SELECT 10,'general',5,ST_MakeEnvelope(500000+g,1100000,500001+g,1100001,5367) FROM generate_series(1,25) g;" ;;
++          zonas_verdes)   sql="INSERT INTO $s.zonas_verdes(area,tipo_vegetacion,geom) SELECT 10,'cesped',ST_MakeEnvelope(500000+g,1100000,500001+g,1100001,5367) FROM generate_series(1,25) g;" ;;
++          puntos_interes) sql="INSERT INTO $s.puntos_interes(nombre,tipo,geom) SELECT 'T','otro',$(pt) FROM generate_series(1,25) g;" ;;
++          iluminacion)    sql="INSERT INTO $s.iluminacion(codigo,potencia,estado,geom) SELECT 'TL-'||g,100,'funcional',$(pt) FROM generate_series(1,25) g;" ;;
++          accesibilidad)  sql="INSERT INTO $s.accesibilidad(tipo,condicion,geom) SELECT 'rampa','buena',ST_MakeLine($(pt),ST_SetSRID(ST_MakePoint(500010+g,1100010),5367)) FROM generate_series(1,25) g;" ;;
++        esac
++        sql2="${sql//TC-/TD-}"; sql2="${sql2//TL-/TM-}"
++        printf 'BEGIN; SET ROLE t_editor;\n%s\nSELECT pg_sleep(1.5);\n%s\nCOMMIT;\n' "$sql" "$sql2" > "$TMP/c$i.sql"
++        bg "$TMP/c$i.out" "$TMP/c$i.sql"
++    done
++    sleep 0.7
++    chk "$P.concurrencia_8_capas_solapadas" "$(q -c "SELECT count(*) FROM pg_stat_activity WHERE state LIKE '%transaction%' OR wait_event = 'PgSleep'")" 8 "8 transacciones abiertas simultáneamente"
++    wait
++    r="$(grep -h '^rc=' "$TMP"/c*.out | sort | uniq -c | tr -s ' ' | tr '\n' ' ')"
++    chk "$P.concurrencia_8_capas_sesiones_ok" "$(grep -h '^rc=0' "$TMP"/c*.out | wc -l | tr -d ' ')" 8 "$r"
++    chk "$P.concurrencia_8_capas_ids_registrados" "$(( $(q -c "SELECT count(*) FROM ops.identificadores_globales") - n0 ))" 400 "400 ids nuevos"
++    r="$(invariantes "$s")"; chk "$P.concurrencia_8_capas_sin_repetidos" "${r#*:}" "0:0" "objetos:repetidos:sin_registro = $r"
++
++    # 3. mismo id explícito en dos tablas, dos sesiones autorizadas superpuestas
++    id="$(( base + $(q -c "SELECT nextval('$s.objeto_id_seq')") ))"
++    printf "BEGIN; SET ROLE t_mant; SET LOCAL sigtec.permitir_id_explicito=on;\nINSERT INTO %s.puntos_interes(id,nombre,tipo,geom) VALUES (%s,'T race 1','otro',%s);\nSELECT pg_sleep(3); COMMIT;\n" "$s" "$id" "$(pt)" > "$TMP/r1.sql"
++    bg "$TMP/r1.out" "$TMP/r1.sql"
++    sleep 1; t0=$(date +%s)
++    r="$(err "BEGIN; SET ROLE t_mant; SET LOCAL sigtec.permitir_id_explicito=on; INSERT INTO $s.iluminacion(id,codigo,potencia,estado,geom) VALUES ($id,'T-RACE',100,'funcional',$(pt)); COMMIT;")"
++    waited=$(( $(date +%s) - t0 )); wait
++    chk "$P.carrera_mismo_id_segunda_rechazada" "$r" 23505 "sesión 2 esperó ${waited}s y recibió $r"
++    chk "$P.carrera_mismo_id_primera_confirmada" "$(tail -1 "$TMP/r1.out")" rc=0
++    chk "$P.carrera_mismo_id_una_sola_fila" "$(q -c "SELECT (SELECT count(*) FROM $s.puntos_interes WHERE id=$id)+(SELECT count(*) FROM $s.iluminacion WHERE id=$id)")" 1
++
++    # 3b. si la primera sesión revierte, la segunda (bloqueada) sí se confirma
++    id="$(( base + $(q -c "SELECT nextval('$s.objeto_id_seq')") ))"
++    printf "BEGIN; SET ROLE t_mant; SET LOCAL sigtec.permitir_id_explicito=on;\nINSERT INTO %s.edificios(id,nombre,codigo,area,pisos,geom) VALUES (%s,'T rb','T-RB-1',10,1,ST_MakeEnvelope(500000,1100000,500001,1100001,5367));\nSELECT pg_sleep(2); ROLLBACK;\n" "$s" "$id" > "$TMP/r2.sql"
++    bg "$TMP/r2.out" "$TMP/r2.sql"
++    sleep 1
++    r="$(err "BEGIN; SET ROLE t_mant; SET LOCAL sigtec.permitir_id_explicito=on; INSERT INTO $s.zonas_verdes(id,area,tipo_vegetacion,geom) VALUES ($id,10,'cesped',ST_MakeEnvelope(500000,1100000,500001,1100001,5367)); COMMIT;")"
++    wait
++    chk "$P.carrera_primera_revierte_segunda_confirma" "$r" NO_ERROR
++    chk "$P.carrera_revertida_registro_coherente" "$(q -c "SELECT capa FROM ops.identificadores_globales WHERE id=$id")" zonas_verdes
++
++    # 3c. mismo id explícito, secuencial, en otra capa
++    chk "$P.id_explicito_repetido_otra_capa" "$(err "SET ROLE t_mant; SET sigtec.permitir_id_explicito=on; INSERT INTO $s.carreteras(id,nombre,tipo,superficie,geom) VALUES ($id,'T','interna','asfalto',ST_MakeLine($(pt),$(pt 500005))); ")" 23505
++
++    # 4. prefijo de otro campus / campus_id ajeno
++    local otro=$(( cid == 5 ? 1 : cid + 1 ))
++    chk "$P.rechaza_id_prefijo_otro_campus" "$(err "SET ROLE t_mant; SET sigtec.permitir_id_explicito=on; INSERT INTO $s.puntos_interes(id,nombre,tipo,geom) VALUES ($((otro * 1000000000 + 1)),'T','otro',$(pt))")" 23514
++    chk "$P.rechaza_campus_id_ajeno" "$(err "SET ROLE t_editor; INSERT INTO $s.puntos_interes(campus_id,nombre,tipo,geom) VALUES ($otro,'T','otro',$(pt))")" 23514
++
++    # 5-6. inmutabilidad
++    id="$(q -c "SELECT min(id) FROM $s.puntos_interes")"
++    chk "$P.rechaza_modificar_id" "$(err "SET ROLE t_editor; UPDATE $s.puntos_interes SET id=id+1 WHERE id=$id")" 23514
++    chk "$P.rechaza_modificar_campus_id" "$(err "SET ROLE t_editor; UPDATE $s.puntos_interes SET campus_id=$otro WHERE id=$id")" 23514
++    chk "$P.rechaza_modificar_id_mantenimiento" "$(err "SET ROLE t_mant; SET sigtec.permitir_id_explicito=on; UPDATE $s.puntos_interes SET id=id+1 WHERE id=$id")" 42501
++
++    # 7. rutas que un rol ordinario podría intentar
++    id="$(( base + $(q -c "SELECT nextval('$s.objeto_id_seq')") ))"
++    chk "$P.editor_con_guc_rechazado" "$(err "SET ROLE t_editor; SET sigtec.permitir_id_explicito=on; INSERT INTO $s.puntos_interes(id,nombre,tipo,geom) VALUES ($id,'T','otro',$(pt))")" 42501
++    chk "$P.editor_no_ejecuta_autorizacion" "$(err "SET ROLE t_editor; SELECT $s.sigtec_id_autorizar_explicito($id)")" 42501
++    chk "$P.editor_no_escribe_registro" "$(err "SET ROLE t_editor; INSERT INTO ops.identificadores_globales(id,campus_id,capa,origen) VALUES ($id,$cid,'edificios','insercion')")" 42501
++    chk "$P.editor_no_borra_registro" "$(err "SET ROLE t_editor; DELETE FROM ops.identificadores_globales")" 42501
++    chk "$P.editor_no_usa_secuencia" "$(err "SET ROLE t_editor; SELECT nextval('$s.objeto_id_seq')")" 42501
++    chk "$P.editor_no_desactiva_disparadores" "$(err "SET ROLE t_editor; ALTER TABLE $s.puntos_interes DISABLE TRIGGER USER")" 42501
++    chk "$P.editor_no_modo_replica" "$(err "SET ROLE t_editor; SET session_replication_role = replica")" 42501
++    chk "$P.editor_no_reutiliza_disparador" "$(err "SET ROLE t_editor; CREATE TEMP TABLE x(id bigint, campus_id smallint); CREATE TRIGGER x AFTER INSERT ON x FOR EACH ROW EXECUTE FUNCTION $s.tg_registrar_identificador()")" 42501
++    n="$(q -c "SELECT count(*) FROM ops.identificadores_globales")"
++    r="$(err "SET ROLE t_editor; SELECT $s.sigtec_id_siguiente()")"
++    chk "$P.siguiente_directo_no_registra" "$r:$(q -c "SELECT count(*) FROM ops.identificadores_globales")" "NO_ERROR:$n" "solo consume un consecutivo (hueco), no reserva ids"
++    chk "$P.rol_sin_permisos_no_inserta" "$(err "SET ROLE t_nada; INSERT INTO $s.puntos_interes(nombre,tipo,geom) VALUES ('T','otro',$(pt))")" 42501
++
++    # 8. mantenimiento con permisos: id emitido y libre
++    chk "$P.mantenimiento_autorizado_inserta" "$(err "SET ROLE t_mant; SET sigtec.permitir_id_explicito=on; INSERT INTO $s.puntos_interes(id,nombre,tipo,geom) VALUES ($id,'T mant','otro',$(pt))")" NO_ERROR
++    chk "$P.mantenimiento_rechaza_id_no_emitido" "$(err "SET ROLE t_mant; SET sigtec.permitir_id_explicito=on; INSERT INTO $s.puntos_interes(id,nombre,tipo,geom) VALUES ($((base + 999999999)),'T','otro',$(pt))")" 23514
++    chk "$P.mantenimiento_sin_guc_rechazado" "$(err "SET ROLE t_mant; INSERT INTO $s.puntos_interes(id,nombre,tipo,geom) VALUES ($id,'T','otro',$(pt))")" 23514
++
++    # 10. rollback y posterior inserción
++    id="$(q -c "BEGIN; INSERT INTO $s.aceras(material,ancho,condicion,geom) VALUES ('concreto',2,'buena',ST_MakeLine($(pt),$(pt 500005))) RETURNING id; ROLLBACK;" | head -1)"
++    chk "$P.rollback_no_deja_registro" "$(q -c "SELECT count(*) FROM ops.identificadores_globales WHERE id=$id")" 0
++    r="$(q -c "INSERT INTO $s.aceras(material,ancho,condicion,geom) VALUES ('concreto',2,'buena',ST_MakeLine($(pt),$(pt 500005))) RETURNING id" | tail -1)"
++    [ "$r" -gt "$id" ] && rec PASS "$P.rollback_siguiente_id_mayor" "$id revertido -> $r" || rec FAIL "$P.rollback_siguiente_id_mayor" "$id -> $r"
++    chk "$P.rollback_id_reinsertable_mantenimiento" "$(err "SET ROLE t_mant; SET sigtec.permitir_id_explicito=on; INSERT INTO $s.aceras(id,material,ancho,condicion,geom) VALUES ($id,'concreto',2,'buena',ST_MakeLine($(pt),$(pt 500005)))")" NO_ERROR
++
++    # 11. eliminación: el id no se reutiliza
++    id="$(q -c "INSERT INTO $s.parqueos(capacidad,tipo,disponibilidad,geom) VALUES (5,'general',1,ST_MakeEnvelope(500000,1100000,500001,1100001,5367)) RETURNING id" | tail -1)"
++    q -c "DELETE FROM $s.parqueos WHERE id=$id" >/dev/null
++    chk "$P.eliminacion_conserva_registro" "$(q -c "SELECT capa FROM ops.identificadores_globales WHERE id=$id")" parqueos
++    chk "$P.eliminacion_id_no_reutilizable" "$(err "SET ROLE t_mant; SET sigtec.permitir_id_explicito=on; INSERT INTO $s.parqueos(id,capacidad,tipo,disponibilidad,geom) VALUES ($id,5,'general',1,ST_MakeEnvelope(500000,1100000,500001,1100001,5367))")" 23505
++    r="$(q -c "INSERT INTO $s.parqueos(capacidad,tipo,disponibilidad,geom) VALUES (5,'general',1,ST_MakeEnvelope(500000,1100000,500001,1100001,5367)) RETURNING id" | tail -1)"
++    [ "$r" -gt "$id" ] && rec PASS "$P.eliminacion_nuevo_id_distinto" "$id eliminado -> nuevo $r" || rec FAIL "$P.eliminacion_nuevo_id_distinto" "$r"
++
++    # 12. reinicio de PostgreSQL
++    r="$(invariantes "$s")"
++    gosu postgres pg_ctl -D "$TMP/data" -m fast -w restart >/dev/null 2>&1
++    chk "$P.reinicio_invariantes" "$(invariantes "$s")" "$r" "objetos:repetidos:sin_registro = $r"
++    id="$(q -c "INSERT INTO $s.edificios(nombre,codigo,area,pisos,geom) VALUES ('T rein','T-REIN',10,1,ST_MakeEnvelope(500000,1100000,500001,1100001,5367)) RETURNING id" | tail -1)"
++    chk "$P.reinicio_inserta_y_registra" "$(q -c "SELECT count(*) FROM ops.identificadores_globales WHERE id=$id AND capa='edificios'")" 1
++
++    # 13. pg_dump / pg_restore y consistencia de secuencia y registro
++    pg_dump -h "$DBH" -U postgres -d sigtec -Fc -f "$TMP/a.dump"
++    id="$(q -c "INSERT INTO $s.edificios(nombre,codigo,area,pisos,geom) VALUES ('T tras dump','T-POST',10,1,ST_MakeEnvelope(500000,1100000,500001,1100001,5367)) RETURNING id" | tail -1)"
++    q -d postgres -c "CREATE DATABASE sigtec_r" >/dev/null
++    pg_restore -h "$DBH" -U postgres -d sigtec_r --exit-on-error "$TMP/a.dump"; chk "$P.restauracion_sin_errores" "$?" 0
++    DB=sigtec_r
++    chk "$P.restauracion_invariantes" "$(invariantes "$s" | cut -d: -f2-)" "0:0"
++    chk "$P.restauracion_disparadores" "$(q -c "SELECT count(*) FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='$s' AND NOT t.tgisinternal")" 24
++    # procedimiento documentado: 1) ajustar la secuencia al máximo conocido (central), 2) reincorporar
++    last="$(DB=sigtec q -c "WITH o AS ($(UNION_IDS "$s")) SELECT max(id) FROM o")"
++    chk "$P.restauracion_id_posterior_rechazado_antes_de_ajustar" "$(err "SET sigtec.permitir_id_explicito=on; INSERT INTO $s.edificios(id,nombre,codigo,area,pisos,geom) VALUES ($id,'T tras dump','T-POST',10,1,ST_MakeEnvelope(500000,1100000,500001,1100001,5367))")" 23514 "id $id no emitido según la secuencia restaurada"
++    q -v schema="$s" -v campus_id="$cid" -v max_id="$last" -f "$SIGTEC_HOME/sql/templates/ajustar_secuencia_tras_recuperacion.sql" >/dev/null
++    chk "$P.restauracion_reincorpora_id_posterior" "$(err "SET sigtec.permitir_id_explicito=on; INSERT INTO $s.edificios(id,nombre,codigo,area,pisos,geom) VALUES ($id,'T tras dump','T-POST',10,1,ST_MakeEnvelope(500000,1100000,500001,1100001,5367))")" NO_ERROR "id $id creado después del respaldo, reincorporado en mantenimiento"
++    chk "$P.restauracion_rechaza_duplicado" "$(err "SET sigtec.permitir_id_explicito=on; INSERT INTO $s.puntos_interes(id,nombre,tipo,geom) VALUES ($id,'T','otro',$(pt))")" 23505
++    r="$(q -c "INSERT INTO $s.puntos_interes(nombre,tipo,geom) VALUES ('T ajuste','otro',$(pt)) RETURNING id" | tail -1)"
++    [ "$r" -gt "$last" ] && rec PASS "$P.restauracion_secuencia_ajustada" "máximo conocido $last -> siguiente $r" || rec FAIL "$P.restauracion_secuencia_ajustada" "$last -> $r"
++    DB=sigtec
++
++    # 14. compatibilidad con la replicación lógica futura
++    q -c "CREATE PUBLICATION t_pub FOR TABLES IN SCHEMA $s" >/dev/null
++    chk "$P.publicacion_ocho_tablas" "$(q -c "SELECT count(*) FROM pg_publication_tables WHERE pubname='t_pub' AND schemaname='$s'")" 8
++    chk "$P.publicacion_excluye_ops" "$(q -c "SELECT count(*) FROM pg_publication_tables WHERE pubname='t_pub' AND schemaname='ops'")" 0
++    chk "$P.replica_identity_pk" "$(q -c "SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='$s' AND c.relkind='r' AND c.relreplident='d'")" 8
++    chk "$P.columnas_sin_cambios" "$(q -c "SELECT count(*) FROM information_schema.columns WHERE table_schema='$s'")" "$(q -c "SELECT 3*8 + 4+3+3+3+2+3+3+3")"
++
++    r="$(invariantes "$s")"; chk "$P.invariantes_finales" "${r#*:}" "0:0" "objetos:repetidos:sin_registro = $r"
++    stop_cluster
++}
++
++upgrade_path() {   # ruta de actualización desde 0102 con un id repetido entre capas
++    local node=cartago s=local_cartago id r
++    if ! prepare_node "$node" sin0103; then rec FAIL actualizacion.preparacion "falló"; stop_cluster; return; fi
++    chk actualizacion.base_sin_0103 "$(q -c "SELECT count(*) FROM ops.schema_migrations WHERE version LIKE 'campus/0103%'")" 0
++    id="$(q -c "SELECT min(id) FROM $s.puntos_interes")"
++    q -c "ALTER TABLE $s.iluminacion DISABLE TRIGGER USER;
++          INSERT INTO $s.iluminacion(id,campus_id,codigo,potencia,estado,geom) VALUES ($id,1,'T-DUP',100,'funcional',$(pt));
++          ALTER TABLE $s.iluminacion ENABLE TRIGGER USER;" >/dev/null
++    r="$(bash "$SIGTEC_HOME/scripts/db/migrate.sh" "$node" 2>&1)"; rc=$?
++    [ "$rc" != 0 ] && echo "$r" | grep -q "repetido(s) entre capas de $s: $id en iluminacion+puntos_interes" \
++        && rec PASS actualizacion.aborta_con_duplicado "rc=$rc, conflicto informado: $id en iluminacion+puntos_interes" \
++        || rec FAIL actualizacion.aborta_con_duplicado "rc=$rc"
++    chk actualizacion.sin_cambios_parciales "$(q -c "SELECT (to_regclass('ops.identificadores_globales') IS NULL) || ':' || (SELECT count(*) FROM ops.schema_migrations WHERE version LIKE 'campus/0103%') || ':' || (SELECT count(*) FROM pg_trigger WHERE tgname='trg_30_registrar_identificador') || ':' || (SELECT prosecdef FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='$s' AND proname='tg_asignar_identificador')")" "true:0:0:true" "registro:0103:trg30:secdef"
++    chk actualizacion.datos_intactos "$(q -c "SELECT count(*) FROM $s.iluminacion WHERE id=$id") $(q -c "SELECT count(*) FROM $s.puntos_interes WHERE id=$id")" "1 1" "no borró ni renumeró"
++    q -c "DELETE FROM $s.iluminacion WHERE codigo='T-DUP'" >/dev/null
++    bash "$SIGTEC_HOME/scripts/db/migrate.sh" "$node" > /dev/null 2>&1; chk actualizacion.aplica_tras_resolver "$?" 0
++    r="$(invariantes "$s")"; chk actualizacion.registro_completo "$r" "41:0:0"
++    chk actualizacion.idempotente "$(bash "$SIGTEC_HOME/scripts/db/migrate.sh" "$node" 2>&1 | grep -c 'aplicada campus/0103')" 0 "un segundo migrate no reaplica 0103"
++    stop_cluster
++}
++
++nodes="$(nodes_expand "${@:-campus}")"
++for node in $nodes; do node_is_campus "$node" && run_campus "$node"; done
++upgrade_path
++
++pass="$(grep -c '^PASS|' "$RESULTS")"; fail="$(grep -c '^FAIL|' "$RESULTS")"
++echo "----"
++echo "RESUMEN identificadores: $pass PASS, $fail FAIL"
++rm -f "$RESULTS"
++[ "$fail" = 0 ]
+--- audit/lab/tests/container/test_backup_failures.sh
++++ tests/container/test_backup_failures.sh
+@@ -0,0 +1,162 @@
++#!/usr/bin/env bash
++# =====================================================================
++# SIG-TEC · pruebas de regresión F-01: los respaldos fallan de verdad
++#   (dentro de sigtec-tools)  tests/container/test_backup_failures.sh [--quick]
++#
++# Todos los casos escriben en BACKUP_ROOT temporales bajo /tmp del contenedor
++# efímero: el volumen real de respaldos (/backups) NO se modifica.
++# Los nodos no se detienen: el "servidor inaccesible" se simula redirigiendo
++# su nombre en /etc/hosts de ESTE contenedor efímero.
++# --quick omite los casos positivos/negativos de seis nodos (solo central/limon).
++# Salida: líneas PASS|FAIL|<caso>|<detalle> y resumen; código 1 si alguna falla.
++# =====================================================================
++. "${SIGTEC_HOME:-/opt/sigtec}/scripts/lib/backup.sh"
++set +e   # este archivo evalúa códigos de salida a mano
++
++T="$SIGTEC_HOME/scripts/backup"
++ROOT="$(mktemp -d /tmp/sigtec-bt.XXXXXX)"
++RESULTS="$ROOT/results"; : > "$RESULTS"
++QUICK=0; [ "${1:-}" = "--quick" ] && QUICK=1
++ALL_NODES="$SIGTEC_NODES"; [ "$QUICK" = 1 ] && ALL_NODES="central limon"
++
++rec() { echo "$1|$2|$3" | tee -a "$RESULTS"; }
++
++# corre <tipo> <raíz> <env...> -- <nodos...> ; deja RC, OUT
++corre() {
++    local kind="$1" root="$2"; shift 2
++    local -a envs=()
++    while [ "$1" != "--" ]; do envs+=("$1"); shift; done; shift
++    OUT="$(env BACKUP_ROOT="$root" "${envs[@]}" bash "$T/${kind}_backup.sh" "$@" 2>&1)"; RC=$?
++}
++publicados() {  # publicados <raíz> <tipo> -> número de respaldos publicados (sin .en-curso/.fallido)
++    ls -1d "$1/$2"/*/*/ 2>/dev/null | wc -l | tr -d ' '
++}
++ok_lines()  { echo "$OUT" | grep -c '  OK ' ; }
++log_rows()  { [ -f "$1/backup_log.tsv" ] && awk -F'\t' -v r="$2" 'NR > 1 && $5 == r' "$1/backup_log.tsv" | wc -l | tr -d ' ' || echo 0; }
++
++# Afirma que un caso NEGATIVO falló sin dejar nada publicado ni OK
++negativo() {   # negativo <caso> <raíz> <tipo> <errores_esperados>
++    local caso="$1" root="$2" kind="$3" n="$4" pub ok err
++    pub="$(publicados "$root" "$kind")"; ok="$(ok_lines)"; err="$(log_rows "$root" ERROR)"
++    if [ "$RC" != 0 ] && [ "$pub" = 0 ] && [ "$ok" = 0 ] && [ "$(log_rows "$root" OK)" = 0 ] \
++       && { [ "$n" = - ] || [ "$err" = "$n" ]; }; then
++        rec PASS "$caso" "rc=$RC, 0 publicados, 0 OK, $err ERROR en bitácora"
++    else
++        rec FAIL "$caso" "rc=$RC publicados=$pub lineas_OK=$ok errores_bitacora=$err (esperados $n)"
++        echo "$OUT" | tail -8 | sed 's/^/    /'
++    fi
++}
++
++for kind in logical physical; do
++    # 1. contraseña incorrecta (todos los nodos)
++    r="$ROOT/$kind-clave"; corre "$kind" "$r" SIGTEC_BACKUP_PASSWORD=clave-deliberadamente-invalida -- $ALL_NODES
++    negativo "$kind.contrasena_incorrecta[$(echo $ALL_NODES | wc -w | tr -d ' ') nodos]" "$r" "$kind" "$(echo $ALL_NODES | wc -w | tr -d ' ')"
++    echo "$OUT" | grep -q 'password authentication failed' \
++        && rec PASS "$kind.diagnostico_autenticacion" "mensaje de PostgreSQL mostrado" \
++        || rec FAIL "$kind.diagnostico_autenticacion" "no se mostró el error de autenticación"
++    echo "$OUT" | grep -q 'clave-deliberadamente-invalida' \
++        && rec FAIL "$kind.sin_secretos_en_salida" "la contraseña aparece en la salida" \
++        || rec PASS "$kind.sin_secretos_en_salida" "la contraseña no aparece en la salida"
++
++    # 2. usuario inexistente
++    r="$ROOT/$kind-usuario"; corre "$kind" "$r" SIGTEC_BACKUP_USER=sigtec_usuario_inexistente -- central
++    negativo "$kind.usuario_inexistente" "$r" "$kind" 1
++
++    # 3. servidor inaccesible (nombre redirigido a una dirección sin servidor)
++    cp /etc/hosts "$ROOT/hosts.orig"; echo "127.0.0.9 pg-limon" >> /etc/hosts
++    r="$ROOT/$kind-inaccesible"; corre "$kind" "$r" PGCONNECT_TIMEOUT=5 -- limon
++    cat "$ROOT/hosts.orig" > /etc/hosts
++    negativo "$kind.servidor_inaccesible" "$r" "$kind" 1
++
++    # 4. sin permiso de escritura (montaje de solo lectura)
++    corre "$kind" "$SIGTEC_HOME/tests/no-escribible" -- central
++    if [ "$RC" != 0 ] && [ ! -e "$SIGTEC_HOME/tests/no-escribible" ]; then
++        rec PASS "$kind.sin_permiso_escritura" "rc=$RC, nada creado"
++    else rec FAIL "$kind.sin_permiso_escritura" "rc=$RC"; fi
++
++    # 5. directorio de salida inválido
++    corre "$kind" /dev/null/respaldos -- central
++    [ "$RC" != 0 ] && rec PASS "$kind.directorio_invalido" "rc=$RC" || rec FAIL "$kind.directorio_invalido" "rc=$RC"
++
++    # 6. fallo de escritura a mitad de la copia (límite de tamaño de archivo)
++    r="$ROOT/$kind-escritura"; mkdir -p "$r"
++    OUT="$( (ulimit -f 48; BACKUP_ROOT="$r" bash "$T/${kind}_backup.sh" cartago) 2>&1)"; RC=$?
++    negativo "$kind.fallo_escritura_parcial" "$r" "$kind" 1
++    resto="$(find "$r/$kind" \( -name sigtec.dump -o -name base -o -name PG_VERSION \) 2>/dev/null | wc -l | tr -d ' ')"
++    [ "$resto" = 0 ] && rec PASS "$kind.sin_archivos_parciales" "el directorio .fallido-* no conserva carga útil" \
++                     || rec FAIL "$kind.sin_archivos_parciales" "$resto archivos de carga útil quedaron en disco"
++
++    # 7. el código sobrevive a un pipeline (pipefail del llamador)
++    r="$ROOT/$kind-pipe"
++    ( set -o pipefail; BACKUP_ROOT="$r" SIGTEC_BACKUP_PASSWORD=x bash "$T/${kind}_backup.sh" central 2>&1 | cat > /dev/null ); RC=$?
++    [ "$RC" != 0 ] && rec PASS "$kind.codigo_en_pipeline" "rc=$RC a través de | cat" || rec FAIL "$kind.codigo_en_pipeline" "rc=$RC"
++done
++
++# 8. positivo: respaldos válidos de los nodos, validación y restauración aislada
++P="$ROOT/positivo"; r="$P"
++for kind in logical physical; do
++    corre "$kind" "$r" -- $ALL_NODES
++    n="$(echo $ALL_NODES | wc -w | tr -d ' ')"; pub="$(publicados "$r" "$kind")"
++    if [ "$RC" = 0 ] && [ "$pub" = "$n" ] && [ "$(ok_lines)" = "$n" ]; then
++        rec PASS "$kind.respaldo_valido[$n nodos]" "rc=0, $pub publicados"
++    else rec FAIL "$kind.respaldo_valido" "rc=$RC publicados=$pub"; echo "$OUT" | tail -8; fi
++done
++for node in $ALL_NODES; do
++    d="$(latest_dir "$r/logical/$node")"
++    ( set -e; validate_logical_dir "$d" "$node" ) 2>/dev/null && rec PASS "logical.validacion[$node]" "TOC, datos y contenido OK" || rec FAIL "logical.validacion[$node]" "$d"
++done
++OUT="$(BACKUP_ROOT="$r" bash "$T/logical_restore_test.sh" $ALL_NODES 2>&1)"; RC=$?
++[ "$RC" = 0 ] && [ "$(echo "$OUT" | grep -c 'VÁLIDA')" = "$(echo $ALL_NODES | wc -w | tr -d ' ')" ] \
++    && rec PASS "logical.restauracion_aislada" "$(echo "$OUT" | grep -c 'VÁLIDA') restauraciones VÁLIDAS" \
++    || { rec FAIL "logical.restauracion_aislada" "rc=$RC"; echo "$OUT" | tail -8; }
++OUT="$(BACKUP_ROOT="$r" bash "$T/physical_restore_test.sh" $ALL_NODES 2>&1)"; RC=$?
++[ "$RC" = 0 ] && [ "$(echo "$OUT" | grep -c 'RECUPERABLE')" = "$(echo $ALL_NODES | wc -w | tr -d ' ')" ] \
++    && rec PASS "physical.recuperacion_aislada" "$(echo "$OUT" | grep -c 'RECUPERABLE') copias RECUPERABLES" \
++    || { rec FAIL "physical.recuperacion_aislada" "rc=$RC"; echo "$OUT" | tail -8; }
++
++# 9. un fallo posterior conserva el respaldo válido anterior como el más reciente
++for kind in logical physical; do
++    before="$(latest_dir "$r/$kind/central")"
++    sleep 1
++    corre "$kind" "$r" SIGTEC_BACKUP_PASSWORD=x -- central
++    after="$(latest_dir "$r/$kind/central")"
++    [ "$RC" != 0 ] && [ -n "$before" ] && [ "$before" = "$after" ] && [ -d "$before" ] \
++        && rec PASS "$kind.conserva_respaldo_anterior" "el último publicado sigue siendo $(basename "$before")" \
++        || rec FAIL "$kind.conserva_respaldo_anterior" "antes=$before después=$after rc=$RC"
++done
++
++# 10. fallo parcial: un nodo cae y el resto se respalda; código global ≠ 0
++cp /etc/hosts "$ROOT/hosts.orig"; echo "127.0.0.9 pg-limon" >> /etc/hosts
++r="$ROOT/mixto"; corre logical "$r" PGCONNECT_TIMEOUT=5 -- central limon
++cat "$ROOT/hosts.orig" > /etc/hosts
++[ "$RC" != 0 ] && [ "$(publicados "$r" logical)" = 1 ] && [ -n "$(latest_dir "$r/logical/central")" ] && [ -z "$(latest_dir "$r/logical/limon")" ] \
++    && rec PASS "logical.fallo_parcial" "rc=$RC; central publicado, limon no" \
++    || rec FAIL "logical.fallo_parcial" "rc=$RC publicados=$(publicados "$r" logical)"
++
++# 11. la validación rechaza artefactos dañados
++c="$ROOT/danado"; mkdir -p "$c/l" "$c/p"
++d="$(latest_dir "$P/logical/cartago")"
++[ -n "$d" ] || rec FAIL logical.rechaza_dump_truncado "no hay respaldo positivo de cartago para alterar"
++if [ -n "$d" ]; then
++    cp "$d/globals.sql" "$c/l/"; head -c "$(( $(stat -c %s "$d/sigtec.dump") * 6 / 10 ))" "$d/sigtec.dump" > "$c/l/sigtec.dump"
++    ( set -e; validate_logical_dir "$c/l" cartago ) 2>/dev/null && rec FAIL logical.rechaza_dump_truncado "aceptado" \
++        || rec PASS logical.rechaza_dump_truncado "pg_restore detectó el truncamiento"
++fi
++d="$(latest_dir "$P/physical/central")"
++[ -n "$d" ] || rec FAIL physical.rechaza_copia_alterada "no hay copia positiva de central para alterar"
++if [ -n "$d" ]; then
++    cp -a "$d/data" "$c/p/data"
++    f="$(find "$c/p/data/base" -type f -size +8k | head -1)"
++    printf 'X' | dd of="$f" bs=1 seek=100 conv=notrunc 2>/dev/null
++    ( set -e; validate_physical_dir "$c/p" ) 2>/dev/null && rec FAIL physical.rechaza_copia_alterada "aceptada" \
++        || rec PASS physical.rechaza_copia_alterada "pg_verifybackup detectó la alteración"
++    rm -f "$c/p/data/backup_manifest"
++    ( set -e; validate_physical_dir "$c/p" ) 2>/dev/null && rec FAIL physical.rechaza_sin_manifiesto "aceptada" \
++        || rec PASS physical.rechaza_sin_manifiesto "falta backup_manifest"
++fi
++
++rm -rf "$ROOT"/positivo "$ROOT"/danado "$ROOT"/*-* 2>/dev/null
++pass="$(grep -c '^PASS|' "$RESULTS")"; fail="$(grep -c '^FAIL|' "$RESULTS")"
++echo "----"
++echo "RESUMEN respaldos: $pass PASS, $fail FAIL"
++[ "$fail" = 0 ]
+--- audit/lab/tests/sql/40_registro_ids.sql
++++ tests/sql/40_registro_ids.sql
+@@ -0,0 +1,114 @@
++-- SIG-TEC · pruebas del registro global de identificadores y de la
++-- autorización del modo de mantenimiento (corrección F-02, migración 0103).
++-- Se ejecuta dentro de una transacción que se REVIERTE: no deja datos ni
++-- roles (los roles de prueba se crean y se descartan en la transacción).
++-- La concurrencia con conexiones independientes se prueba en
++-- tests/container/test_ids_aislado.sh (clústeres temporales).
++-- Variables: :node :schema :campus_id
++BEGIN;
++
++-- Estructura -------------------------------------------------------------
++SELECT pg_temp.t(:'node' || '.registro_existe_con_pk',
++                 EXISTS (SELECT 1 FROM pg_constraint WHERE conrelid = 'ops.identificadores_globales'::regclass
++                          AND contype = 'p' AND conname = 'identificadores_globales_pkey'),
++                 'ops.identificadores_globales (id PRIMARY KEY)');
++SELECT pg_temp.t(:'node' || '.registro_sin_acceso_publico',
++                 NOT has_table_privilege('public', 'ops.identificadores_globales', 'INSERT')
++                 AND NOT has_table_privilege('public', 'ops.identificadores_globales', 'DELETE')
++                 AND NOT has_schema_privilege('public', 'ops', 'USAGE'),
++                 'PUBLIC sin INSERT/DELETE ni USAGE en ops');
++SELECT pg_temp.t(:'node' || '.disparador_registro_8_capas', count(*) = 8, count(*) || ' tablas')
++FROM pg_trigger t JOIN pg_class c ON c.oid = t.tgrelid JOIN pg_namespace n ON n.oid = c.relnamespace
++WHERE n.nspname = :'schema' AND t.tgname = 'trg_30_registrar_identificador' AND t.tgenabled = 'O';
++SELECT pg_temp.t(:'node' || '.asignacion_security_invoker', NOT p.prosecdef, 'tg_asignar_identificador SECURITY INVOKER')
++FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
++WHERE n.nspname = :'schema' AND p.proname = 'tg_asignar_identificador';
++SELECT pg_temp.t(:'node' || '.funciones_definer_search_path_seguro',
++                 bool_and(p.prosecdef AND p.proconfig @> ARRAY['search_path=pg_catalog, pg_temp']),
++                 string_agg(p.proname, ',' ORDER BY p.proname))
++FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
++WHERE n.nspname = :'schema' AND p.proname IN ('sigtec_id_siguiente', 'sigtec_id_autorizar_explicito', 'tg_registrar_identificador');
++SELECT pg_temp.t(:'node' || '.autorizacion_solo_mantenimiento',
++                 has_function_privilege('sigtec_mantenimiento_id', (:'schema' || '.sigtec_id_autorizar_explicito(bigint)'), 'EXECUTE')
++                 AND NOT has_function_privilege('public', (:'schema' || '.sigtec_id_autorizar_explicito(bigint)'), 'EXECUTE')
++                 AND NOT has_function_privilege('public', (:'schema' || '.tg_registrar_identificador()'), 'EXECUTE'),
++                 'EXECUTE de la autorización solo para sigtec_mantenimiento_id');
++SELECT pg_temp.t(:'node' || '.rol_mantenimiento_sin_login',
++                 NOT rolcanlogin AND NOT rolsuper AND NOT rolbypassrls, 'sigtec_mantenimiento_id NOLOGIN')
++FROM pg_roles WHERE rolname = 'sigtec_mantenimiento_id';
++
++-- Datos existentes: todos registrados, ninguno repetido entre capas ------
++SELECT set_config('sigtec.chk_schema', :'schema', true) AS _s \gset
++DO $v$
++DECLARE s text := current_setting('sigtec.chk_schema'); u text;
++BEGIN
++    SELECT string_agg(format('SELECT id, %L::text AS capa FROM %I.%I', c, s, c), ' UNION ALL ') INTO u
++      FROM unnest(ARRAY['edificios','carreteras','aceras','parqueos','zonas_verdes',
++                        'puntos_interes','iluminacion','accesibilidad']) c;
++    EXECUTE format('CREATE TEMP VIEW _obj AS %s', u);   -- se descarta con el ROLLBACK
++END
++$v$;
++SELECT pg_temp.t(:'node' || '.ids_unicos_entre_capas', count(*) = 0, count(*) || ' ids repetidos entre capas')
++FROM (SELECT id FROM _obj GROUP BY id HAVING count(*) > 1) d;
++SELECT pg_temp.t(:'node' || '.todos_los_objetos_registrados', count(*) = 0,
++                 (SELECT count(*) FROM _obj) || ' objetos; ' || count(*) || ' sin registro o con otra capa')
++FROM _obj o LEFT JOIN ops.identificadores_globales g USING (id) WHERE g.id IS NULL OR g.capa <> o.capa;
++SELECT pg_temp.t(:'node' || '.secuencia_cubre_registro',
++                 coalesce(max(id) - :campus_id::bigint * 1000000000, 0)
++                   <= coalesce(pg_sequence_last_value((:'schema' || '.objeto_id_seq')::regclass), 0),
++                 'máximo consecutivo registrado ' || coalesce(max(id) - :campus_id::bigint * 1000000000, 0)
++                   || ' <= último de la secuencia ' || coalesce(pg_sequence_last_value((:'schema' || '.objeto_id_seq')::regclass), 0))
++FROM ops.identificadores_globales;
++
++-- Comportamiento (roles de prueba creados dentro de la transacción) -------
++CREATE ROLE sigtec_t_editor NOLOGIN;
++CREATE ROLE sigtec_t_mant NOLOGIN IN ROLE sigtec_mantenimiento_id;
++SELECT format('GRANT USAGE ON SCHEMA %1$I TO sigtec_t_editor; GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA %1$I TO sigtec_t_editor', :'schema') AS g \gset
++:g;
++
++SELECT set_config('sigtec_test.base', (:campus_id::bigint * 1000000000)::text, true);
++-- consecutivo emitido y sin usar (las secuencias no son transaccionales: consume uno)
++SELECT set_config('sigtec_test.libre',
++       (:campus_id::bigint * 1000000000 + nextval((:'schema' || '.objeto_id_seq')::regclass))::text, true);
++
++SELECT pg_temp.t(:'node' || '.editor_inserta_sin_privilegio_secuencia', r = 'NO_ERROR', r)
++FROM pg_temp.expect_error(format($$SET LOCAL ROLE sigtec_t_editor;
++    INSERT INTO %I.puntos_interes (nombre, tipo, geom) VALUES ('PRUEBA registro', 'otro', ST_SetSRID(ST_MakePoint(450000, 1100000), 5367))$$,
++    :'schema')) r;
++SELECT pg_temp.t(:'node' || '.editor_con_guc_no_inserta_id_explicito', r LIKE '42501:%no está autorizado%', r)
++FROM pg_temp.expect_error(format($$SET LOCAL ROLE sigtec_t_editor; SET LOCAL sigtec.permitir_id_explicito = on;
++    INSERT INTO %I.puntos_interes (id, nombre, tipo, geom) VALUES (%s, 'X', 'otro', ST_SetSRID(ST_MakePoint(450000, 1100000), 5367))$$,
++    :'schema', current_setting('sigtec_test.libre'))) r;
++SELECT pg_temp.t(:'node' || '.editor_no_invoca_autorizacion', r LIKE '42501:%', r)
++FROM pg_temp.expect_error(format($$SET LOCAL ROLE sigtec_t_editor; SELECT %I.sigtec_id_autorizar_explicito(%s)$$,
++    :'schema', current_setting('sigtec_test.libre'))) r;
++SELECT pg_temp.t(:'node' || '.editor_no_escribe_registro', r LIKE '42501:%', r)
++FROM pg_temp.expect_error(format($$SET LOCAL ROLE sigtec_t_editor;
++    INSERT INTO ops.identificadores_globales (id, campus_id, capa, origen) VALUES (%s, %s, 'edificios', 'insercion')$$,
++    current_setting('sigtec_test.libre'), :campus_id)) r;
++SELECT pg_temp.t(:'node' || '.editor_no_desactiva_disparadores', r LIKE '42501:%', r)
++FROM pg_temp.expect_error(format($$SET LOCAL ROLE sigtec_t_editor; ALTER TABLE %I.puntos_interes DISABLE TRIGGER USER$$, :'schema')) r;
++SELECT pg_temp.t(:'node' || '.editor_no_activa_modo_replica', r LIKE '42501:%', r)
++FROM pg_temp.expect_error($$SET LOCAL ROLE sigtec_t_editor; SET LOCAL session_replication_role = replica$$) r;
++
++-- Mantenimiento autorizado: id emitido y libre -> se acepta; el mismo id en otra capa -> 23505
++SELECT pg_temp.t(:'node' || '.mantenimiento_autorizado_y_unicidad_entre_capas',
++                 r = '23505', r)
++FROM (SELECT left(pg_temp.expect_error(format($$SET LOCAL ROLE sigtec_t_mant; SET LOCAL sigtec.permitir_id_explicito = on;
++    INSERT INTO %1$I.puntos_interes (id, nombre, tipo, geom) VALUES (%2$s, 'PRUEBA mant', 'otro', ST_SetSRID(ST_MakePoint(450000, 1100000), 5367));
++    INSERT INTO %1$I.iluminacion (id, codigo, potencia, estado, geom) VALUES (%2$s, 'PRUEBA-MANT', 100, 'funcional', ST_SetSRID(ST_MakePoint(450000, 1100000), 5367))$$,
++    :'schema', current_setting('sigtec_test.libre'))), 5) AS r) x;
++SELECT pg_temp.t(:'node' || '.mantenimiento_autorizado_inserta', r = 'NO_ERROR', r)
++FROM pg_temp.expect_error(format($$SET LOCAL ROLE sigtec_t_mant; SET LOCAL sigtec.permitir_id_explicito = on;
++    INSERT INTO %I.puntos_interes (id, nombre, tipo, geom) VALUES (%s, 'PRUEBA mant', 'otro', ST_SetSRID(ST_MakePoint(450000, 1100000), 5367))$$,
++    :'schema', current_setting('sigtec_test.libre'))) r;
++SELECT pg_temp.t(:'node' || '.mantenimiento_no_modifica_ids', r LIKE '42501:%', r)
++FROM pg_temp.expect_error(format($$SET LOCAL ROLE sigtec_t_mant; UPDATE %I.puntos_interes SET nombre = nombre$$, :'schema')) r;
++
++-- Un id ya registrado (objeto existente) no puede reutilizarse en otra capa
++SELECT pg_temp.t(:'node' || '.id_existente_no_reutilizable', r LIKE '23505:%ya existe en el registro%', r)
++FROM pg_temp.expect_error(format($$SET LOCAL sigtec.permitir_id_explicito = on;
++    INSERT INTO %I.accesibilidad (id, tipo, condicion, geom) VALUES (%s, 'rampa', 'buena', ST_GeomFromText('LINESTRING(450000 1100000,450005 1100005)', 5367))$$,
++    :'schema', (SELECT min(id) FROM ops.identificadores_globales))) r;
++
++ROLLBACK;
+--- audit/lab/Makefile
++++ Makefile
+@@ -85,7 +85,12 @@
+ 	@scripts/backup/run.sh physical_restore_test.sh $(NODE)
+ 
+ wal-retention: ## Muestra qué WAL archivado se podría depurar (KEEP=2 respaldos; APPLY=1 para borrar)
+-	@scripts/backup/wal_retention.sh $(NODE) --keep $${KEEP:-2} $(if $(APPLY),--apply,)
++	@case "$(APPLY)" in \
++	   ""|0) a="" ;; \
++	   1) a="--apply" ;; \
++	   *) echo "APPLY debe ser 1 (eliminar) o 0/vacío (simulación); recibido: $(APPLY)" >&2; exit 2 ;; \
++	 esac; \
++	 scripts/backup/wal_retention.sh $(NODE) --keep $${KEEP:-2} $$a
+ 
+ pitr-demo: ## Demostración de falla + PITR en instancia aislada (NODE=san_carlos)
+ 	@scripts/recovery/pitr_demo.sh $(if $(filter all,$(NODE)),san_carlos,$(NODE))

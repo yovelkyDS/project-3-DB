@@ -1,0 +1,5 @@
+{
+  "rc": 0,
+  "stdout": "campus/0101_capas_locales\ncampus/0102_identificadores\ncommon/0001_postgis\ncommon/0002_ops_nodo\nt\nf\nFIRST_RC=0 SECOND_RC=0\n\nLEGACY_DUPLICATE_ID=3000000083 CONFIRMED_ROWS=2\n",
+  "stderr": ""
+}

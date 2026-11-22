@@ -1,0 +1,6 @@
+{
+  "source": "scripts/recovery/pitr_demo.sh:t",
+  "rc": 0,
+  "stdout": "injected failure\nCAPTURED_RC=37\n",
+  "stderr": ""
+}

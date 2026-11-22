@@ -1,0 +1,37 @@
+laboratorio: remediation/lab  (proyecto sigtec_remed)  fecha: 2026-11-20 17:01:56-0600
+
+=== estado de pg-recovery ===
+nodo=san_carlos campus_id=3
+en_recuperacion=false
+migraciones=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+registro_0103=false
+
+=== RA-01a: make migrate NODE=recovery ===
+nodo inválido: recovery
+MAKE_MIGRATE_RECOVERY_RC=0  0103_aplicada=0
+RESULTADO RA-01a: DEFECTO REPRODUCIDO (código 0 sin aplicar 0103)
+
+=== RA-01b: editor sin privilegios + GUC, mismo id en dos capas desde dos conexiones ===
+editor_usa_secuencia=f
+id elegido (emitido por la secuencia y sin usar): 3000000083
+sesión 1:
+  BEGIN
+  SET
+  SET
+  INSERT 0 1
+   pg_sleep 
+  ----------
+   
+  (1 row)
+  
+  COMMIT
+  rc=0
+sesión 2 (duró 0 s):
+  BEGIN
+  SET
+  SET
+  INSERT 0 1
+  COMMIT
+  rc=0
+filas confirmadas con id 3000000083: 2
+RESULTADO RA-01b: DEFECTO REPRODUCIDO (2 filas con el mismo id)

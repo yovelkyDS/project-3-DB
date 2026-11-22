@@ -1,0 +1,40 @@
+### rol creado y revertido?
+rol_mantenimiento_existe=false
+### resolución del conflicto (decisión del administrador: ambos son datos de prueba de la reproducción)
+DELETE 1
+DELETE 1
+### migrate all
+[2026-11-20 15:11:05-0600] migrando central (pg-central)
+psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+[2026-11-20 15:11:06-0600]   central: 2 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:11:06-0600] migrando cartago (pg-cartago)
+psql:/opt/sigtec/sql/migrations/campus/0103_registro_identificadores.sql:127: NOTICE:  SIG-TEC 0103: 42 identificadores existentes registrados en ops.identificadores_globales
+[2026-11-20 15:11:06-0600]   cartago: aplicada campus/0103_registro_identificadores
+psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+[2026-11-20 15:11:06-0600]   cartago: 5 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:11:06-0600] migrando san_jose (pg-san-jose)
+psql:/opt/sigtec/sql/migrations/campus/0103_registro_identificadores.sql:127: NOTICE:  SIG-TEC 0103: 41 identificadores existentes registrados en ops.identificadores_globales
+[2026-11-20 15:11:06-0600]   san_jose: aplicada campus/0103_registro_identificadores
+psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+[2026-11-20 15:11:06-0600]   san_jose: 5 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:11:06-0600] migrando san_carlos (pg-san-carlos)
+psql:/opt/sigtec/sql/migrations/campus/0103_registro_identificadores.sql:127: NOTICE:  SIG-TEC 0103: 41 identificadores existentes registrados en ops.identificadores_globales
+[2026-11-20 15:11:06-0600]   san_carlos: aplicada campus/0103_registro_identificadores
+psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+[2026-11-20 15:11:06-0600]   san_carlos: 5 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:11:06-0600] migrando alajuela (pg-alajuela)
+psql:/opt/sigtec/sql/migrations/campus/0103_registro_identificadores.sql:127: NOTICE:  SIG-TEC 0103: 41 identificadores existentes registrados en ops.identificadores_globales
+[2026-11-20 15:11:06-0600]   alajuela: aplicada campus/0103_registro_identificadores
+psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+[2026-11-20 15:11:07-0600]   alajuela: 5 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:11:07-0600] migrando limon (pg-limon)
+psql:/opt/sigtec/sql/migrations/campus/0103_registro_identificadores.sql:127: NOTICE:  SIG-TEC 0103: 41 identificadores existentes registrados en ops.identificadores_globales
+[2026-11-20 15:11:07-0600]   limon: aplicada campus/0103_registro_identificadores
+psql:/opt/sigtec/sql/roles/sigtec_backup.sql:26: NOTICE:  role "sigtec_backup" has already been granted membership in role "pg_read_all_data" by role "postgres"
+[2026-11-20 15:11:07-0600]   limon: 5 migraciones registradas; rol sigtec_backup sincronizado
+rc=0
+cartago: registro=42 objetos=42 trg30=8 asignar_secdef=false
+san_jose: registro=41 objetos=41 trg30=8 asignar_secdef=false
+san_carlos: registro=41 objetos=41 trg30=8 asignar_secdef=false
+alajuela: registro=41 objetos=41 trg30=8 asignar_secdef=false
+limon: registro=41 objetos=41 trg30=8 asignar_secdef=false

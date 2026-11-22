@@ -1,0 +1,82 @@
+laboratorio: remediation/lab  (proyecto sigtec_remed)  fecha: 2026-11-20 15:02:06-0600
+
+=== F-01 logical: contraseña de sigtec_backup incorrecta (nodo central) ===
+[2026-11-20 15:02:07-0600] pg_dump central (pg-central) -> logical/central/20261120T210207Z
+pg_restore: error: input file is too short (read 0, expected 5)
+psql: error: connection to server at "pg-central" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+connection to server at "pg-central" (172.24.0.2), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+[2026-11-20 15:02:07-0600]   OK central: 0 bytes, 0 entradas TOC
+rc_script=0
+directorios_publicados=1
+bitacora:
+central	pg_dump	logical/central/20261120T210207Z	OK
+RESULTADO F-01 logical: DEFECTO REPRODUCIDO (rc=0, publicados=1)
+
+=== F-01 physical: contraseña de sigtec_backup incorrecta (nodo central) ===
+[2026-11-20 15:02:07-0600] pg_basebackup central (pg-central) -> physical/central/20261120T210207Z/data
+[2026-11-20 15:02:07-0600]   pg_verifybackup: pg_verifybackup: error: could not open file "/tmp/neg-physical/physical/central/20261120T210207Z/data/backup_manifest": No such file or directory
+sed: can't read /tmp/neg-physical/physical/central/20261120T210207Z/data/backup_label: No such file or directory
+sed: can't read /tmp/neg-physical/physical/central/20261120T210207Z/data/backup_label: No such file or directory
+sed: can't read /tmp/neg-physical/physical/central/20261120T210207Z/data/backup_label: No such file or directory
+du: cannot access '/tmp/neg-physical/physical/central/20261120T210207Z/data': No such file or directory
+[2026-11-20 15:02:07-0600]   OK central: 0 MiB, inicio 
+rc_script=0
+directorios_publicados=1
+bitacora:
+central	pg_basebackup	physical/central/20261120T210207Z	OK
+RESULTADO F-01 physical: DEFECTO REPRODUCIDO (rc=0, publicados=1)
+
+=== F-02 preparación: rol remed_editor sin privilegios de secuencia; consecutivos emitidos sin usar ===
+NOTICE:  role "remed_editor" does not exist, skipping
+DROP ROLE
+CREATE ROLE
+GRANT
+GRANT
+ nextval 
+---------
+      42
+      43
+      44
+(3 rows)
+
+ editor_usa_secuencia | ultimo 
+----------------------+--------
+ f                    |     44
+(1 row)
+
+
+=== F-02a: remed_editor + SET LOCAL sigtec.permitir_id_explicito=on inserta id explícito 1000000042 ===
+BEGIN
+SET
+SET
+     id     
+------------
+ 1000000042
+(1 row)
+
+INSERT 0 1
+COMMIT
+RESULTADO F-02a: DEFECTO REPRODUCIDO (un rol sin privilegios insertó un id explícito)
+
+=== F-02b: dos sesiones concurrentes, mismo id 1000000043 en puntos_interes e iluminacion (remed_editor) ===
+BEGIN
+SET
+SET
+INSERT 0 1
+BEGIN
+SET
+SET
+INSERT 0 1
+COMMIT
+sesion2_rc=0
+ pg_sleep 
+----------
+ 
+(1 row)
+
+COMMIT
+sesion1_rc=0
+
+=== F-02 resultado: ids repetidos entre capas de Cartago ===
+duplicados: 1000000043 x2
+RESULTADO F-02b: DEFECTO REPRODUCIDO (id confirmado en dos capas)

@@ -1,0 +1,1 @@
+2026-11-20 15:28:36-0600 se sustituyó la ruta absoluta del encabezado (línea 1) por una relativa en 01_reproduccion_prefix y 04_reproduccion_postfix/reproduce_audit_defects.log; ningún otro contenido cambió

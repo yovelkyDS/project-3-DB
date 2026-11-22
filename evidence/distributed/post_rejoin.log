@@ -1,0 +1,28 @@
+OK propagación san_carlos edificios 3000000093 INSERT/UPDATE
+OK propagación san_carlos edificios 3000000093 INSERT/UPDATE
+OK propagación san_carlos edificios 3000000093 DELETE
+OK propagación san_carlos carreteras 3000000094 INSERT/UPDATE
+OK propagación san_carlos carreteras 3000000094 INSERT/UPDATE
+OK propagación san_carlos carreteras 3000000094 DELETE
+OK propagación san_carlos aceras 3000000095 INSERT/UPDATE
+OK propagación san_carlos aceras 3000000095 INSERT/UPDATE
+OK propagación san_carlos aceras 3000000095 DELETE
+OK propagación san_carlos parqueos 3000000096 INSERT/UPDATE
+OK propagación san_carlos parqueos 3000000096 INSERT/UPDATE
+OK propagación san_carlos parqueos 3000000096 DELETE
+OK propagación san_carlos zonas_verdes 3000000097 INSERT/UPDATE
+OK propagación san_carlos zonas_verdes 3000000097 INSERT/UPDATE
+OK propagación san_carlos zonas_verdes 3000000097 DELETE
+OK propagación san_carlos puntos_interes 3000000098 INSERT/UPDATE
+OK propagación san_carlos puntos_interes 3000000098 INSERT/UPDATE
+OK propagación san_carlos puntos_interes 3000000098 DELETE
+OK propagación san_carlos iluminacion 3000000099 INSERT/UPDATE
+OK propagación san_carlos iluminacion 3000000099 INSERT/UPDATE
+OK propagación san_carlos iluminacion 3000000099 DELETE
+OK propagación san_carlos accesibilidad 3000000100 INSERT/UPDATE
+OK propagación san_carlos accesibilidad 3000000100 INSERT/UPDATE
+OK propagación san_carlos accesibilidad 3000000100 DELETE
+OK 2PC confirmación en ambos sigtec_e5e32afb9f4e4b338a44f14dad004f8c
+OK 2PC reversión completa sigtec_ac2abd1d732b4f1fbeedf943c8121af3
+Decisión COMMIT persistida; interrupción simulada. Ejecute resolve. GID: sigtec_831ba9150a564b2ab28722b3325519f6
+OK: ocho capas, filas y atributos iguales en ambas rutas; vistas sin perdidas ni duplicados.

@@ -1,0 +1,15 @@
+ Container sigtec_audit_20261120-sigtec-tools-run-f4df6b0f1b38 Creating 
+ Container sigtec_audit_20261120-sigtec-tools-run-f4df6b0f1b38 Created 
+         pubname         |   schemaname   |   tablename    
+-------------------------+----------------+----------------
+ audit_publication_probe | local_san_jose | accesibilidad
+ audit_publication_probe | local_san_jose | aceras
+ audit_publication_probe | local_san_jose | carreteras
+ audit_publication_probe | local_san_jose | edificios
+ audit_publication_probe | local_san_jose | iluminacion
+ audit_publication_probe | local_san_jose | parqueos
+ audit_publication_probe | local_san_jose | puntos_interes
+ audit_publication_probe | local_san_jose | zonas_verdes
+(8 rows)
+
+40

@@ -1,0 +1,7 @@
+sigtec-pg-recovery-1|Up 3 hours (healthy)|127.0.0.1:55436->5432/tcp
+sigtec-pg-alajuela-1|Up 3 hours (healthy)|127.0.0.1:55434->5432/tcp
+sigtec-pg-cartago-1|Up 3 hours (healthy)|127.0.0.1:55431->5432/tcp
+sigtec-pg-limon-1|Up 3 hours (healthy)|127.0.0.1:55435->5432/tcp
+sigtec-pg-san-carlos-1|Up 3 hours (healthy)|127.0.0.1:55433->5432/tcp
+sigtec-pg-san-jose-1|Up 3 hours (healthy)|127.0.0.1:55432->5432/tcp
+sigtec-pg-central-1|Up 3 hours (healthy)|127.0.0.1:55430->5432/tcp

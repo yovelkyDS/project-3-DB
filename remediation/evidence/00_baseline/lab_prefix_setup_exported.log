@@ -1,0 +1,325 @@
+[2026-11-20 15:00:58-0600] == SIG-TEC · instalación (registro: evidence/setup/setup_20261120_150058.log) ==
+[2026-11-20 15:00:58-0600] [1/9] requisitos del host
+SIG-TEC · requisitos (sistema detectado: macos, arm64)
+  [OK]    bash 3.2.57(1)-release
+  [OK]    docker CLI 29.2.1, build a5c7197
+  [OK]    docker compose 5.0.2
+  [OK]    daemon Docker activo (servidor 29.2.1, 7836 MiB, aarch64)
+  [OK]    generador de contraseñas disponible (openssl)
+  [OK]    make 3.81
+  [OK]    espacio en disco suficiente
+  [OK]    puertos 55430-55436 libres
+  [AVISO] el proyecto está en una carpeta sincronizada en la nube. Los datos y respaldos viven en volúmenes Docker (no se sincronizan); solo el código fuente está en esta carpeta.
+Requisitos: LISTO
+[2026-11-20 15:00:59-0600] [2/9] configuración local y credenciales
+[2026-11-20 15:01:00-0600] .env creado a partir de .env.example
+[2026-11-20 15:01:00-0600] .env listo (7 credenciales generadas; los valores no se muestran)
+[2026-11-20 15:01:00-0600] [3/9] imagen sigtec/postgis:17.12-3.5.4 (PostgreSQL 17.12 + PostGIS 3.5.4)
+ Image sigtec/postgis:17.12-3.5.4 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 739B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 3.91kB done
+#2 DONE 0.0s
+
+#3 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#3 DONE 2.0s
+
+#4 docker-image://docker.io/docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183
+#4 resolve docker.io/docker/dockerfile:1@sha256:572cebbc2b15e6f84c077742952674889cb63cd5e9b80abdffcbe587b6f19183 done
+#4 CACHED
+
+#5 [internal] load metadata for docker.io/library/postgres:17.12-trixie@sha256:b60e90042aa6b8dbecd58e224b3e36114dbf8ad754465264c2476ad58a86e45c
+#5 DONE 0.7s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.0s
+
+#7 [build 1/4] FROM docker.io/library/postgres:17.12-trixie@sha256:b60e90042aa6b8dbecd58e224b3e36114dbf8ad754465264c2476ad58a86e45c
+#7 resolve docker.io/library/postgres:17.12-trixie@sha256:b60e90042aa6b8dbecd58e224b3e36114dbf8ad754465264c2476ad58a86e45c done
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 10.25kB done
+#8 DONE 0.0s
+
+#9 [build 4/4] RUN set -eux;     curl -fsSL -o postgis.tar.gz "https://download.osgeo.org/postgis/source/postgis-3.5.4.tar.gz";     echo "bc960a0395942d58abb8078a09bb901bd49555565532f5246cc28292d9eadb57  postgis.tar.gz" | sha256sum -c -;     tar -xzf postgis.tar.gz;     cd "postgis-3.5.4";     ./configure         --without-raster         --without-topology         --without-address-standardizer         --without-protobuf         --without-interrupt-tests;     make -j"$(nproc)";     make install DESTDIR=/out;     find /out -type f \( -name '*.so' -o -path '*/bin/*' \) -exec ldd {} \; 2>/dev/null       | awk '/=> \//{print $3}' | sort -u       | xargs -r -n1 realpath | xargs -r dpkg -S 2>/dev/null       | cut -d: -f1 | sort -u > /out/sigtec-runtime-packages.txt;     cat /out/sigtec-runtime-packages.txt
+#9 CACHED
+
+#10 [stage-1 7/8] COPY initdb/ /docker-entrypoint-initdb.d/
+#10 CACHED
+
+#11 [stage-1 3/8] RUN set -eux;     apt-get update;     apt-get install -y --no-install-recommends openssl $(grep -v -E '^(libc6|libgcc-s1|libstdc\+\+6)$' /tmp/sigtec-runtime-packages.txt);     rm -rf /var/lib/apt/lists/* /tmp/sigtec-runtime-packages.txt
+#11 CACHED
+
+#12 [stage-1 2/8] COPY --from=build /out/sigtec-runtime-packages.txt /tmp/sigtec-runtime-packages.txt
+#12 CACHED
+
+#13 [stage-1 6/8] COPY bin/sigtec-entrypoint bin/sigtec-recovery-entrypoint bin/sigtec-archive-wal /usr/local/bin/
+#13 CACHED
+
+#14 [stage-1 4/8] COPY --from=build /out/usr/ /usr/
+#14 CACHED
+
+#15 [build 2/4] RUN set -eux;     apt-get update;     apt-get install -y --no-install-recommends         build-essential ca-certificates curl pkg-config         "postgresql-server-dev-17"         libgeos-dev libproj-dev libjson-c-dev libxml2-dev;     rm -rf /var/lib/apt/lists/*
+#15 CACHED
+
+#16 [stage-1 5/8] COPY conf/postgresql.conf conf/pg_hba.conf /etc/postgresql/
+#16 CACHED
+
+#17 [build 3/4] WORKDIR /usr/src
+#17 CACHED
+
+#18 [stage-1 8/8] RUN set -eux;     chmod 0755 /usr/local/bin/sigtec-*;     chmod 0644 /etc/postgresql/postgresql.conf /etc/postgresql/pg_hba.conf;     install -d -o postgres -g postgres -m 0700 /var/lib/postgresql/wal_archive /var/lib/postgresql/tls;     test -f "/usr/share/postgresql/17/extension/postgis--3.5.4.sql"
+#18 CACHED
+
+#19 exporting to image
+#19 exporting layers done
+#19 exporting manifest sha256:dc66accc0f736d5f1adbc2e5c5315a7cbc02f7afbc6399a16363c808baec9477 done
+#19 exporting config sha256:29758d686e5fb5ae6ecfd60626ba1c066bc7b8afcc758eb0daa5e30c5dcab6bf done
+#19 exporting attestation manifest sha256:d9b855bd6ac796205d785f86025278aa94981cc305a105c6f1c7b188e510f243 done
+#19 exporting manifest list sha256:e7f89f92a2c4942ed55a28533abd56c23a531ced421df02091c5bed2a24cc31a done
+#19 naming to docker.io/sigtec/postgis:17.12-3.5.4 done
+#19 unpacking to docker.io/sigtec/postgis:17.12-3.5.4 done
+#19 DONE 0.0s
+
+#20 resolving provenance for metadata file
+#20 DONE 0.0s
+ Image sigtec/postgis:17.12-3.5.4 Built 
+[2026-11-20 15:01:03-0600] [4/9] red, volúmenes e inicio de los seis nodos
+ Network sigtec_remed_net Creating 
+ Network sigtec_remed_net Created 
+ Volume sigtec_remed_walarchive_central Creating 
+ Volume sigtec_remed_walarchive_central Created 
+ Volume sigtec_remed_pgdata_san_jose Creating 
+ Volume sigtec_remed_pgdata_san_jose Created 
+ Volume sigtec_remed_pgdata_limon Creating 
+ Volume sigtec_remed_pgdata_limon Created 
+ Volume sigtec_remed_walarchive_cartago Creating 
+ Volume sigtec_remed_walarchive_cartago Created 
+ Volume sigtec_remed_pgdata_san_carlos Creating 
+ Volume sigtec_remed_pgdata_san_carlos Created 
+ Volume sigtec_remed_walarchive_alajuela Creating 
+ Volume sigtec_remed_walarchive_alajuela Created 
+ Volume sigtec_remed_pgdata_central Creating 
+ Volume sigtec_remed_pgdata_central Created 
+ Volume sigtec_remed_walarchive_san_carlos Creating 
+ Volume sigtec_remed_walarchive_san_carlos Created 
+ Volume sigtec_remed_walarchive_san_jose Creating 
+ Volume sigtec_remed_walarchive_san_jose Created 
+ Volume sigtec_remed_pgdata_alajuela Creating 
+ Volume sigtec_remed_pgdata_alajuela Created 
+ Volume sigtec_remed_pgdata_cartago Creating 
+ Volume sigtec_remed_pgdata_cartago Created 
+ Volume sigtec_remed_walarchive_limon Creating 
+ Volume sigtec_remed_walarchive_limon Created 
+ Container sigtec_remed-pg-central-1 Creating 
+ Container sigtec_remed-pg-central-1 Created 
+ Container sigtec_remed-pg-san-carlos-1 Creating 
+ Container sigtec_remed-pg-alajuela-1 Creating 
+ Container sigtec_remed-pg-limon-1 Creating 
+ Container sigtec_remed-pg-cartago-1 Creating 
+ Container sigtec_remed-pg-san-jose-1 Creating 
+ Container sigtec_remed-pg-cartago-1 Created 
+ Container sigtec_remed-pg-limon-1 Created 
+ Container sigtec_remed-pg-alajuela-1 Created 
+ Container sigtec_remed-pg-san-jose-1 Created 
+ Container sigtec_remed-pg-san-carlos-1 Created 
+ Container sigtec_remed-pg-central-1 Starting 
+ Container sigtec_remed-pg-central-1 Started 
+ Container sigtec_remed-pg-central-1 Waiting 
+ Container sigtec_remed-pg-central-1 Waiting 
+ Container sigtec_remed-pg-central-1 Waiting 
+ Container sigtec_remed-pg-central-1 Waiting 
+ Container sigtec_remed-pg-central-1 Waiting 
+ Container sigtec_remed-pg-central-1 Healthy 
+ Container sigtec_remed-pg-alajuela-1 Starting 
+ Container sigtec_remed-pg-central-1 Healthy 
+ Container sigtec_remed-pg-cartago-1 Starting 
+ Container sigtec_remed-pg-central-1 Healthy 
+ Container sigtec_remed-pg-san-carlos-1 Starting 
+ Container sigtec_remed-pg-central-1 Healthy 
+ Container sigtec_remed-pg-san-jose-1 Starting 
+ Container sigtec_remed-pg-central-1 Healthy 
+ Container sigtec_remed-pg-limon-1 Starting 
+ Container sigtec_remed-pg-cartago-1 Started 
+ Container sigtec_remed-pg-alajuela-1 Started 
+ Container sigtec_remed-pg-limon-1 Started 
+ Container sigtec_remed-pg-san-jose-1 Started 
+ Container sigtec_remed-pg-san-carlos-1 Started 
+[2026-11-20 15:01:09-0600] [5/9] esperando estado healthy
+NAME                           IMAGE                        COMMAND                  SERVICE         CREATED          STATUS                    PORTS
+sigtec_remed-pg-alajuela-1     sigtec/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-alajuela     12 seconds ago   Up 5 seconds (healthy)    127.0.0.1:57434->5432/tcp
+sigtec_remed-pg-cartago-1      sigtec/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-cartago      12 seconds ago   Up 5 seconds (healthy)    127.0.0.1:57431->5432/tcp
+sigtec_remed-pg-central-1      sigtec/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-central      12 seconds ago   Up 11 seconds (healthy)   127.0.0.1:57430->5432/tcp
+sigtec_remed-pg-limon-1        sigtec/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-limon        12 seconds ago   Up 5 seconds (healthy)    127.0.0.1:57435->5432/tcp
+sigtec_remed-pg-san-carlos-1   sigtec/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-san-carlos   12 seconds ago   Up 5 seconds (healthy)    127.0.0.1:57433->5432/tcp
+sigtec_remed-pg-san-jose-1     sigtec/postgis:17.12-3.5.4   "sigtec-entrypoint p…"   pg-san-jose     12 seconds ago   Up 5 seconds (healthy)    127.0.0.1:57432->5432/tcp
+[2026-11-20 15:01:15-0600] [6/9] migraciones (PostGIS, ops, esquemas locales, ocho capas, identificadores, rol de respaldo)
+ Volume sigtec_remed_backups Creating 
+ Volume sigtec_remed_backups Created 
+ Container sigtec_remed-sigtec-tools-run-6bf8eac44cb6 Creating 
+ Container sigtec_remed-sigtec-tools-run-6bf8eac44cb6 Created 
+[2026-11-20 15:01:15-0600] migrando central (pg-central)
+psql:/opt/sigtec/sql/migrations/common/0001_postgis.sql:4: NOTICE:  extension "postgis" already exists, skipping
+[2026-11-20 15:01:15-0600]   central: aplicada common/0001_postgis
+[2026-11-20 15:01:15-0600]   central: aplicada common/0002_ops_nodo
+[2026-11-20 15:01:15-0600]   central: 2 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:01:15-0600] migrando cartago (pg-cartago)
+psql:/opt/sigtec/sql/migrations/common/0001_postgis.sql:4: NOTICE:  extension "postgis" already exists, skipping
+[2026-11-20 15:01:16-0600]   cartago: aplicada common/0001_postgis
+[2026-11-20 15:01:16-0600]   cartago: aplicada common/0002_ops_nodo
+[2026-11-20 15:01:16-0600]   cartago: aplicada campus/0101_capas_locales
+[2026-11-20 15:01:16-0600]   cartago: aplicada campus/0102_identificadores
+[2026-11-20 15:01:16-0600]   cartago: 4 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:01:16-0600] migrando san_jose (pg-san-jose)
+psql:/opt/sigtec/sql/migrations/common/0001_postgis.sql:4: NOTICE:  extension "postgis" already exists, skipping
+[2026-11-20 15:01:16-0600]   san_jose: aplicada common/0001_postgis
+[2026-11-20 15:01:16-0600]   san_jose: aplicada common/0002_ops_nodo
+[2026-11-20 15:01:16-0600]   san_jose: aplicada campus/0101_capas_locales
+[2026-11-20 15:01:16-0600]   san_jose: aplicada campus/0102_identificadores
+[2026-11-20 15:01:16-0600]   san_jose: 4 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:01:16-0600] migrando san_carlos (pg-san-carlos)
+psql:/opt/sigtec/sql/migrations/common/0001_postgis.sql:4: NOTICE:  extension "postgis" already exists, skipping
+[2026-11-20 15:01:16-0600]   san_carlos: aplicada common/0001_postgis
+[2026-11-20 15:01:16-0600]   san_carlos: aplicada common/0002_ops_nodo
+[2026-11-20 15:01:16-0600]   san_carlos: aplicada campus/0101_capas_locales
+[2026-11-20 15:01:16-0600]   san_carlos: aplicada campus/0102_identificadores
+[2026-11-20 15:01:16-0600]   san_carlos: 4 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:01:16-0600] migrando alajuela (pg-alajuela)
+psql:/opt/sigtec/sql/migrations/common/0001_postgis.sql:4: NOTICE:  extension "postgis" already exists, skipping
+[2026-11-20 15:01:16-0600]   alajuela: aplicada common/0001_postgis
+[2026-11-20 15:01:16-0600]   alajuela: aplicada common/0002_ops_nodo
+[2026-11-20 15:01:16-0600]   alajuela: aplicada campus/0101_capas_locales
+[2026-11-20 15:01:16-0600]   alajuela: aplicada campus/0102_identificadores
+[2026-11-20 15:01:17-0600]   alajuela: 4 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:01:17-0600] migrando limon (pg-limon)
+psql:/opt/sigtec/sql/migrations/common/0001_postgis.sql:4: NOTICE:  extension "postgis" already exists, skipping
+[2026-11-20 15:01:17-0600]   limon: aplicada common/0001_postgis
+[2026-11-20 15:01:17-0600]   limon: aplicada common/0002_ops_nodo
+[2026-11-20 15:01:17-0600]   limon: aplicada campus/0101_capas_locales
+[2026-11-20 15:01:17-0600]   limon: aplicada campus/0102_identificadores
+[2026-11-20 15:01:17-0600]   limon: 4 migraciones registradas; rol sigtec_backup sincronizado
+[2026-11-20 15:01:17-0600] [7/9] datos de prueba sintéticos
+ Container sigtec_remed-sigtec-tools-run-40d845edc6dd Creating 
+ Container sigtec_remed-sigtec-tools-run-40d845edc6dd Created 
+[2026-11-20 15:01:18-0600] cartago: datos_sinteticos_v1 cargado (41 objetos)
+[2026-11-20 15:01:18-0600] san_jose: datos_sinteticos_v1 cargado (41 objetos)
+[2026-11-20 15:01:18-0600] san_carlos: datos_sinteticos_v1 cargado (41 objetos)
+[2026-11-20 15:01:19-0600] alajuela: datos_sinteticos_v1 cargado (41 objetos)
+[2026-11-20 15:01:19-0600] limon: datos_sinteticos_v1 cargado (41 objetos)
+[2026-11-20 15:01:19-0600] [8/9] verificación inicial
+ Container sigtec_remed-sigtec-tools-run-2a17e324b2f5 Creating 
+ Container sigtec_remed-sigtec-tools-run-2a17e324b2f5 Created 
+
+== central (pg-central) · nodo=central campus_id=- ==
+           postgresql            | postgis | wal_level | archive_mode | wal_archivados | archivado_fallido | en_recuperacion 
+---------------------------------+---------+-----------+--------------+----------------+-------------------+-----------------
+ 17.12 (Debian 17.12-1.pgdg13+1) | 3.5.4   | logical   | on           |              2 |                 0 | f
+(1 row)
+
+
+== cartago (pg-cartago) · nodo=cartago campus_id=1 ==
+           postgresql            | postgis | wal_level | archive_mode | wal_archivados | archivado_fallido | en_recuperacion 
+---------------------------------+---------+-----------+--------------+----------------+-------------------+-----------------
+ 17.12 (Debian 17.12-1.pgdg13+1) | 3.5.4   | logical   | on           |              2 |                 0 | f
+(1 row)
+
+      capa      | filas | geom_nula | geom_vacia | srid_incorrecto | tipo_incorrecto | geom_invalida | campus_incorrecto | id_fuera_formato | ids_duplicados | estado 
+----------------+-------+-----------+------------+-----------------+-----------------+---------------+-------------------+------------------+----------------+--------
+ edificios      |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ carreteras     |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ aceras         |     5 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ parqueos       |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ zonas_verdes   |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ puntos_interes |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ iluminacion    |     8 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ accesibilidad  |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+(8 rows)
+
+== san_jose (pg-san-jose) · nodo=san_jose campus_id=2 ==
+           postgresql            | postgis | wal_level | archive_mode | wal_archivados | archivado_fallido | en_recuperacion 
+---------------------------------+---------+-----------+--------------+----------------+-------------------+-----------------
+ 17.12 (Debian 17.12-1.pgdg13+1) | 3.5.4   | logical   | on           |              2 |                 0 | f
+(1 row)
+
+      capa      | filas | geom_nula | geom_vacia | srid_incorrecto | tipo_incorrecto | geom_invalida | campus_incorrecto | id_fuera_formato | ids_duplicados | estado 
+----------------+-------+-----------+------------+-----------------+-----------------+---------------+-------------------+------------------+----------------+--------
+ edificios      |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ carreteras     |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ aceras         |     5 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ parqueos       |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ zonas_verdes   |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ puntos_interes |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ iluminacion    |     8 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ accesibilidad  |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+(8 rows)
+
+== san_carlos (pg-san-carlos) · nodo=san_carlos campus_id=3 ==
+           postgresql            | postgis | wal_level | archive_mode | wal_archivados | archivado_fallido | en_recuperacion 
+---------------------------------+---------+-----------+--------------+----------------+-------------------+-----------------
+ 17.12 (Debian 17.12-1.pgdg13+1) | 3.5.4   | logical   | on           |              2 |                 0 | f
+(1 row)
+
+      capa      | filas | geom_nula | geom_vacia | srid_incorrecto | tipo_incorrecto | geom_invalida | campus_incorrecto | id_fuera_formato | ids_duplicados | estado 
+----------------+-------+-----------+------------+-----------------+-----------------+---------------+-------------------+------------------+----------------+--------
+ edificios      |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ carreteras     |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ aceras         |     5 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ parqueos       |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ zonas_verdes   |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ puntos_interes |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ iluminacion    |     8 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ accesibilidad  |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+(8 rows)
+
+== alajuela (pg-alajuela) · nodo=alajuela campus_id=4 ==
+           postgresql            | postgis | wal_level | archive_mode | wal_archivados | archivado_fallido | en_recuperacion 
+---------------------------------+---------+-----------+--------------+----------------+-------------------+-----------------
+ 17.12 (Debian 17.12-1.pgdg13+1) | 3.5.4   | logical   | on           |              2 |                 0 | f
+(1 row)
+
+      capa      | filas | geom_nula | geom_vacia | srid_incorrecto | tipo_incorrecto | geom_invalida | campus_incorrecto | id_fuera_formato | ids_duplicados | estado 
+----------------+-------+-----------+------------+-----------------+-----------------+---------------+-------------------+------------------+----------------+--------
+ edificios      |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ carreteras     |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ aceras         |     5 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ parqueos       |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ zonas_verdes   |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ puntos_interes |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ iluminacion    |     8 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ accesibilidad  |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+(8 rows)
+
+== limon (pg-limon) · nodo=limon campus_id=5 ==
+           postgresql            | postgis | wal_level | archive_mode | wal_archivados | archivado_fallido | en_recuperacion 
+---------------------------------+---------+-----------+--------------+----------------+-------------------+-----------------
+ 17.12 (Debian 17.12-1.pgdg13+1) | 3.5.4   | logical   | on           |              2 |                 0 | f
+(1 row)
+
+      capa      | filas | geom_nula | geom_vacia | srid_incorrecto | tipo_incorrecto | geom_invalida | campus_incorrecto | id_fuera_formato | ids_duplicados | estado 
+----------------+-------+-----------+------------+-----------------+-----------------+---------------+-------------------+------------------+----------------+--------
+ edificios      |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ carreteras     |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ aceras         |     5 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ parqueos       |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ zonas_verdes   |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ puntos_interes |     6 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ iluminacion    |     8 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+ accesibilidad  |     4 |         0 |          0 |               0 |               0 |             0 |                 0 |                0 |              0 | OK
+(8 rows)
+[2026-11-20 15:01:20-0600] [9/9] resumen
+
+  SIG-TEC desplegado. Conexiones desde esta máquina (base: sigtec, SRID 5367):
+    Central     127.0.0.1:57430
+    Cartago     127.0.0.1:57431     campus_id 1  esquema local_cartago
+    San José    127.0.0.1:57432     campus_id 2  esquema local_san_jose
+    San Carlos  127.0.0.1:57433     campus_id 3  esquema local_san_carlos
+    Alajuela    127.0.0.1:57434     campus_id 4  esquema local_alajuela
+    Limón       127.0.0.1:57435     campus_id 5  esquema local_limon
+  Credenciales: archivo .env (no versionado).
+  Siguientes pasos:  make test · make backup · make pitr-demo · make help
+rc=0

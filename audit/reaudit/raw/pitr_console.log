@@ -1,0 +1,21 @@
+PASS pitr_no_active_subscriptions
+step scripts/backup/physical_backup.sh 0
+step -c 0
+step scripts/recovery/pitr_steps.sh 0
+step scripts/recovery/pitr_steps.sh 0
+step scripts/recovery/pitr_steps.sh 0
+step scripts/recovery/pitr_steps.sh 0
+PASS pitr_A_target_B_order
+PASS pitr_new_recovery_promoted
+PASS pitr_restores_A_excludes_B_registry_coherent
+FAIL F03_marker_actual_script
+PASS pitr_WAL_replay_stops_before_B
+PASS pitr_source_keeps_A_modified_and_B
+Traceback (most recent call last):
+  File "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/reaudit/probes/independent.py", line 285, in <module>
+    sys.exit(0 if all(r['passed'] for r in records) else 1)
+                  ^^^
+  File "/Users/allanaron06122005gmail.com/Library/CloudStorage/OneDrive-EstudiantesITCR/III_proyecto_bases/audit/reaudit/probes/independent.py", line 285, in <genexpr>
+    sys.exit(0 if all(r['passed'] for r in records) else 1)
+                      ~^^^^^^^^^^
+KeyError: 'passed'

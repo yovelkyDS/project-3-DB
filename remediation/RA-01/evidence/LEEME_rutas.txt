@@ -1,0 +1,1 @@
+Las rutas absolutas del directorio del proyecto en estos registros se sustituyeron por '.' (privacidad y comprobación repo.sin_rutas_absolutas); el contenido restante no se modificó.

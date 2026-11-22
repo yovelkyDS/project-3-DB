@@ -1,0 +1,11 @@
+[2026-11-20 15:49:17-0600] scripts/backup/logical_backup.sh central  (registro: evidence/backups/logical_backup_20261120_154917.log)
+ Container sigtec_remed-sigtec-tools-run-00882ae4a49f Creating 
+ Container sigtec_remed-sigtec-tools-run-00882ae4a49f Created 
+[2026-11-20 15:49:17-0600] pg_dump central (pg-central) -> logical/central/20261120T214917Z
+      | pg_dump: error: connection to server at "pg-central" (172.24.0.8), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+      | connection to server at "pg-central" (172.24.0.8), port 5432 failed: FATAL:  password authentication failed for user "sigtec_backup"
+[2026-11-20 15:49:17-0600]   FALLA: pg_dump terminó con error
+[2026-11-20 15:49:17-0600]   ERROR respaldando central: no se publicó ningún respaldo
+[2026-11-20 15:49:17-0600] RESULTADO: uno o más respaldos lógicos FALLARON
+
+[2026-11-20 15:49:17-0600] resultado: ERROR (código 1)

@@ -1,0 +1,92 @@
+{
+  "Id": "967effcf647490846af4b1fbb3f428a1b90bb1897d018795ed1f2cb2284cbe0e",
+  "Image": "sha256:cc0beda012c0d724bfb69afb0734bc5ac872a5d38db73417305b49dca17402af",
+  "Mounts": [
+    {
+      "Type": "volume",
+      "Name": "sigtec_walarchive_alajuela",
+      "Source": "/var/lib/docker/volumes/sigtec_walarchive_alajuela/_data",
+      "Destination": "/var/lib/postgresql/wal_archive",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    },
+    {
+      "Type": "volume",
+      "Name": "sigtec_pgdata_alajuela",
+      "Source": "/var/lib/docker/volumes/sigtec_pgdata_alajuela/_data",
+      "Destination": "/var/lib/postgresql/data",
+      "Driver": "local",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 64439,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-11-20T17:28:20.564021381Z",
+    "FinishedAt": "2026-11-20T17:28:20.017573547Z",
+    "Health": {
+      "Status": "healthy",
+      "FailingStreak": 0,
+      "Log": [
+        {
+          "Start": "2026-11-20T18:51:05.569763376Z",
+          "End": "2026-11-20T18:51:05.636319001Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:10.639161879Z",
+          "End": "2026-11-20T18:51:10.713511962Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:15.714176756Z",
+          "End": "2026-11-20T18:51:15.775724798Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:20.77886405Z",
+          "End": "2026-11-20T18:51:20.840347008Z",
+          "ExitCode": 0,
+          "Output": ""
+        },
+        {
+          "Start": "2026-11-20T18:51:25.841259886Z",
+          "End": "2026-11-20T18:51:25.902817011Z",
+          "ExitCode": 0,
+          "Output": ""
+        }
+      ]
+    }
+  },
+  "Ports": {
+    "5432/tcp": [
+      {
+        "HostIp": "127.0.0.1",
+        "HostPort": "55434"
+      }
+    ]
+  },
+  "Networks": {
+    "sigtec_net": {
+      "IPAddress": "172.22.0.3",
+      "Aliases": [
+        "sigtec-pg-alajuela-1",
+        "pg-alajuela"
+      ]
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "files_checked": 322,
+  "changed_existing_files": [],
+  "shell_syntax": [
+    {
+      "file": "scripts/setup.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/check_prereqs.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/versions.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/clean.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/recovery/pitr_steps.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/recovery/pitr_demo.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/lib/nodes.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/lib/db.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/lib/backup.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/lib/host.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/db/seed.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/db/verify.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/db/migrate.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/backup/physical_backup.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/backup/physical_restore_test.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/backup/logical_backup.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/backup/wal_retention.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/backup/run.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/backup/list_backups.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "scripts/backup/logical_restore_test.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "tests/run_tests.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "tests/container/run_sql_tests.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "tests/container/test_template_central.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "tests/container/test_ids_aislado.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "tests/container/test_backup_failures.sh",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "docker/postgis/bin/sigtec-entrypoint",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "docker/postgis/bin/sigtec-recovery-entrypoint",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "docker/postgis/bin/sigtec-archive-wal",
+      "rc": 0,
+      "stderr": ""
+    },
+    {
+      "file": "docker/postgis/initdb/10-sigtec-init.sh",
+      "rc": 0,
+      "stderr": ""
+    }
+  ],
+  "original_secret_matches_outside_env": []
+}

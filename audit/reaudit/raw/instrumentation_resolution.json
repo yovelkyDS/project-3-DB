@@ -1,0 +1,7 @@
+{
+  "PITR_initial_marker_probe": "Harness option unsupported, not a project failure",
+  "resolved_by": "marker_followup_independent.json",
+  "legacy_initial_setup": "Harness CREATE DATABASE grouping, before restore",
+  "resolved_legacy_by": "legacy_recovery_reproduction.json",
+  "application_code_modified": false
+}
