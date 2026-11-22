@@ -1,0 +1,103 @@
+name: SIG-TEC CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: sigtec-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validar-y-publicar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Preparar resultados
+        run: mkdir -p ci-results
+
+      - name: Probar coordinador distribuido
+        run: |
+          python -m unittest discover \
+            -s tests/distributed \
+            -p 'test_*.py' -v \
+            2>&1 | tee ci-results/unit.log
+
+      - name: Instalar infraestructura del integrante 1
+        run: |
+          bash scripts/setup.sh \
+            2>&1 | tee ci-results/setup.log
+
+      - name: Ocultar contraseñas generadas en los logs
+        run: |
+          while IFS='=' read -r key value; do
+            if [[ "$key" == *PASSWORD && -n "$value" ]]; then
+              echo "::add-mask::$value"
+            fi
+          done < .env
+
+      - name: Probar SQL, PostGIS e identificadores
+        run: |
+          docker compose --profile tools run --rm -T \
+            sigtec-tools \
+            -c 'bash tests/container/run_sql_tests.sh all' \
+            2>&1 | tee ci-results/sql.log
+
+      - name: Instalar replicación y vistas del integrante 2
+        run: |
+          python scripts/distributed/manage.py setup \
+            2>&1 | tee ci-results/replication.log
+
+      - name: Probar edición, permisos, propagación y 2PC
+        run: |
+          python tests/distributed/integration.py \
+            2>&1 | tee ci-results/integration.log
+
+      - name: Publicar imagen validada
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}/postgis"
+          TAG="${GITHUB_SHA}"
+
+          echo "$GH_TOKEN" | docker login ghcr.io \
+            -u "$GITHUB_ACTOR" --password-stdin
+
+          docker tag sigtec/postgis:17.12-3.5.4 "$IMAGE:$TAG"
+          docker push "$IMAGE:$TAG"
+
+          echo "Imagen publicada: $IMAGE:$TAG" \
+            >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar resultados de esta ejecución
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-ci
+          path: ci-results/
+          retention-days: 14
+
+      - name: Detener laboratorio del runner
+        if: always()
+        run: docker compose --profile recovery down
