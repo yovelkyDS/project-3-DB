@@ -39,7 +39,8 @@ RUN set -eux; \
         --without-address-standardizer \
         --without-protobuf \
         --without-interrupt-tests; \
-    make -j"$(nproc)"; \
+    # Evitar carreras entre sub-make que generan los mismos archivos SQL temporales.
+    make -j1; \
     make install DESTDIR=/out; \
     # Paquetes Debian que proveen las bibliotecas compartidas usadas por PostGIS
     find /out -type f \( -name '*.so' -o -path '*/bin/*' \) -exec ldd {} \; 2>/dev/null \
