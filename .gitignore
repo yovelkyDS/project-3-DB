@@ -30,3 +30,10 @@ dist/
 *.dump
 *.backup
 
+
+# Credenciales locales de QGIS y PostgreSQL (nunca se publican)
+qgis-auth*.db*
+.pgpass
+pg_service.conf
+*.pem
+*.key
