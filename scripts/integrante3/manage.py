@@ -139,7 +139,7 @@ INSERT INTO public.layer_styles
 VALUES
  ('sigtec', 'qgis', {sql_literal('v_' + layer)}, 'geom',
   'SIG-TEC institucional', {sql_literal(qml)}::xml, true,
-  'Simbología institucional SIG-TEC v1.0', current_user, clock_timestamp(), NULL);
+  'Simbología institucional SIG-TEC v2.0', current_user, clock_timestamp(), NULL);
 """
         run_sql("central", statement)
 
@@ -216,8 +216,10 @@ def package() -> Path:
         values = env_values()
         config["central"]["port"] = int(values.get(PORT_KEYS["central"], config["central"]["port"]))
         for node in NODES:
+            # Un campus reincorporado tras PITR se atiende desde pg-recovery.
+            key = "SIGTEC_PORT_RECOVERY" if service(node) == "pg-recovery" else PORT_KEYS[node]
             config["campuses"][node]["port"] = int(
-                values.get(PORT_KEYS[node], config["campuses"][node]["port"])
+                values.get(key, config["campuses"][node]["port"])
             )
     with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(PLUGIN_ROOT.rglob("*")):

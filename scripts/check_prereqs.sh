@@ -105,6 +105,16 @@ fi
 if command -v make >/dev/null 2>&1; then pass "make $(make --version 2>/dev/null | head -1 | sed 's/GNU Make //')"
 else warn "make no encontrado (opcional): use los scripts de scripts/ directamente"; fi
 
+# 6b. Python y QGIS (no hacen falta para levantar los seis nodos)
+py=""
+for p in python3 python; do
+    if "$p" -c 'import sys; sys.exit(sys.version_info < (3, 10))' >/dev/null 2>&1; then py="$p"; break; fi
+done
+if [ -n "$py" ]; then pass "$("$py" --version 2>&1) ($py; sin paquetes pip)"
+else warn "Python >= 3.10 no encontrado: se necesita para replicación, cuentas y estilos (integrantes 2 y 3)"; fi
+if qpy="$("$ROOT/scripts/qgis_python.sh" 2>/dev/null)"; then pass "Python de QGIS: $qpy"
+else warn "QGIS 3.44 LTR no encontrado (no hace falta para los nodos): https://qgis.org/download/  (macOS: brew install --cask qgis@ltr)"; fi
+
 # 7. espacio en disco
 avail_kb="$(df -Pk "$ROOT" 2>/dev/null | awk 'NR==2{print $4}')"
 if [ -n "$avail_kb" ] && [ "$avail_kb" -lt 3000000 ]; then

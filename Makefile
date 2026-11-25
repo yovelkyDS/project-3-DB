@@ -15,7 +15,28 @@ NODE    ?= all
         test test-full backup backup-logical backup-physical backup-list restore-test \
         restore-logical-test restore-physical-test wal-retention pitr-demo recovery-status \
         recovery-stop recovery-clean psql versions clean integrante3-setup integrante3-verify \
-        integrante3-unit qgis-plugin
+        integrante3-unit qgis-plugin qgis-test install test-all datos-reales
+
+# Entorno completo de los tres integrantes
+install: ## Entorno completo: nodos, datos, replicación, cuentas, estilos y ZIP de QGIS
+	@$(MAKE) setup
+	@$(MAKE) replication-setup
+	@$(MAKE) datos-reales
+	@$(MAKE) integrante3-setup
+
+test-all: ## Todas las pruebas: unitarias, SQL, replicación, permisos, 2PC, cuentas y QGIS
+	@$(MAKE) distributed-unit
+	@$(MAKE) integrante3-unit
+	@$(MAKE) test
+	@$(MAKE) distributed-test
+	@$(MAKE) integrante3-verify
+	@$(MAKE) qgis-test
+
+datos-reales: ## Sustituye los datos sintéticos por la geografía real (OSM), con respaldo previo; idempotente
+	@$(PYTHON) scripts/datos/importar.py
+
+qgis-test: qgis-plugin ## Prueba el complemento con PyQGIS real y perfil temporal (requiere QGIS 3.44 LTR)
+	@py="$$(scripts/qgis_python.sh)" && "$$py" tests/integrante3/qgis_integration.py </dev/null
 
 help: ## Muestra esta ayuda
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}'
@@ -118,7 +139,8 @@ clean: ## ELIMINA contenedores y TODOS los volúmenes del proyecto (pide confirm
 	@scripts/clean.sh
 
 # Integrante 2 (Python 3.10+ en el host)
-PYTHON ?= python
+# Primer intérprete >= 3.10 disponible (macOS/Linux suelen traer solo python3; Windows, python).
+PYTHON ?= $(shell for p in python3 python; do "$$p" -c 'import sys; sys.exit(sys.version_info < (3, 10))' >/dev/null 2>&1 && { echo "$$p"; exit 0; }; done; echo python3)
 .PHONY: replication-setup replication-verify distributed-test distributed-unit distributed-resolve
 replication-setup: ## Instala replicación y vistas del integrante 2
 	@$(PYTHON) scripts/distributed/manage.py setup
