@@ -1,0 +1,14 @@
+{
+  "database": "sigtec",
+  "sslmode": "require",
+  "connect_timeout": 5,
+  "srid": 5367,
+  "central": {"host": "127.0.0.1", "port": 55430},
+  "campuses": {
+    "cartago": {"host": "127.0.0.1", "port": 55431},
+    "san_jose": {"host": "127.0.0.1", "port": 55432},
+    "san_carlos": {"host": "127.0.0.1", "port": 55433},
+    "alajuela": {"host": "127.0.0.1", "port": 55434},
+    "limon": {"host": "127.0.0.1", "port": 55435}
+  }
+}
