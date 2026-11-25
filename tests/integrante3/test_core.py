@@ -40,7 +40,11 @@ class CoreTests(unittest.TestCase):
                 options = style.findall("./renderer-v2/symbols/symbol/layer/Option/Option")
                 self.assertTrue(options)
                 for option in options:
-                    self.assertEqual(option.get("type"), "QString", option.get("name"))
+                    # Tipos que escribe QGIS 3.44; cualquier otro se ignora al abrir el estilo.
+                    if option.get("value") is None and not len(option):
+                        continue  # opción vacía (p. ej. "parameters" de un SVG)
+                    self.assertIn(option.get("type"), {"QString", "bool", "double", "int", "Map"},
+                                  option.get("name"))
 
     def test_autenticacion_usa_identidad_de_sesion_sin_tabla_de_claves(self):
         sql = (ROOT / "sql" / "integrante3" / "auth.sql").read_text(encoding="utf-8")
