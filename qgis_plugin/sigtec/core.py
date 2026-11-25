@@ -15,7 +15,22 @@ LAYER_SPECS = (
     ("accesibilidad", "Accesibilidad", "LineString"),
 )
 NODE_CODES = ("cartago", "san_jose", "san_carlos", "alajuela", "limon")
+CAMPUS_NAMES = {
+    "cartago": "Cartago", "san_jose": "San José", "san_carlos": "San Carlos",
+    "alajuela": "Alajuela", "limon": "Limón",
+}
+# De arriba hacia abajo en el mapa: puntos, líneas sobre edificios y superficies al fondo.
+DRAW_ORDER = ("puntos_interes", "iluminacion", "accesibilidad", "edificios",
+              "carreteras", "aceras", "parqueos", "zonas_verdes")
 MANAGED_PROPERTY = "sigtec/managed"
+BASEMAP_PROPERTY = "sigtec/basemap"
+BASEMAP = {
+    "name": "OpenStreetMap",
+    "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "zmax": 19,
+    "attribution": "© colaboradores de OpenStreetMap",
+    "opacity": 0.5,
+}
 
 
 def load_config(path: str | Path) -> dict:
