@@ -1,0 +1,4 @@
+[2026-11-24 22:32:34-0600] scripts/backup/logical_backup.sh san_jose  (registro: evidence/backups/logical_backup_20261124_223234.log)
+[2026-11-24 22:32:35-0600] pg_dump san_jose (pg-san-jose) -> logical/san_jose/20261125T043235Z
+[2026-11-24 22:32:35-0600]   OK san_jose: 296568 bytes, 266 entradas TOC, validado; edificios=13 carreteras=13 aceras=7 parqueos=21 zonas_verdes=27 puntos_interes=21 iluminacion=6 accesibilidad=4
+[2026-11-24 22:32:35-0600] resultado: OK

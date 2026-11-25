@@ -1,0 +1,14 @@
+[2026-11-24 22:18:45-0600] scripts/backup/logical_backup.sh all  (registro: evidence/backups/logical_backup_20261124_221845.log)
+[2026-11-24 22:18:45-0600] pg_dump central (pg-central) -> logical/central/20261125T041845Z
+[2026-11-24 22:18:46-0600]   OK central: 351428 bytes, 608 entradas TOC, validado
+[2026-11-24 22:18:46-0600] pg_dump cartago (pg-cartago) -> logical/cartago/20261125T041846Z
+[2026-11-24 22:18:46-0600]   OK cartago: 146505 bytes, 259 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-24 22:18:46-0600] pg_dump san_jose (pg-san-jose) -> logical/san_jose/20261125T041846Z
+[2026-11-24 22:18:47-0600]   OK san_jose: 146945 bytes, 259 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-24 22:18:47-0600] pg_dump san_carlos (pg-san-carlos) -> logical/san_carlos/20261125T041847Z
+[2026-11-24 22:18:47-0600]   OK san_carlos: 147974 bytes, 259 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-24 22:18:47-0600] pg_dump alajuela (pg-alajuela) -> logical/alajuela/20261125T041847Z
+[2026-11-24 22:18:47-0600]   OK alajuela: 146906 bytes, 259 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-24 22:18:47-0600] pg_dump limon (pg-limon) -> logical/limon/20261125T041847Z
+[2026-11-24 22:18:48-0600]   OK limon: 145635 bytes, 259 entradas TOC, validado; edificios=6 carreteras=4 aceras=5 parqueos=4 zonas_verdes=4 puntos_interes=6 iluminacion=8 accesibilidad=4
+[2026-11-24 22:18:48-0600] resultado: OK

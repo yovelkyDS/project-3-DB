@@ -1,0 +1,822 @@
+[2026-11-24 22:24:37-0600] == SIG-TEC · pruebas (registro: evidence/tests/tests_20261124_222437.log) ==
+[2026-11-24 22:24:37-0600] [1] contenedores, healthchecks, red y volúmenes
+PASS  docker.central.healthy                                     pg-central: healthy
+PASS  docker.central.puerto                                      127.0.0.1:55430 
+PASS  docker.central.volumenes_separados                         sigtec_pgdata_central:/var/lib/postgresql/data sigtec_walarchive_central:/var/lib/postgresql/wal_archive 
+PASS  docker.central.reinicio_automatico                         unless-stopped
+PASS  docker.cartago.healthy                                     pg-cartago: healthy
+PASS  docker.cartago.puerto                                      127.0.0.1:55431 
+PASS  docker.cartago.volumenes_separados                         sigtec_pgdata_cartago:/var/lib/postgresql/data sigtec_walarchive_cartago:/var/lib/postgresql/wal_archive 
+PASS  docker.cartago.reinicio_automatico                         unless-stopped
+PASS  docker.san_jose.healthy                                    pg-san-jose: healthy
+PASS  docker.san_jose.puerto                                     127.0.0.1:55432 
+PASS  docker.san_jose.volumenes_separados                        sigtec_walarchive_san_jose:/var/lib/postgresql/wal_archive sigtec_pgdata_san_jose:/var/lib/postgresql/data 
+PASS  docker.san_jose.reinicio_automatico                        unless-stopped
+PASS  docker.san_carlos.healthy                                  pg-san-carlos: healthy
+PASS  docker.san_carlos.puerto                                   127.0.0.1:55433 
+PASS  docker.san_carlos.volumenes_separados                      sigtec_walarchive_san_carlos:/var/lib/postgresql/wal_archive sigtec_pgdata_san_carlos:/var/lib/postgresql/data 
+PASS  docker.san_carlos.reinicio_automatico                      unless-stopped
+PASS  docker.alajuela.healthy                                    pg-alajuela: healthy
+PASS  docker.alajuela.puerto                                     127.0.0.1:55434 
+PASS  docker.alajuela.volumenes_separados                        sigtec_pgdata_alajuela:/var/lib/postgresql/data sigtec_walarchive_alajuela:/var/lib/postgresql/wal_archive 
+PASS  docker.alajuela.reinicio_automatico                        unless-stopped
+PASS  docker.limon.healthy                                       pg-limon: healthy
+PASS  docker.limon.puerto                                        127.0.0.1:55435 
+PASS  docker.limon.volumenes_separados                           sigtec_pgdata_limon:/var/lib/postgresql/data sigtec_walarchive_limon:/var/lib/postgresql/wal_archive 
+PASS  docker.limon.reinicio_automatico                           unless-stopped
+PASS  docker.red_compartida                                      sigtec_net con 6 contenedores
+[2026-11-24 22:24:39-0600] [2] pruebas SQL y PostGIS en los seis nodos
+ Container sigtec-sigtec-tools-run-be9f2229e8db Creating 
+ Container sigtec-sigtec-tools-run-be9f2229e8db Created 
+PASS  central.base_sigtec                                        sigtec
+PASS  central.postgresql_17_12                                   17.12 (Debian 17.12-1.pgdg13+1)
+PASS  central.postgis_3_5_4                                      ext=3.5.4 lib=3.5.4
+PASS  central.postgis_funciona                                   POINT(444118.34 1145912.93)
+PASS  central.epsg_5367                                          CR05 / CRTM05
+PASS  central.wal_level_logical                                  logical
+PASS  central.slots_y_emisores                                   senders=16 slots=16 logical_workers=8
+PASS  central.archive_mode                                       /usr/local/bin/sigtec-archive-wal "%p" "%f"
+PASS  central.archivado_sin_fallos                               archivados=22 fallidos=0 ultimo=000000010000000000000011.00000028.backup
+PASS  central.data_checksums                                     on
+PASS  central.scram                                              scram-sha-256
+PASS  central.tls_conexion_actual                                TLSv1.3
+PASS  central.node_info                                          central campus_id=NULL
+PASS  central.rol_respaldo_minimo                                replication=t super=f pg_read_all_data=t
+PASS  central.migraciones                                        common/0001_postgis,common/0002_ops_nodo
+PASS  cartago.base_sigtec                                        sigtec
+PASS  cartago.postgresql_17_12                                   17.12 (Debian 17.12-1.pgdg13+1)
+PASS  cartago.postgis_3_5_4                                      ext=3.5.4 lib=3.5.4
+PASS  cartago.postgis_funciona                                   POINT(444118.34 1145912.93)
+PASS  cartago.epsg_5367                                          CR05 / CRTM05
+PASS  cartago.wal_level_logical                                  logical
+PASS  cartago.slots_y_emisores                                   senders=16 slots=16 logical_workers=8
+PASS  cartago.archive_mode                                       /usr/local/bin/sigtec-archive-wal "%p" "%f"
+PASS  cartago.archivado_sin_fallos                               archivados=27 fallidos=0 ultimo=000000010000000000000016.00000028.backup
+PASS  cartago.data_checksums                                     on
+PASS  cartago.scram                                              scram-sha-256
+PASS  cartago.tls_conexion_actual                                TLSv1.3
+PASS  cartago.node_info                                          cartago campus_id=1
+PASS  cartago.rol_respaldo_minimo                                replication=t super=f pg_read_all_data=t
+PASS  cartago.migraciones                                        campus/0101_capas_locales,campus/0102_identificadores,campus/0103_registro_identificadores,common/0001_postgis,common/0002_ops_nodo
+PASS  cartago.ocho_tablas                                        accesibilidad,aceras,carreteras,edificios,iluminacion,parqueos,puntos_interes,zonas_verdes
+PASS  cartago.solo_tablas_de_capas                               ninguna extra
+PASS  cartago.tipos_y_srid_declarados                            accesibilidad:LINESTRING/5367,aceras:LINESTRING/5367,carreteras:LINESTRING/5367,edificios:POLYGON/5367,iluminacion:POINT/5367,parqueos:POLYGON/5367,puntos_interes:POINT/5367,zonas_verdes:POLYGON/5367
+PASS  cartago.pk_id_bigint                                       8 tablas con PK(id bigint)
+PASS  cartago.campus_id_smallint_not_null                        8 tablas
+PASS  cartago.secuencia_unica_compartida                         1 local_cartago.objeto_id_seq 
+PASS  cartago.disparador_inmutabilidad                           8 tablas
+PASS  cartago.id_sin_default                                     ninguna tabla con DEFAULT en id
+PASS  cartago.indices_espaciales                                 8 índices GiST
+PASS  cartago.datos_prueba_registrados                           41 objetos cargados
+PASS  cartago.capa.edificios                                     filas=154 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  cartago.capa.carreteras                                    filas=137 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  cartago.capa.aceras                                        filas=263 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  cartago.capa.parqueos                                      filas=11 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  cartago.capa.zonas_verdes                                  filas=13 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  cartago.capa.puntos_interes                                filas=49 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  cartago.capa.iluminacion                                   filas=250 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  cartago.capa.accesibilidad                                 filas=5 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  cartago.id_unico_entre_capas                               882 ids, 882 distintos, rango 1000001717..1000002598
+PASS  cartago.primer_objeto_consecutivo_1                        id=1000000001 en edificios
+PASS  cartago.coherencia_geografica                              extensión POLYGON((509390 1088864,509390 1090214,510609 1090214,510609 1088864,509390 1088864)); distancia máx. a la referencia 826.4 m
+PASS  cartago.solo_esquema_local_propio                          local_cartago
+PASS  cartago.id_formula_campus                                  puntos_interes=1000002617 iluminacion=1000002618 accesibilidad (id NULL explícito)=1000002619
+PASS  cartago.secuencia_compartida_entre_capas                   consecutivo previo 2616 -> 2617,2618,2619
+PASS  cartago.campus_id_asignado                                 1
+PASS  cartago.rechaza_cambio_de_id                               23514: SIG-TEC: el identificador global es inmutable (1000002617 -> 1000002618)
+PASS  cartago.rechaza_cambio_de_campus                           23514: SIG-TEC: el campus propietario es inmutable (objeto 1000002617: 1 -> 2)
+PASS  cartago.rechaza_insertar_otro_campus                       23514: SIG-TEC: campus_id 2 no pertenece a este nodo (campus 1)
+PASS  cartago.rechaza_id_explicito                               23514: SIG-TEC: el identificador global lo asigna PostgreSQL (se recibió id 1999999999)
+PASS  cartago.mantenimiento_rechaza_id_repetido_entre_capas      23505: SIG-TEC: el id 1000002617 ya existe en el registro global del campus (asignado en puntos_interes; los ids eliminados tampoco se reutilizan)
+PASS  cartago.mantenimiento_rechaza_id_futuro                    23514: SIG-TEC: id 1999999999 no fue emitido por la secuencia del campus 1 (último consecutivo: 2619)
+PASS  cartago.rechaza_srid_distinto                              22023: Geometry SRID (4326) does not match column SRID (5367)
+PASS  cartago.rechaza_tipo_geometrico                            22023: Geometry type (Point) does not match column type (Polygon)
+PASS  cartago.rechaza_geometria_invalida                         23514: new row for relation "zonas_verdes" violates check constraint "zonas_verdes_geom_ck"
+PASS  cartago.rechaza_geometria_nula                             23502: null value in column "geom" of relation "carreteras" violates not-null constraint
+PASS  cartago.rechaza_atributo_obligatorio                       23502: null value in column "nombre" of relation "edificios" violates not-null constraint
+PASS  cartago.rechaza_dominio_invalido                           23514: new row for relation "carreteras" violates check constraint "carreteras_tipo_ck"
+PASS  cartago.rechaza_disponibilidad_mayor_capacidad             23514: new row for relation "parqueos" violates check constraint "parqueos_disponibilidad_ck"
+PASS  cartago.permite_actualizar_atributos                       NO_ERROR
+PASS  cartago.permite_eliminar                                   NO_ERROR
+PASS  cartago.registro_existe_con_pk                             ops.identificadores_globales (id PRIMARY KEY)
+PASS  cartago.registro_sin_acceso_publico                        PUBLIC sin INSERT/DELETE ni USAGE en ops
+PASS  cartago.disparador_registro_8_capas                        8 tablas
+PASS  cartago.asignacion_security_invoker                        tg_asignar_identificador SECURITY INVOKER
+PASS  cartago.funciones_definer_search_path_seguro               sigtec_id_autorizar_explicito,sigtec_id_siguiente,tg_registrar_identificador
+PASS  cartago.autorizacion_solo_mantenimiento                    EXECUTE de la autorización solo para sigtec_mantenimiento_id
+PASS  cartago.rol_mantenimiento_sin_login                        sigtec_mantenimiento_id NOLOGIN
+PASS  cartago.ids_unicos_entre_capas                             0 ids repetidos entre capas
+PASS  cartago.todos_los_objetos_registrados                      882 objetos; 0 sin registro o con otra capa
+PASS  cartago.secuencia_cubre_registro                           máximo consecutivo registrado 2616 <= último de la secuencia 2624
+PASS  cartago.editor_inserta_sin_privilegio_secuencia            NO_ERROR
+PASS  cartago.editor_con_guc_no_inserta_id_explicito             42501: SIG-TEC: el rol sigtec_t_editor no está autorizado para insertar identificadores explícitos
+PASS  cartago.editor_no_invoca_autorizacion                      42501: permission denied for function sigtec_id_autorizar_explicito
+PASS  cartago.editor_no_escribe_registro                         42501: permission denied for schema ops
+PASS  cartago.editor_no_desactiva_disparadores                   42501: must be owner of table puntos_interes
+PASS  cartago.editor_no_activa_modo_replica                      42501: permission denied to set parameter "session_replication_role"
+PASS  cartago.mantenimiento_autorizado_y_unicidad_entre_capas    23505
+PASS  cartago.mantenimiento_autorizado_inserta                   NO_ERROR
+PASS  cartago.mantenimiento_no_modifica_ids                      42501: permission denied for table puntos_interes
+PASS  cartago.id_existente_no_reutilizable                       23505: SIG-TEC: el id 1000000001 ya existe en el registro global del campus (asignado en edificios; los ids eliminados tampoco se reutilizan)
+PASS  san_jose.base_sigtec                                       sigtec
+PASS  san_jose.postgresql_17_12                                  17.12 (Debian 17.12-1.pgdg13+1)
+PASS  san_jose.postgis_3_5_4                                     ext=3.5.4 lib=3.5.4
+PASS  san_jose.postgis_funciona                                  POINT(444118.34 1145912.93)
+PASS  san_jose.epsg_5367                                         CR05 / CRTM05
+PASS  san_jose.wal_level_logical                                 logical
+PASS  san_jose.slots_y_emisores                                  senders=16 slots=16 logical_workers=8
+PASS  san_jose.archive_mode                                      /usr/local/bin/sigtec-archive-wal "%p" "%f"
+PASS  san_jose.archivado_sin_fallos                              archivados=24 fallidos=0 ultimo=000000010000000000000013.00000028.backup
+PASS  san_jose.data_checksums                                    on
+PASS  san_jose.scram                                             scram-sha-256
+PASS  san_jose.tls_conexion_actual                               TLSv1.3
+PASS  san_jose.node_info                                         san_jose campus_id=2
+PASS  san_jose.rol_respaldo_minimo                               replication=t super=f pg_read_all_data=t
+PASS  san_jose.migraciones                                       campus/0101_capas_locales,campus/0102_identificadores,campus/0103_registro_identificadores,common/0001_postgis,common/0002_ops_nodo
+PASS  san_jose.ocho_tablas                                       accesibilidad,aceras,carreteras,edificios,iluminacion,parqueos,puntos_interes,zonas_verdes
+PASS  san_jose.solo_tablas_de_capas                              ninguna extra
+PASS  san_jose.tipos_y_srid_declarados                           accesibilidad:LINESTRING/5367,aceras:LINESTRING/5367,carreteras:LINESTRING/5367,edificios:POLYGON/5367,iluminacion:POINT/5367,parqueos:POLYGON/5367,puntos_interes:POINT/5367,zonas_verdes:POLYGON/5367
+PASS  san_jose.pk_id_bigint                                      8 tablas con PK(id bigint)
+PASS  san_jose.campus_id_smallint_not_null                       8 tablas
+PASS  san_jose.secuencia_unica_compartida                        2 local_san_jose.objeto_id_seq 
+PASS  san_jose.disparador_inmutabilidad                          8 tablas
+PASS  san_jose.id_sin_default                                    ninguna tabla con DEFAULT en id
+PASS  san_jose.indices_espaciales                                8 índices GiST
+PASS  san_jose.datos_prueba_registrados                          41 objetos cargados
+PASS  san_jose.capa.edificios                                    filas=13 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_jose.capa.carreteras                                   filas=13 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_jose.capa.aceras                                       filas=7 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_jose.capa.parqueos                                     filas=21 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_jose.capa.zonas_verdes                                 filas=27 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_jose.capa.puntos_interes                               filas=21 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_jose.capa.iluminacion                                  filas=6 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_jose.capa.accesibilidad                                filas=4 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_jose.id_unico_entre_capas                              112 ids, 112 distintos, rango 2000000300..2000000411
+PASS  san_jose.primer_objeto_consecutivo_1                       id=2000000001 en edificios
+PASS  san_jose.coherencia_geografica                             extensión POLYGON((491480 1098604,491480 1099183,492049 1099183,492049 1098604,491480 1098604)); distancia máx. a la referencia 299.0 m
+PASS  san_jose.solo_esquema_local_propio                         local_san_jose
+PASS  san_jose.id_formula_campus                                 puntos_interes=2000000430 iluminacion=2000000431 accesibilidad (id NULL explícito)=2000000432
+PASS  san_jose.secuencia_compartida_entre_capas                  consecutivo previo 429 -> 430,431,432
+PASS  san_jose.campus_id_asignado                                2
+PASS  san_jose.rechaza_cambio_de_id                              23514: SIG-TEC: el identificador global es inmutable (2000000430 -> 2000000431)
+PASS  san_jose.rechaza_cambio_de_campus                          23514: SIG-TEC: el campus propietario es inmutable (objeto 2000000430: 2 -> 3)
+PASS  san_jose.rechaza_insertar_otro_campus                      23514: SIG-TEC: campus_id 3 no pertenece a este nodo (campus 2)
+PASS  san_jose.rechaza_id_explicito                              23514: SIG-TEC: el identificador global lo asigna PostgreSQL (se recibió id 2999999999)
+PASS  san_jose.mantenimiento_rechaza_id_repetido_entre_capas     23505: SIG-TEC: el id 2000000430 ya existe en el registro global del campus (asignado en puntos_interes; los ids eliminados tampoco se reutilizan)
+PASS  san_jose.mantenimiento_rechaza_id_futuro                   23514: SIG-TEC: id 2999999999 no fue emitido por la secuencia del campus 2 (último consecutivo: 432)
+PASS  san_jose.rechaza_srid_distinto                             22023: Geometry SRID (4326) does not match column SRID (5367)
+PASS  san_jose.rechaza_tipo_geometrico                           22023: Geometry type (Point) does not match column type (Polygon)
+PASS  san_jose.rechaza_geometria_invalida                        23514: new row for relation "zonas_verdes" violates check constraint "zonas_verdes_geom_ck"
+PASS  san_jose.rechaza_geometria_nula                            23502: null value in column "geom" of relation "carreteras" violates not-null constraint
+PASS  san_jose.rechaza_atributo_obligatorio                      23502: null value in column "nombre" of relation "edificios" violates not-null constraint
+PASS  san_jose.rechaza_dominio_invalido                          23514: new row for relation "carreteras" violates check constraint "carreteras_tipo_ck"
+PASS  san_jose.rechaza_disponibilidad_mayor_capacidad            23514: new row for relation "parqueos" violates check constraint "parqueos_disponibilidad_ck"
+PASS  san_jose.permite_actualizar_atributos                      NO_ERROR
+PASS  san_jose.permite_eliminar                                  NO_ERROR
+PASS  san_jose.registro_existe_con_pk                            ops.identificadores_globales (id PRIMARY KEY)
+PASS  san_jose.registro_sin_acceso_publico                       PUBLIC sin INSERT/DELETE ni USAGE en ops
+PASS  san_jose.disparador_registro_8_capas                       8 tablas
+PASS  san_jose.asignacion_security_invoker                       tg_asignar_identificador SECURITY INVOKER
+PASS  san_jose.funciones_definer_search_path_seguro              sigtec_id_autorizar_explicito,sigtec_id_siguiente,tg_registrar_identificador
+PASS  san_jose.autorizacion_solo_mantenimiento                   EXECUTE de la autorización solo para sigtec_mantenimiento_id
+PASS  san_jose.rol_mantenimiento_sin_login                       sigtec_mantenimiento_id NOLOGIN
+PASS  san_jose.ids_unicos_entre_capas                            0 ids repetidos entre capas
+PASS  san_jose.todos_los_objetos_registrados                     112 objetos; 0 sin registro o con otra capa
+PASS  san_jose.secuencia_cubre_registro                          máximo consecutivo registrado 429 <= último de la secuencia 437
+PASS  san_jose.editor_inserta_sin_privilegio_secuencia           NO_ERROR
+PASS  san_jose.editor_con_guc_no_inserta_id_explicito            42501: SIG-TEC: el rol sigtec_t_editor no está autorizado para insertar identificadores explícitos
+PASS  san_jose.editor_no_invoca_autorizacion                     42501: permission denied for function sigtec_id_autorizar_explicito
+PASS  san_jose.editor_no_escribe_registro                        42501: permission denied for schema ops
+PASS  san_jose.editor_no_desactiva_disparadores                  42501: must be owner of table puntos_interes
+PASS  san_jose.editor_no_activa_modo_replica                     42501: permission denied to set parameter "session_replication_role"
+PASS  san_jose.mantenimiento_autorizado_y_unicidad_entre_capas   23505
+PASS  san_jose.mantenimiento_autorizado_inserta                  NO_ERROR
+PASS  san_jose.mantenimiento_no_modifica_ids                     42501: permission denied for table puntos_interes
+PASS  san_jose.id_existente_no_reutilizable                      23505: SIG-TEC: el id 2000000001 ya existe en el registro global del campus (asignado en edificios; los ids eliminados tampoco se reutilizan)
+PASS  san_carlos.base_sigtec                                     sigtec
+PASS  san_carlos.postgresql_17_12                                17.12 (Debian 17.12-1.pgdg13+1)
+PASS  san_carlos.postgis_3_5_4                                   ext=3.5.4 lib=3.5.4
+PASS  san_carlos.postgis_funciona                                POINT(444118.34 1145912.93)
+PASS  san_carlos.epsg_5367                                       CR05 / CRTM05
+PASS  san_carlos.wal_level_logical                               logical
+PASS  san_carlos.slots_y_emisores                                senders=16 slots=16 logical_workers=8
+PASS  san_carlos.archive_mode                                    /usr/local/bin/sigtec-archive-wal "%p" "%f"
+PASS  san_carlos.archivado_sin_fallos                            archivados=26 fallidos=0 ultimo=000000010000000000000015.00000028.backup
+PASS  san_carlos.data_checksums                                  on
+PASS  san_carlos.scram                                           scram-sha-256
+PASS  san_carlos.tls_conexion_actual                             TLSv1.3
+PASS  san_carlos.node_info                                       san_carlos campus_id=3
+PASS  san_carlos.rol_respaldo_minimo                             replication=t super=f pg_read_all_data=t
+PASS  san_carlos.migraciones                                     campus/0101_capas_locales,campus/0102_identificadores,campus/0103_registro_identificadores,common/0001_postgis,common/0002_ops_nodo
+PASS  san_carlos.ocho_tablas                                     accesibilidad,aceras,carreteras,edificios,iluminacion,parqueos,puntos_interes,zonas_verdes
+PASS  san_carlos.solo_tablas_de_capas                            ninguna extra
+PASS  san_carlos.tipos_y_srid_declarados                         accesibilidad:LINESTRING/5367,aceras:LINESTRING/5367,carreteras:LINESTRING/5367,edificios:POLYGON/5367,iluminacion:POINT/5367,parqueos:POLYGON/5367,puntos_interes:POINT/5367,zonas_verdes:POLYGON/5367
+PASS  san_carlos.pk_id_bigint                                    8 tablas con PK(id bigint)
+PASS  san_carlos.campus_id_smallint_not_null                     8 tablas
+PASS  san_carlos.secuencia_unica_compartida                      3 local_san_carlos.objeto_id_seq 
+PASS  san_carlos.disparador_inmutabilidad                        8 tablas
+PASS  san_carlos.id_sin_default                                  ninguna tabla con DEFAULT en id
+PASS  san_carlos.indices_espaciales                              8 índices GiST
+PASS  san_carlos.datos_prueba_registrados                        41 objetos cargados
+PASS  san_carlos.capa.edificios                                  filas=61 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_carlos.capa.carreteras                                 filas=38 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_carlos.capa.aceras                                     filas=160 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_carlos.capa.parqueos                                   filas=22 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_carlos.capa.zonas_verdes                               filas=7 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_carlos.capa.puntos_interes                             filas=20 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_carlos.capa.iluminacion                                filas=131 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_carlos.capa.accesibilidad                              filas=4 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  san_carlos.id_unico_entre_capas                            443 ids, 443 distintos, rango 3000000957..3000001399
+PASS  san_carlos.primer_objeto_consecutivo_1                     id=3000000001 en edificios
+PASS  san_carlos.coherencia_geografica                           extensión POLYGON((443523 1145463,443523 1146647,444560 1146647,444560 1145463,443523 1145463)); distancia máx. a la referencia 898.5 m
+PASS  san_carlos.solo_esquema_local_propio                       local_san_carlos
+PASS  san_carlos.id_formula_campus                               puntos_interes=3000001418 iluminacion=3000001419 accesibilidad (id NULL explícito)=3000001420
+PASS  san_carlos.secuencia_compartida_entre_capas                consecutivo previo 1417 -> 1418,1419,1420
+PASS  san_carlos.campus_id_asignado                              3
+PASS  san_carlos.rechaza_cambio_de_id                            23514: SIG-TEC: el identificador global es inmutable (3000001418 -> 3000001419)
+PASS  san_carlos.rechaza_cambio_de_campus                        23514: SIG-TEC: el campus propietario es inmutable (objeto 3000001418: 3 -> 4)
+PASS  san_carlos.rechaza_insertar_otro_campus                    23514: SIG-TEC: campus_id 4 no pertenece a este nodo (campus 3)
+PASS  san_carlos.rechaza_id_explicito                            23514: SIG-TEC: el identificador global lo asigna PostgreSQL (se recibió id 3999999999)
+PASS  san_carlos.mantenimiento_rechaza_id_repetido_entre_capas   23505: SIG-TEC: el id 3000001418 ya existe en el registro global del campus (asignado en puntos_interes; los ids eliminados tampoco se reutilizan)
+PASS  san_carlos.mantenimiento_rechaza_id_futuro                 23514: SIG-TEC: id 3999999999 no fue emitido por la secuencia del campus 3 (último consecutivo: 1420)
+PASS  san_carlos.rechaza_srid_distinto                           22023: Geometry SRID (4326) does not match column SRID (5367)
+PASS  san_carlos.rechaza_tipo_geometrico                         22023: Geometry type (Point) does not match column type (Polygon)
+PASS  san_carlos.rechaza_geometria_invalida                      23514: new row for relation "zonas_verdes" violates check constraint "zonas_verdes_geom_ck"
+PASS  san_carlos.rechaza_geometria_nula                          23502: null value in column "geom" of relation "carreteras" violates not-null constraint
+PASS  san_carlos.rechaza_atributo_obligatorio                    23502: null value in column "nombre" of relation "edificios" violates not-null constraint
+PASS  san_carlos.rechaza_dominio_invalido                        23514: new row for relation "carreteras" violates check constraint "carreteras_tipo_ck"
+PASS  san_carlos.rechaza_disponibilidad_mayor_capacidad          23514: new row for relation "parqueos" violates check constraint "parqueos_disponibilidad_ck"
+PASS  san_carlos.permite_actualizar_atributos                    NO_ERROR
+PASS  san_carlos.permite_eliminar                                NO_ERROR
+PASS  san_carlos.registro_existe_con_pk                          ops.identificadores_globales (id PRIMARY KEY)
+PASS  san_carlos.registro_sin_acceso_publico                     PUBLIC sin INSERT/DELETE ni USAGE en ops
+PASS  san_carlos.disparador_registro_8_capas                     8 tablas
+PASS  san_carlos.asignacion_security_invoker                     tg_asignar_identificador SECURITY INVOKER
+PASS  san_carlos.funciones_definer_search_path_seguro            sigtec_id_autorizar_explicito,sigtec_id_siguiente,tg_registrar_identificador
+PASS  san_carlos.autorizacion_solo_mantenimiento                 EXECUTE de la autorización solo para sigtec_mantenimiento_id
+PASS  san_carlos.rol_mantenimiento_sin_login                     sigtec_mantenimiento_id NOLOGIN
+PASS  san_carlos.ids_unicos_entre_capas                          0 ids repetidos entre capas
+PASS  san_carlos.todos_los_objetos_registrados                   443 objetos; 0 sin registro o con otra capa
+PASS  san_carlos.secuencia_cubre_registro                        máximo consecutivo registrado 1417 <= último de la secuencia 1425
+PASS  san_carlos.editor_inserta_sin_privilegio_secuencia         NO_ERROR
+PASS  san_carlos.editor_con_guc_no_inserta_id_explicito          42501: SIG-TEC: el rol sigtec_t_editor no está autorizado para insertar identificadores explícitos
+PASS  san_carlos.editor_no_invoca_autorizacion                   42501: permission denied for function sigtec_id_autorizar_explicito
+PASS  san_carlos.editor_no_escribe_registro                      42501: permission denied for schema ops
+PASS  san_carlos.editor_no_desactiva_disparadores                42501: must be owner of table puntos_interes
+PASS  san_carlos.editor_no_activa_modo_replica                   42501: permission denied to set parameter "session_replication_role"
+PASS  san_carlos.mantenimiento_autorizado_y_unicidad_entre_capas 23505
+PASS  san_carlos.mantenimiento_autorizado_inserta                NO_ERROR
+PASS  san_carlos.mantenimiento_no_modifica_ids                   42501: permission denied for table puntos_interes
+PASS  san_carlos.id_existente_no_reutilizable                    23505: SIG-TEC: el id 3000000001 ya existe en el registro global del campus (asignado en edificios; los ids eliminados tampoco se reutilizan)
+PASS  alajuela.base_sigtec                                       sigtec
+PASS  alajuela.postgresql_17_12                                  17.12 (Debian 17.12-1.pgdg13+1)
+PASS  alajuela.postgis_3_5_4                                     ext=3.5.4 lib=3.5.4
+PASS  alajuela.postgis_funciona                                  POINT(444118.34 1145912.93)
+PASS  alajuela.epsg_5367                                         CR05 / CRTM05
+PASS  alajuela.wal_level_logical                                 logical
+PASS  alajuela.slots_y_emisores                                  senders=16 slots=16 logical_workers=8
+PASS  alajuela.archive_mode                                      /usr/local/bin/sigtec-archive-wal "%p" "%f"
+PASS  alajuela.archivado_sin_fallos                              archivados=24 fallidos=0 ultimo=000000010000000000000013.00000028.backup
+PASS  alajuela.data_checksums                                    on
+PASS  alajuela.scram                                             scram-sha-256
+PASS  alajuela.tls_conexion_actual                               TLSv1.3
+PASS  alajuela.node_info                                         alajuela campus_id=4
+PASS  alajuela.rol_respaldo_minimo                               replication=t super=f pg_read_all_data=t
+PASS  alajuela.migraciones                                       campus/0101_capas_locales,campus/0102_identificadores,campus/0103_registro_identificadores,common/0001_postgis,common/0002_ops_nodo
+PASS  alajuela.ocho_tablas                                       accesibilidad,aceras,carreteras,edificios,iluminacion,parqueos,puntos_interes,zonas_verdes
+PASS  alajuela.solo_tablas_de_capas                              ninguna extra
+PASS  alajuela.tipos_y_srid_declarados                           accesibilidad:LINESTRING/5367,aceras:LINESTRING/5367,carreteras:LINESTRING/5367,edificios:POLYGON/5367,iluminacion:POINT/5367,parqueos:POLYGON/5367,puntos_interes:POINT/5367,zonas_verdes:POLYGON/5367
+PASS  alajuela.pk_id_bigint                                      8 tablas con PK(id bigint)
+PASS  alajuela.campus_id_smallint_not_null                       8 tablas
+PASS  alajuela.secuencia_unica_compartida                        4 local_alajuela.objeto_id_seq 
+PASS  alajuela.disparador_inmutabilidad                          8 tablas
+PASS  alajuela.id_sin_default                                    ninguna tabla con DEFAULT en id
+PASS  alajuela.indices_espaciales                                8 índices GiST
+PASS  alajuela.datos_prueba_registrados                          41 objetos cargados
+PASS  alajuela.capa.edificios                                    filas=22 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  alajuela.capa.carreteras                                   filas=47 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  alajuela.capa.aceras                                       filas=10 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  alajuela.capa.parqueos                                     filas=2 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  alajuela.capa.zonas_verdes                                 filas=8 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  alajuela.capa.puntos_interes                               filas=8 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  alajuela.capa.iluminacion                                  filas=43 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  alajuela.capa.accesibilidad                                filas=4 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  alajuela.id_unico_entre_capas                              144 ids, 144 distintos, rango 4000000363..4000000506
+PASS  alajuela.primer_objeto_consecutivo_1                       id=4000000001 en edificios
+PASS  alajuela.coherencia_geografica                             extensión POLYGON((476074 1106259,476074 1106731,476647 1106731,476647 1106259,476074 1106259)); distancia máx. a la referencia 381.1 m
+PASS  alajuela.solo_esquema_local_propio                         local_alajuela
+PASS  alajuela.id_formula_campus                                 puntos_interes=4000000525 iluminacion=4000000526 accesibilidad (id NULL explícito)=4000000527
+PASS  alajuela.secuencia_compartida_entre_capas                  consecutivo previo 524 -> 525,526,527
+PASS  alajuela.campus_id_asignado                                4
+PASS  alajuela.rechaza_cambio_de_id                              23514: SIG-TEC: el identificador global es inmutable (4000000525 -> 4000000526)
+PASS  alajuela.rechaza_cambio_de_campus                          23514: SIG-TEC: el campus propietario es inmutable (objeto 4000000525: 4 -> 5)
+PASS  alajuela.rechaza_insertar_otro_campus                      23514: SIG-TEC: campus_id 5 no pertenece a este nodo (campus 4)
+PASS  alajuela.rechaza_id_explicito                              23514: SIG-TEC: el identificador global lo asigna PostgreSQL (se recibió id 4999999999)
+PASS  alajuela.mantenimiento_rechaza_id_repetido_entre_capas     23505: SIG-TEC: el id 4000000525 ya existe en el registro global del campus (asignado en puntos_interes; los ids eliminados tampoco se reutilizan)
+PASS  alajuela.mantenimiento_rechaza_id_futuro                   23514: SIG-TEC: id 4999999999 no fue emitido por la secuencia del campus 4 (último consecutivo: 527)
+PASS  alajuela.rechaza_srid_distinto                             22023: Geometry SRID (4326) does not match column SRID (5367)
+PASS  alajuela.rechaza_tipo_geometrico                           22023: Geometry type (Point) does not match column type (Polygon)
+PASS  alajuela.rechaza_geometria_invalida                        23514: new row for relation "zonas_verdes" violates check constraint "zonas_verdes_geom_ck"
+PASS  alajuela.rechaza_geometria_nula                            23502: null value in column "geom" of relation "carreteras" violates not-null constraint
+PASS  alajuela.rechaza_atributo_obligatorio                      23502: null value in column "nombre" of relation "edificios" violates not-null constraint
+PASS  alajuela.rechaza_dominio_invalido                          23514: new row for relation "carreteras" violates check constraint "carreteras_tipo_ck"
+PASS  alajuela.rechaza_disponibilidad_mayor_capacidad            23514: new row for relation "parqueos" violates check constraint "parqueos_disponibilidad_ck"
+PASS  alajuela.permite_actualizar_atributos                      NO_ERROR
+PASS  alajuela.permite_eliminar                                  NO_ERROR
+PASS  alajuela.registro_existe_con_pk                            ops.identificadores_globales (id PRIMARY KEY)
+PASS  alajuela.registro_sin_acceso_publico                       PUBLIC sin INSERT/DELETE ni USAGE en ops
+PASS  alajuela.disparador_registro_8_capas                       8 tablas
+PASS  alajuela.asignacion_security_invoker                       tg_asignar_identificador SECURITY INVOKER
+PASS  alajuela.funciones_definer_search_path_seguro              sigtec_id_autorizar_explicito,sigtec_id_siguiente,tg_registrar_identificador
+PASS  alajuela.autorizacion_solo_mantenimiento                   EXECUTE de la autorización solo para sigtec_mantenimiento_id
+PASS  alajuela.rol_mantenimiento_sin_login                       sigtec_mantenimiento_id NOLOGIN
+PASS  alajuela.ids_unicos_entre_capas                            0 ids repetidos entre capas
+PASS  alajuela.todos_los_objetos_registrados                     144 objetos; 0 sin registro o con otra capa
+PASS  alajuela.secuencia_cubre_registro                          máximo consecutivo registrado 524 <= último de la secuencia 532
+PASS  alajuela.editor_inserta_sin_privilegio_secuencia           NO_ERROR
+PASS  alajuela.editor_con_guc_no_inserta_id_explicito            42501: SIG-TEC: el rol sigtec_t_editor no está autorizado para insertar identificadores explícitos
+PASS  alajuela.editor_no_invoca_autorizacion                     42501: permission denied for function sigtec_id_autorizar_explicito
+PASS  alajuela.editor_no_escribe_registro                        42501: permission denied for schema ops
+PASS  alajuela.editor_no_desactiva_disparadores                  42501: must be owner of table puntos_interes
+PASS  alajuela.editor_no_activa_modo_replica                     42501: permission denied to set parameter "session_replication_role"
+PASS  alajuela.mantenimiento_autorizado_y_unicidad_entre_capas   23505
+PASS  alajuela.mantenimiento_autorizado_inserta                  NO_ERROR
+PASS  alajuela.mantenimiento_no_modifica_ids                     42501: permission denied for table puntos_interes
+PASS  alajuela.id_existente_no_reutilizable                      23505: SIG-TEC: el id 4000000001 ya existe en el registro global del campus (asignado en edificios; los ids eliminados tampoco se reutilizan)
+PASS  limon.base_sigtec                                          sigtec
+PASS  limon.postgresql_17_12                                     17.12 (Debian 17.12-1.pgdg13+1)
+PASS  limon.postgis_3_5_4                                        ext=3.5.4 lib=3.5.4
+PASS  limon.postgis_funciona                                     POINT(444118.34 1145912.93)
+PASS  limon.epsg_5367                                            CR05 / CRTM05
+PASS  limon.wal_level_logical                                    logical
+PASS  limon.slots_y_emisores                                     senders=16 slots=16 logical_workers=8
+PASS  limon.archive_mode                                         /usr/local/bin/sigtec-archive-wal "%p" "%f"
+PASS  limon.archivado_sin_fallos                                 archivados=25 fallidos=0 ultimo=000000010000000000000014.00000028.backup
+PASS  limon.data_checksums                                       on
+PASS  limon.scram                                                scram-sha-256
+PASS  limon.tls_conexion_actual                                  TLSv1.3
+PASS  limon.node_info                                            limon campus_id=5
+PASS  limon.rol_respaldo_minimo                                  replication=t super=f pg_read_all_data=t
+PASS  limon.migraciones                                          campus/0101_capas_locales,campus/0102_identificadores,campus/0103_registro_identificadores,common/0001_postgis,common/0002_ops_nodo
+PASS  limon.ocho_tablas                                          accesibilidad,aceras,carreteras,edificios,iluminacion,parqueos,puntos_interes,zonas_verdes
+PASS  limon.solo_tablas_de_capas                                 ninguna extra
+PASS  limon.tipos_y_srid_declarados                              accesibilidad:LINESTRING/5367,aceras:LINESTRING/5367,carreteras:LINESTRING/5367,edificios:POLYGON/5367,iluminacion:POINT/5367,parqueos:POLYGON/5367,puntos_interes:POINT/5367,zonas_verdes:POLYGON/5367
+PASS  limon.pk_id_bigint                                         8 tablas con PK(id bigint)
+PASS  limon.campus_id_smallint_not_null                          8 tablas
+PASS  limon.secuencia_unica_compartida                           5 local_limon.objeto_id_seq 
+PASS  limon.disparador_inmutabilidad                             8 tablas
+PASS  limon.id_sin_default                                       ninguna tabla con DEFAULT en id
+PASS  limon.indices_espaciales                                   8 índices GiST
+PASS  limon.datos_prueba_registrados                             41 objetos cargados
+PASS  limon.capa.edificios                                       filas=5 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  limon.capa.carreteras                                      filas=11 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  limon.capa.aceras                                          filas=1 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  limon.capa.parqueos                                        filas=1 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  limon.capa.zonas_verdes                                    filas=3 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  limon.capa.puntos_interes                                  filas=5 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  limon.capa.iluminacion                                     filas=10 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  limon.capa.accesibilidad                                   filas=4 nulas=0 vacias=0 srid_mal=0 tipo_mal=0 invalidas=0 campus_mal=0 id_mal=0 dup=0
+PASS  limon.id_unico_entre_capas                                 40 ids, 40 distintos, rango 5000000154..5000000193
+PASS  limon.primer_objeto_consecutivo_1                          id=5000000001 en edificios
+PASS  limon.coherencia_geografica                                extensión POLYGON((605581 1105556,605581 1105983,606092 1105983,606092 1105556,605581 1105556)); distancia máx. a la referencia 347.7 m
+PASS  limon.solo_esquema_local_propio                            local_limon
+PASS  limon.id_formula_campus                                    puntos_interes=5000000212 iluminacion=5000000213 accesibilidad (id NULL explícito)=5000000214
+PASS  limon.secuencia_compartida_entre_capas                     consecutivo previo 211 -> 212,213,214
+PASS  limon.campus_id_asignado                                   5
+PASS  limon.rechaza_cambio_de_id                                 23514: SIG-TEC: el identificador global es inmutable (5000000212 -> 5000000213)
+PASS  limon.rechaza_cambio_de_campus                             23514: SIG-TEC: el campus propietario es inmutable (objeto 5000000212: 5 -> 1)
+PASS  limon.rechaza_insertar_otro_campus                         23514: SIG-TEC: campus_id 1 no pertenece a este nodo (campus 5)
+PASS  limon.rechaza_id_explicito                                 23514: SIG-TEC: el identificador global lo asigna PostgreSQL (se recibió id 5999999999)
+PASS  limon.mantenimiento_rechaza_id_repetido_entre_capas        23505: SIG-TEC: el id 5000000212 ya existe en el registro global del campus (asignado en puntos_interes; los ids eliminados tampoco se reutilizan)
+PASS  limon.mantenimiento_rechaza_id_futuro                      23514: SIG-TEC: id 5999999999 no fue emitido por la secuencia del campus 5 (último consecutivo: 214)
+PASS  limon.rechaza_srid_distinto                                22023: Geometry SRID (4326) does not match column SRID (5367)
+PASS  limon.rechaza_tipo_geometrico                              22023: Geometry type (Point) does not match column type (Polygon)
+PASS  limon.rechaza_geometria_invalida                           23514: new row for relation "zonas_verdes" violates check constraint "zonas_verdes_geom_ck"
+PASS  limon.rechaza_geometria_nula                               23502: null value in column "geom" of relation "carreteras" violates not-null constraint
+PASS  limon.rechaza_atributo_obligatorio                         23502: null value in column "nombre" of relation "edificios" violates not-null constraint
+PASS  limon.rechaza_dominio_invalido                             23514: new row for relation "carreteras" violates check constraint "carreteras_tipo_ck"
+PASS  limon.rechaza_disponibilidad_mayor_capacidad               23514: new row for relation "parqueos" violates check constraint "parqueos_disponibilidad_ck"
+PASS  limon.permite_actualizar_atributos                         NO_ERROR
+PASS  limon.permite_eliminar                                     NO_ERROR
+PASS  limon.registro_existe_con_pk                               ops.identificadores_globales (id PRIMARY KEY)
+PASS  limon.registro_sin_acceso_publico                          PUBLIC sin INSERT/DELETE ni USAGE en ops
+PASS  limon.disparador_registro_8_capas                          8 tablas
+PASS  limon.asignacion_security_invoker                          tg_asignar_identificador SECURITY INVOKER
+PASS  limon.funciones_definer_search_path_seguro                 sigtec_id_autorizar_explicito,sigtec_id_siguiente,tg_registrar_identificador
+PASS  limon.autorizacion_solo_mantenimiento                      EXECUTE de la autorización solo para sigtec_mantenimiento_id
+PASS  limon.rol_mantenimiento_sin_login                          sigtec_mantenimiento_id NOLOGIN
+PASS  limon.ids_unicos_entre_capas                               0 ids repetidos entre capas
+PASS  limon.todos_los_objetos_registrados                        40 objetos; 0 sin registro o con otra capa
+PASS  limon.secuencia_cubre_registro                             máximo consecutivo registrado 211 <= último de la secuencia 219
+PASS  limon.editor_inserta_sin_privilegio_secuencia              NO_ERROR
+PASS  limon.editor_con_guc_no_inserta_id_explicito               42501: SIG-TEC: el rol sigtec_t_editor no está autorizado para insertar identificadores explícitos
+PASS  limon.editor_no_invoca_autorizacion                        42501: permission denied for function sigtec_id_autorizar_explicito
+PASS  limon.editor_no_escribe_registro                           42501: permission denied for schema ops
+PASS  limon.editor_no_desactiva_disparadores                     42501: must be owner of table puntos_interes
+PASS  limon.editor_no_activa_modo_replica                        42501: permission denied to set parameter "session_replication_role"
+PASS  limon.mantenimiento_autorizado_y_unicidad_entre_capas      23505
+PASS  limon.mantenimiento_autorizado_inserta                     NO_ERROR
+PASS  limon.mantenimiento_no_modifica_ids                        42501: permission denied for table puntos_interes
+PASS  limon.id_existente_no_reutilizable                         23505: SIG-TEC: el id 5000000001 ya existe en el registro global del campus (asignado en edificios; los ids eliminados tampoco se reutilizan)
+PASS  global.ids_unicos_entre_campus                             1621 ids en 5 campus, 0 duplicados, prefijo = campus_id en todos
+PASS  global.plantilla_central_compatible                        plantilla aplicada en clúster temporal: 5 esquemas × 8 tablas idénticos a los originales (columnas, tipos, NOT NULL, defaults, PK, CHECK, replica identity)
+----
+RESUMEN: 392 PASS, 0 FAIL
+[2026-11-24 22:24:43-0600] [2b] regresión F-01: los respaldos fallidos fallan (negativos y positivos, seis nodos)
+ Container sigtec-sigtec-tools-run-eb37abaa795e Creating 
+ Container sigtec-sigtec-tools-run-eb37abaa795e Created 
+PASS|logical.contrasena_incorrecta[6 nodos]|rc=1, 0 publicados, 0 OK, 6 ERROR en bitácora
+PASS|logical.diagnostico_autenticacion|mensaje de PostgreSQL mostrado
+PASS|logical.sin_secretos_en_salida|la contraseña no aparece en la salida
+PASS|logical.usuario_inexistente|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|logical.servidor_inaccesible|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|logical.sin_permiso_escritura|rc=1, nada creado
+PASS|logical.directorio_invalido|rc=1
+PASS|logical.fallo_escritura_parcial|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|logical.sin_archivos_parciales|el directorio .fallido-* no conserva carga útil
+PASS|logical.codigo_en_pipeline|rc=1 a través de | cat
+PASS|physical.contrasena_incorrecta[6 nodos]|rc=1, 0 publicados, 0 OK, 6 ERROR en bitácora
+PASS|physical.diagnostico_autenticacion|mensaje de PostgreSQL mostrado
+PASS|physical.sin_secretos_en_salida|la contraseña no aparece en la salida
+PASS|physical.usuario_inexistente|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|physical.servidor_inaccesible|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|physical.sin_permiso_escritura|rc=1, nada creado
+PASS|physical.directorio_invalido|rc=1
+PASS|physical.fallo_escritura_parcial|rc=1, 0 publicados, 0 OK, 1 ERROR en bitácora
+PASS|physical.sin_archivos_parciales|el directorio .fallido-* no conserva carga útil
+PASS|physical.codigo_en_pipeline|rc=1 a través de | cat
+PASS|logical.respaldo_valido[6 nodos]|rc=0, 6 publicados
+PASS|physical.respaldo_valido[6 nodos]|rc=0, 6 publicados
+PASS|logical.validacion[central]|TOC, datos y contenido OK
+PASS|logical.validacion[cartago]|TOC, datos y contenido OK
+PASS|logical.validacion[san_jose]|TOC, datos y contenido OK
+PASS|logical.validacion[san_carlos]|TOC, datos y contenido OK
+PASS|logical.validacion[alajuela]|TOC, datos y contenido OK
+PASS|logical.validacion[limon]|TOC, datos y contenido OK
+PASS|logical.restauracion_aislada|6 restauraciones VÁLIDAS
+PASS|physical.recuperacion_aislada|6 copias RECUPERABLES
+PASS|logical.conserva_respaldo_anterior|el último publicado sigue siendo 20261125T042445Z
+PASS|physical.conserva_respaldo_anterior|el último publicado sigue siendo 20261125T042447Z
+PASS|logical.fallo_parcial|rc=1; central publicado, limon no
+PASS|logical.rechaza_dump_truncado|pg_restore detectó el truncamiento
+PASS|physical.rechaza_copia_alterada|pg_verifybackup detectó la alteración
+PASS|physical.rechaza_sin_manifiesto|falta backup_manifest
+----
+RESUMEN respaldos: 36 PASS, 0 FAIL
+[2026-11-24 22:25:19-0600] [2b] regresión F-02: unicidad global de ids, concurrencia y mantenimiento (clústeres temporales)
+ Container sigtec-sigtec-tools-run-ad133aafabd9 Creating 
+ Container sigtec-sigtec-tools-run-ad133aafabd9 Created 
+PASS|cartago.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|cartago.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|cartago.editor_sin_privilegio_secuencia|f
+PASS|cartago.insercion_normal_id_generado|id=1000000042
+PASS|cartago.insercion_normal_registrada|puntos_interes/insercion
+PASS|cartago.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|cartago.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|cartago.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|cartago.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|cartago.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|cartago.carrera_mismo_id_primera_confirmada|rc=0
+PASS|cartago.carrera_mismo_id_una_sola_fila|1
+PASS|cartago.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|cartago.carrera_revertida_registro_coherente|zonas_verdes
+PASS|cartago.id_explicito_repetido_otra_capa|23505
+PASS|cartago.rechaza_id_prefijo_otro_campus|23514
+PASS|cartago.rechaza_campus_id_ajeno|23514
+PASS|cartago.rechaza_modificar_id|23514
+PASS|cartago.rechaza_modificar_campus_id|23514
+PASS|cartago.rechaza_modificar_id_mantenimiento|42501
+PASS|cartago.editor_con_guc_rechazado|42501
+PASS|cartago.editor_no_ejecuta_autorizacion|42501
+PASS|cartago.editor_no_escribe_registro|42501
+PASS|cartago.editor_no_borra_registro|42501
+PASS|cartago.editor_no_usa_secuencia|42501
+PASS|cartago.editor_no_desactiva_disparadores|42501
+PASS|cartago.editor_no_modo_replica|42501
+PASS|cartago.editor_no_reutiliza_disparador|42501
+PASS|cartago.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|cartago.rol_sin_permisos_no_inserta|42501
+PASS|cartago.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|cartago.mantenimiento_rechaza_id_no_emitido|23514
+PASS|cartago.mantenimiento_sin_guc_rechazado|23514
+PASS|cartago.rollback_no_deja_registro|0
+PASS|cartago.rollback_siguiente_id_mayor|1000000447 revertido -> 1000000448
+PASS|cartago.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|cartago.eliminacion_conserva_registro|parqueos
+PASS|cartago.eliminacion_id_no_reutilizable|23505
+PASS|cartago.eliminacion_nuevo_id_distinto|1000000449 eliminado -> nuevo 1000000450
+PASS|cartago.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|cartago.reinicio_inserta_y_registra|1
+PASS|cartago.restauracion_sin_errores|0
+PASS|cartago.restauracion_invariantes|0:0
+PASS|cartago.restauracion_disparadores|24
+PASS|cartago.restauracion_id_posterior_rechazado_antes_de_ajustar|id 1000000452 no emitido según la secuencia restaurada
+PASS|cartago.restauracion_reincorpora_id_posterior|id 1000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|cartago.restauracion_rechaza_duplicado|23505
+PASS|cartago.restauracion_secuencia_ajustada|máximo conocido 1000000452 -> siguiente 1000000453
+PASS|cartago.publicacion_ocho_tablas|8
+PASS|cartago.publicacion_excluye_ops|0
+PASS|cartago.replica_identity_pk|8
+PASS|cartago.columnas_sin_cambios|48
+PASS|cartago.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|san_jose.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|san_jose.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|san_jose.editor_sin_privilegio_secuencia|f
+PASS|san_jose.insercion_normal_id_generado|id=2000000042
+PASS|san_jose.insercion_normal_registrada|puntos_interes/insercion
+PASS|san_jose.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|san_jose.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|san_jose.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|san_jose.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|san_jose.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|san_jose.carrera_mismo_id_primera_confirmada|rc=0
+PASS|san_jose.carrera_mismo_id_una_sola_fila|1
+PASS|san_jose.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|san_jose.carrera_revertida_registro_coherente|zonas_verdes
+PASS|san_jose.id_explicito_repetido_otra_capa|23505
+PASS|san_jose.rechaza_id_prefijo_otro_campus|23514
+PASS|san_jose.rechaza_campus_id_ajeno|23514
+PASS|san_jose.rechaza_modificar_id|23514
+PASS|san_jose.rechaza_modificar_campus_id|23514
+PASS|san_jose.rechaza_modificar_id_mantenimiento|42501
+PASS|san_jose.editor_con_guc_rechazado|42501
+PASS|san_jose.editor_no_ejecuta_autorizacion|42501
+PASS|san_jose.editor_no_escribe_registro|42501
+PASS|san_jose.editor_no_borra_registro|42501
+PASS|san_jose.editor_no_usa_secuencia|42501
+PASS|san_jose.editor_no_desactiva_disparadores|42501
+PASS|san_jose.editor_no_modo_replica|42501
+PASS|san_jose.editor_no_reutiliza_disparador|42501
+PASS|san_jose.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|san_jose.rol_sin_permisos_no_inserta|42501
+PASS|san_jose.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|san_jose.mantenimiento_rechaza_id_no_emitido|23514
+PASS|san_jose.mantenimiento_sin_guc_rechazado|23514
+PASS|san_jose.rollback_no_deja_registro|0
+PASS|san_jose.rollback_siguiente_id_mayor|2000000447 revertido -> 2000000448
+PASS|san_jose.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|san_jose.eliminacion_conserva_registro|parqueos
+PASS|san_jose.eliminacion_id_no_reutilizable|23505
+PASS|san_jose.eliminacion_nuevo_id_distinto|2000000449 eliminado -> nuevo 2000000450
+PASS|san_jose.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|san_jose.reinicio_inserta_y_registra|1
+PASS|san_jose.restauracion_sin_errores|0
+PASS|san_jose.restauracion_invariantes|0:0
+PASS|san_jose.restauracion_disparadores|24
+PASS|san_jose.restauracion_id_posterior_rechazado_antes_de_ajustar|id 2000000452 no emitido según la secuencia restaurada
+PASS|san_jose.restauracion_reincorpora_id_posterior|id 2000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|san_jose.restauracion_rechaza_duplicado|23505
+PASS|san_jose.restauracion_secuencia_ajustada|máximo conocido 2000000452 -> siguiente 2000000453
+PASS|san_jose.publicacion_ocho_tablas|8
+PASS|san_jose.publicacion_excluye_ops|0
+PASS|san_jose.replica_identity_pk|8
+PASS|san_jose.columnas_sin_cambios|48
+PASS|san_jose.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|san_carlos.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|san_carlos.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|san_carlos.editor_sin_privilegio_secuencia|f
+PASS|san_carlos.insercion_normal_id_generado|id=3000000042
+PASS|san_carlos.insercion_normal_registrada|puntos_interes/insercion
+PASS|san_carlos.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|san_carlos.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|san_carlos.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|san_carlos.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|san_carlos.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|san_carlos.carrera_mismo_id_primera_confirmada|rc=0
+PASS|san_carlos.carrera_mismo_id_una_sola_fila|1
+PASS|san_carlos.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|san_carlos.carrera_revertida_registro_coherente|zonas_verdes
+PASS|san_carlos.id_explicito_repetido_otra_capa|23505
+PASS|san_carlos.rechaza_id_prefijo_otro_campus|23514
+PASS|san_carlos.rechaza_campus_id_ajeno|23514
+PASS|san_carlos.rechaza_modificar_id|23514
+PASS|san_carlos.rechaza_modificar_campus_id|23514
+PASS|san_carlos.rechaza_modificar_id_mantenimiento|42501
+PASS|san_carlos.editor_con_guc_rechazado|42501
+PASS|san_carlos.editor_no_ejecuta_autorizacion|42501
+PASS|san_carlos.editor_no_escribe_registro|42501
+PASS|san_carlos.editor_no_borra_registro|42501
+PASS|san_carlos.editor_no_usa_secuencia|42501
+PASS|san_carlos.editor_no_desactiva_disparadores|42501
+PASS|san_carlos.editor_no_modo_replica|42501
+PASS|san_carlos.editor_no_reutiliza_disparador|42501
+PASS|san_carlos.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|san_carlos.rol_sin_permisos_no_inserta|42501
+PASS|san_carlos.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|san_carlos.mantenimiento_rechaza_id_no_emitido|23514
+PASS|san_carlos.mantenimiento_sin_guc_rechazado|23514
+PASS|san_carlos.rollback_no_deja_registro|0
+PASS|san_carlos.rollback_siguiente_id_mayor|3000000447 revertido -> 3000000448
+PASS|san_carlos.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|san_carlos.eliminacion_conserva_registro|parqueos
+PASS|san_carlos.eliminacion_id_no_reutilizable|23505
+PASS|san_carlos.eliminacion_nuevo_id_distinto|3000000449 eliminado -> nuevo 3000000450
+PASS|san_carlos.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|san_carlos.reinicio_inserta_y_registra|1
+PASS|san_carlos.restauracion_sin_errores|0
+PASS|san_carlos.restauracion_invariantes|0:0
+PASS|san_carlos.restauracion_disparadores|24
+PASS|san_carlos.restauracion_id_posterior_rechazado_antes_de_ajustar|id 3000000452 no emitido según la secuencia restaurada
+PASS|san_carlos.restauracion_reincorpora_id_posterior|id 3000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|san_carlos.restauracion_rechaza_duplicado|23505
+PASS|san_carlos.restauracion_secuencia_ajustada|máximo conocido 3000000452 -> siguiente 3000000453
+PASS|san_carlos.publicacion_ocho_tablas|8
+PASS|san_carlos.publicacion_excluye_ops|0
+PASS|san_carlos.replica_identity_pk|8
+PASS|san_carlos.columnas_sin_cambios|48
+PASS|san_carlos.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|alajuela.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|alajuela.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|alajuela.editor_sin_privilegio_secuencia|f
+PASS|alajuela.insercion_normal_id_generado|id=4000000042
+PASS|alajuela.insercion_normal_registrada|puntos_interes/insercion
+PASS|alajuela.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|alajuela.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|alajuela.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|alajuela.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|alajuela.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|alajuela.carrera_mismo_id_primera_confirmada|rc=0
+PASS|alajuela.carrera_mismo_id_una_sola_fila|1
+PASS|alajuela.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|alajuela.carrera_revertida_registro_coherente|zonas_verdes
+PASS|alajuela.id_explicito_repetido_otra_capa|23505
+PASS|alajuela.rechaza_id_prefijo_otro_campus|23514
+PASS|alajuela.rechaza_campus_id_ajeno|23514
+PASS|alajuela.rechaza_modificar_id|23514
+PASS|alajuela.rechaza_modificar_campus_id|23514
+PASS|alajuela.rechaza_modificar_id_mantenimiento|42501
+PASS|alajuela.editor_con_guc_rechazado|42501
+PASS|alajuela.editor_no_ejecuta_autorizacion|42501
+PASS|alajuela.editor_no_escribe_registro|42501
+PASS|alajuela.editor_no_borra_registro|42501
+PASS|alajuela.editor_no_usa_secuencia|42501
+PASS|alajuela.editor_no_desactiva_disparadores|42501
+PASS|alajuela.editor_no_modo_replica|42501
+PASS|alajuela.editor_no_reutiliza_disparador|42501
+PASS|alajuela.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|alajuela.rol_sin_permisos_no_inserta|42501
+PASS|alajuela.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|alajuela.mantenimiento_rechaza_id_no_emitido|23514
+PASS|alajuela.mantenimiento_sin_guc_rechazado|23514
+PASS|alajuela.rollback_no_deja_registro|0
+PASS|alajuela.rollback_siguiente_id_mayor|4000000447 revertido -> 4000000448
+PASS|alajuela.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|alajuela.eliminacion_conserva_registro|parqueos
+PASS|alajuela.eliminacion_id_no_reutilizable|23505
+PASS|alajuela.eliminacion_nuevo_id_distinto|4000000449 eliminado -> nuevo 4000000450
+PASS|alajuela.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|alajuela.reinicio_inserta_y_registra|1
+PASS|alajuela.restauracion_sin_errores|0
+PASS|alajuela.restauracion_invariantes|0:0
+PASS|alajuela.restauracion_disparadores|24
+PASS|alajuela.restauracion_id_posterior_rechazado_antes_de_ajustar|id 4000000452 no emitido según la secuencia restaurada
+PASS|alajuela.restauracion_reincorpora_id_posterior|id 4000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|alajuela.restauracion_rechaza_duplicado|23505
+PASS|alajuela.restauracion_secuencia_ajustada|máximo conocido 4000000452 -> siguiente 4000000453
+PASS|alajuela.publicacion_ocho_tablas|8
+PASS|alajuela.publicacion_excluye_ops|0
+PASS|alajuela.replica_identity_pk|8
+PASS|alajuela.columnas_sin_cambios|48
+PASS|alajuela.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|limon.instalacion_limpia|0101, 0102 y 0103 aplicadas
+PASS|limon.registro_inicial|41 objetos, 0 repetidos, 0 sin registro
+PASS|limon.editor_sin_privilegio_secuencia|f
+PASS|limon.insercion_normal_id_generado|id=5000000042
+PASS|limon.insercion_normal_registrada|puntos_interes/insercion
+PASS|limon.concurrencia_8_capas_solapadas|8 transacciones abiertas simultáneamente
+PASS|limon.concurrencia_8_capas_sesiones_ok| 8 rc=0 
+PASS|limon.concurrencia_8_capas_ids_registrados|400 ids nuevos
+PASS|limon.concurrencia_8_capas_sin_repetidos|objetos:repetidos:sin_registro = 442:0:0
+PASS|limon.carrera_mismo_id_segunda_rechazada|sesión 2 esperó 2s y recibió 23505
+PASS|limon.carrera_mismo_id_primera_confirmada|rc=0
+PASS|limon.carrera_mismo_id_una_sola_fila|1
+PASS|limon.carrera_primera_revierte_segunda_confirma|NO_ERROR
+PASS|limon.carrera_revertida_registro_coherente|zonas_verdes
+PASS|limon.id_explicito_repetido_otra_capa|23505
+PASS|limon.rechaza_id_prefijo_otro_campus|23514
+PASS|limon.rechaza_campus_id_ajeno|23514
+PASS|limon.rechaza_modificar_id|23514
+PASS|limon.rechaza_modificar_campus_id|23514
+PASS|limon.rechaza_modificar_id_mantenimiento|42501
+PASS|limon.editor_con_guc_rechazado|42501
+PASS|limon.editor_no_ejecuta_autorizacion|42501
+PASS|limon.editor_no_escribe_registro|42501
+PASS|limon.editor_no_borra_registro|42501
+PASS|limon.editor_no_usa_secuencia|42501
+PASS|limon.editor_no_desactiva_disparadores|42501
+PASS|limon.editor_no_modo_replica|42501
+PASS|limon.editor_no_reutiliza_disparador|42501
+PASS|limon.siguiente_directo_no_registra|solo consume un consecutivo (hueco), no reserva ids
+PASS|limon.rol_sin_permisos_no_inserta|42501
+PASS|limon.mantenimiento_autorizado_inserta|NO_ERROR
+PASS|limon.mantenimiento_rechaza_id_no_emitido|23514
+PASS|limon.mantenimiento_sin_guc_rechazado|23514
+PASS|limon.rollback_no_deja_registro|0
+PASS|limon.rollback_siguiente_id_mayor|5000000447 revertido -> 5000000448
+PASS|limon.rollback_id_reinsertable_mantenimiento|NO_ERROR
+PASS|limon.eliminacion_conserva_registro|parqueos
+PASS|limon.eliminacion_id_no_reutilizable|23505
+PASS|limon.eliminacion_nuevo_id_distinto|5000000449 eliminado -> nuevo 5000000450
+PASS|limon.reinicio_invariantes|objetos:repetidos:sin_registro = 448:0:0
+PASS|limon.reinicio_inserta_y_registra|1
+PASS|limon.restauracion_sin_errores|0
+PASS|limon.restauracion_invariantes|0:0
+PASS|limon.restauracion_disparadores|24
+PASS|limon.restauracion_id_posterior_rechazado_antes_de_ajustar|id 5000000452 no emitido según la secuencia restaurada
+PASS|limon.restauracion_reincorpora_id_posterior|id 5000000452 creado después del respaldo, reincorporado en mantenimiento
+PASS|limon.restauracion_rechaza_duplicado|23505
+PASS|limon.restauracion_secuencia_ajustada|máximo conocido 5000000452 -> siguiente 5000000453
+PASS|limon.publicacion_ocho_tablas|8
+PASS|limon.publicacion_excluye_ops|0
+PASS|limon.replica_identity_pk|8
+PASS|limon.columnas_sin_cambios|48
+PASS|limon.invariantes_finales|objetos:repetidos:sin_registro = 450:0:0
+PASS|actualizacion.base_sin_0103|0
+PASS|actualizacion.aborta_con_duplicado|rc=1, conflicto informado: 1000000024 en iluminacion+puntos_interes
+PASS|actualizacion.sin_cambios_parciales|registro:0103:trg30:secdef
+PASS|actualizacion.datos_intactos|no borró ni renumeró
+PASS|actualizacion.aplica_tras_resolver|0
+PASS|actualizacion.registro_completo|41:0:0
+PASS|actualizacion.idempotente|un segundo migrate no reaplica 0103
+----
+RESUMEN identificadores: 272 PASS, 0 FAIL
+[2026-11-24 22:26:25-0600] [2b] regresión RA-01: nodo recuperado anterior a 0103 -> make migrate NODE=recovery (PITR en clústeres temporales)
+ Container sigtec-sigtec-tools-run-1ea5ad892f7d Creating 
+ Container sigtec-sigtec-tools-run-1ea5ad892f7d Created 
+PASS|pitr.origen_sin_0103|campus/0101_capas_locales,campus/0102_identificadores
+PASS|pitr.copia_base|0
+PASS|pitr.origen_migrado_despues_del_objetivo|1
+PASS|pitr.wal_archivado|000000010000000000000004
+PASS|pitr.promovida|f
+PASS|pitr.cambio_a_presente|1
+PASS|pitr.cambio_b_ausente|0
+PASS|pitr.esquema_anterior_a_0103|el instante restaurado es anterior a 0103
+PASS|pitr.identidad_restaurada|san_carlos/3
+PASS|ra01.sin_0103_admite_duplicado|antes de migrar, dos conexiones del editor confirmaron 3000000075 en dos capas (RA-01 reproducido)
+PASS|neg.destino_desconocido|destino inválido: 'nodo_x'
+PASS|neg.lista_con_desconocido|2
+PASS|neg.seed_rechaza_recovery|rc=1
+PASS|neg.servidor_inaccesible|no aceptó conexiones en 3s
+PASS|neg.contrasena_incorrecta|password authentication failed for user 
+PASS|neg.sin_secretos|la contraseña no aparece en la salida
+PASS|neg.no_promovida|sigue en recuperación (reproduciendo WAL o en pausa; solo lectura)
+PASS|neg.identidad_inconsistente|identidad inconsistente (SIGTEC_RECOVERY_INFO: limon; ops.node_info: san_carlos)
+PASS|neg.ids_repetidos|ids repetidos entre capas: 3000000075 en iluminacion+puntos_interes
+PASS|neg.sin_cambios|0103, registro y datos sin cambios
+PASS|neg.sin_respaldo_publicado|0
+PASS|mig.rc_cero|0
+PASS|mig.0103_aplicada|1
+PASS|mig.respaldo_previo_publicado|1
+PASS|mig.respaldo_previo_legible|0
+PASS|mig.respaldo_previo_anterior_a_0103|manifest: migraciones_registradas=campus/0101_capas_locales,campus/0102_identificadores,common/0001_postgis,common/0002_ops_nodo
+PASS|mig.datos_preservados|huella idéntica, 42 objetos
+PASS|mig.identidad_conservada|san_carlos|pg-san-carlos|3|local_san_carlos
+PASS|mig.registro_completo|42
+PASS|mig.verificacion_0103|10:0
+PASS|mig.registro_primary_key|PRIMARY KEY (id)
+PASS|mig.ids_unicos_entre_capas|0 ids repetidos
+PASS|mig.objetos_registrados|42 objetos; 0 sin registro o con otra capa
+PASS|mig.disparadores_habilitados|24 (esperado 24: trg_10, trg_20, trg_30 × 8 capas); deshabilitados: 0
+PASS|mig.modo_de_seguridad_funciones|sigtec_id_autorizar_explicito=DEFINER sigtec_id_siguiente=DEFINER tg_asignar_identificador=INVOKER tg_registrar_identificador=DEFINER
+PASS|mig.permisos_mantenimiento|rol sigtec_mantenimiento_id NOLOGIN; autorización solo para ese rol; PUBLIC sin escritura en el registro
+PASS|mig.secuencia_cubre_ids|último consecutivo emitido 75 >= máximo usado 42 (objetos 42, registro 42)
+PASS|mig.siguiente_id_libre|el próximo id automático sería 3000000076
+PASS|mig.segunda_ejecucion_rc|0
+PASS|mig.segunda_ejecucion_nada|ninguna migración reaplicada
+PASS|mig.segunda_ejecucion_sin_respaldo|1
+PASS|mig.verify_recovery|0
+PASS|mig.verify_apta|declarada apta
+PASS|neg.error_sql|division by zero
+PASS|neg.error_sql_sin_parcial|ni registrada ni objetos a medias
+PASS|neg.verify_detecta_pendiente_sql|verify rc=1: no apta mientras falte campus/0199
+PASS|neg.error_permisos|permission denied for schema local_san_carlos
+PASS|neg.error_permisos_sin_parcial|ni registrada ni objetos a medias
+PASS|neg.verify_detecta_pendiente_permisos|verify rc=1: no apta mientras falte campus/0199
+PASS|int.editor_guc|42501
+PASS|int.editor_no_autoriza|42501
+PASS|int.editor_no_registro|42501
+PASS|int.editor_no_deshabilita|42501
+PASS|int.mant_mismo_id_dos_capas|23505
+PASS|int.carrera_primera_confirma|rc=0
+PASS|int.carrera_segunda_espera_y_falla|esperó 3 s, 23505
+PASS|int.carrera_una_fila|1
+PASS|int.concurrencia_superpuesta|8 transacciones abiertas a la vez
+PASS|int.concurrencia_confirmadas|8
+PASS|int.concurrencia_registradas|200
+PASS|int.ids_unicos|0
+PASS|int.siguiente_id|3000000278
+PASS|int.reinicio_datos|79d8f8b96f15b63a1fae036078d6b19f
+PASS|int.reinicio_verify|0
+PASS|int.reinicio_insercion|id=3000000279 (> 3000000278)
+----
+RESUMEN recuperación RA-01: 65 PASS, 0 FAIL
+[2026-11-24 22:26:55-0600] [2c] instancia recuperada pg-recovery: migraciones al día y registro de ids
+[2026-11-24 22:26:55-0600]   pg-recovery no está en ejecución: no hay instancia recuperada que verificar
+[2026-11-24 22:26:55-0600] [3] higiene del repositorio (secretos, rutas absolutas)
+PASS  repo.sin_secretos                                          ningún valor de .env aparece en otros archivos
+PASS  repo.sin_rutas_absolutas                                   sin rutas de usuario en el código
+PASS  repo.env_ignorado                                          .env en .gitignore
+PASS  repo.env_permisos                                          -rw-------
+PASS  repo.sin_etiquetas_flotantes                               imágenes fijadas (Dockerfile por digest)
+----
+[2026-11-24 22:26:56-0600] RESULTADO: todas las pruebas pasaron

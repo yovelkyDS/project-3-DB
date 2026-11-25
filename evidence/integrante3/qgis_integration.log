@@ -1,0 +1,106 @@
+OK complemento instalable: dist/sigtec_qgis.zip
+PASS  qgis.version                                   3.44.15-Solothurn
+PASS  qgis.almacen_credenciales_temporal             
+PASS  complemento.carga_desde_zip                    
+PASS  complemento.formulario_real                    
+PASS  cartago.inicio_de_sesion                       8 capas 
+PASS  cartago.nombres                                
+PASS  cartago.conexion_al_campus                     puerto 55431
+PASS  cartago.srid_clave_geometria                   
+PASS  cartago.tipos_geometria                        
+PASS  cartago.objetos_de_cinco_campus                
+PASS  cartago.sin_contrasena_en_el_proyecto          
+PASS  cartago.estilos_desde_postgresql               
+PASS  cartago.encuadre_del_campus                    
+PASS  cartago.dibujo                                 2416 píxeles pintados
+PASS  cartago.alta_propia                            1000000082
+PASS  cartago.cambio_propio                          SUCCESS: 1 attribute value(s) changed.
+PASS  cartago.cambio_ajeno_rechazado                 ERROR: 1 attribute value change(s) not applied.; 
+PASS  cartago.baja_ajena_rechazada                   
+PASS  cartago.alta_ajena_rechazada                   
+PASS  cartago.dato_ajeno_intacto                     
+PASS  cartago.baja_propia                            
+PASS  cartago.reingreso_sin_duplicar                 
+PASS  san_jose.inicio_de_sesion                      8 capas 
+PASS  san_jose.nombres                               
+PASS  san_jose.conexion_al_campus                    puerto 55432
+PASS  san_jose.srid_clave_geometria                  
+PASS  san_jose.tipos_geometria                       
+PASS  san_jose.objetos_de_cinco_campus               
+PASS  san_jose.sin_contrasena_en_el_proyecto         
+PASS  san_jose.estilos_desde_postgresql              
+PASS  san_jose.encuadre_del_campus                   
+PASS  san_jose.dibujo                                2416 píxeles pintados
+PASS  san_jose.alta_propia                           2000000081
+PASS  san_jose.cambio_propio                         SUCCESS: 1 attribute value(s) changed.
+PASS  san_jose.cambio_ajeno_rechazado                ERROR: 1 attribute value change(s) not applied.; 
+PASS  san_jose.baja_ajena_rechazada                  
+PASS  san_jose.alta_ajena_rechazada                  
+PASS  san_jose.dato_ajeno_intacto                    
+PASS  san_jose.baja_propia                           
+PASS  san_jose.reingreso_sin_duplicar                
+PASS  san_carlos.inicio_de_sesion                    8 capas 
+PASS  san_carlos.nombres                             
+PASS  san_carlos.conexion_al_campus                  puerto 55433
+PASS  san_carlos.srid_clave_geometria                
+PASS  san_carlos.tipos_geometria                     
+PASS  san_carlos.objetos_de_cinco_campus             
+PASS  san_carlos.sin_contrasena_en_el_proyecto       
+PASS  san_carlos.estilos_desde_postgresql            
+PASS  san_carlos.encuadre_del_campus                 
+PASS  san_carlos.dibujo                              2416 píxeles pintados
+PASS  san_carlos.alta_propia                         3000000081
+PASS  san_carlos.cambio_propio                       SUCCESS: 1 attribute value(s) changed.
+PASS  san_carlos.cambio_ajeno_rechazado              ERROR: 1 attribute value change(s) not applied.; 
+PASS  san_carlos.baja_ajena_rechazada                
+PASS  san_carlos.alta_ajena_rechazada                
+PASS  san_carlos.dato_ajeno_intacto                  
+PASS  san_carlos.baja_propia                         
+PASS  san_carlos.reingreso_sin_duplicar              
+PASS  alajuela.inicio_de_sesion                      8 capas 
+PASS  alajuela.nombres                               
+PASS  alajuela.conexion_al_campus                    puerto 55434
+PASS  alajuela.srid_clave_geometria                  
+PASS  alajuela.tipos_geometria                       
+PASS  alajuela.objetos_de_cinco_campus               
+PASS  alajuela.sin_contrasena_en_el_proyecto         
+PASS  alajuela.estilos_desde_postgresql              
+PASS  alajuela.encuadre_del_campus                   
+PASS  alajuela.dibujo                                2416 píxeles pintados
+PASS  alajuela.alta_propia                           4000000081
+PASS  alajuela.cambio_propio                         SUCCESS: 1 attribute value(s) changed.
+PASS  alajuela.cambio_ajeno_rechazado                ERROR: 1 attribute value change(s) not applied.; 
+PASS  alajuela.baja_ajena_rechazada                  
+PASS  alajuela.alta_ajena_rechazada                  
+PASS  alajuela.dato_ajeno_intacto                    
+PASS  alajuela.baja_propia                           
+PASS  alajuela.reingreso_sin_duplicar                
+PASS  limon.inicio_de_sesion                         8 capas 
+PASS  limon.nombres                                  
+PASS  limon.conexion_al_campus                       puerto 55435
+PASS  limon.srid_clave_geometria                     
+PASS  limon.tipos_geometria                          
+PASS  limon.objetos_de_cinco_campus                  
+PASS  limon.sin_contrasena_en_el_proyecto            
+PASS  limon.estilos_desde_postgresql                 
+PASS  limon.encuadre_del_campus                      
+PASS  limon.dibujo                                   2416 píxeles pintados
+PASS  limon.alta_propia                              5000000081
+PASS  limon.cambio_propio                            SUCCESS: 1 attribute value(s) changed.
+PASS  limon.cambio_ajeno_rechazado                   ERROR: 1 attribute value change(s) not applied.; 
+PASS  limon.baja_ajena_rechazada                     
+PASS  limon.alta_ajena_rechazada                     
+PASS  limon.dato_ajeno_intacto                       
+PASS  limon.baja_propia                              
+PASS  limon.reingreso_sin_duplicar                   
+PASS  capas_ajenas_conservadas                       
+PASS  estilos_iguales_entre_campus                   
+PASS  contrasena_incorrecta.rechazada                No se pudo autenticar contra el nodo central. Verifique usuario, contraseña, configuración y disponibilidad de los nodos.
+AVISO contrasena_incorrecta.ventana_de_qgis               1 solicitud(es); al cancelarla aparece el mensaje de SIG-TEC
+PASS  contrasena_incorrecta.no_queda_guardada        5 -> 5 credenciales
+PASS  nodo_inaccesible.mensaje                       El nodo limon no está accesible o la vista qgis.v_edificios no existe.
+PASS  nodo_inaccesible.sin_carga_parcial             
+PASS  credenciales.una_por_cuenta                    5 guardadas para 5 cuentas
+PASS  complemento.descarga                           
+----
+RESULTADO: todas las pruebas pasaron
