@@ -38,12 +38,25 @@ Solo se necesita en el equipo:
 * **bash** (incluido en macOS/Linux; en Windows: WSL2 o Git Bash) — o PowerShell con `scripts/setup.ps1`.
 * `make` es opcional (atajos). ~3 GB de disco y ~3 GB de memoria para Docker.
 
-No hace falta instalar PostgreSQL, psql ni Python en el host: todas las herramientas cliente
+* **Python ≥ 3.10** para replicación, cuentas y estilos (solo biblioteca estándar; por eso no hay `requirements.txt`).
+* **QGIS Desktop 3.44.15 LTR** para el complemento. macOS: `brew install --cask qgis@ltr` (compruebe que instale 3.44.15).
+
+No hace falta instalar PostgreSQL ni psql en el host: todas las herramientas cliente
 corren dentro de la imagen del proyecto. `scripts/check_prereqs.sh` comprueba todo lo
 anterior, intenta iniciar Docker si está detenido y muestra instrucciones de instalación
 específicas del sistema operativo si falta algo.
 
 ## Instalación desde cero
+
+```bash
+make install     # seis nodos, datos, replicación, cuentas, estilos y dist/sigtec_qgis.zip
+make test-all    # todas las pruebas, incluidas las del complemento con PyQGIS
+```
+
+`make install` ejecuta, en orden, `make setup`, `make replication-setup`, `make datos-reales`
+(geografía real de OpenStreetMap, con respaldo previo) y `make integrante3-setup`. Puede repetirse con las ediciones pausadas, salvo después de una
+reincorporación: `replication-setup` se niega a sobrescribir las rutas recuperadas. Para
+instalar solo la base del integrante 1:
 
 ```bash
 scripts/setup.sh
@@ -79,6 +92,9 @@ La primera vez tarda unos minutos porque compila PostGIS 3.5.4 (ver
 | `make psql NODE=cartago` | Consola `psql` como superusuario (`NODE=recovery` para la instancia recuperada) |
 | `make versions` | Registra versiones efectivas en `evidence/versions.txt` |
 | `make integrante3-setup` · `make integrante3-verify` | Instala y valida autenticación, cuentas y estilos del Integrante 3 |
+| `make install` · `make test-all` | Entorno completo · todas las pruebas |
+| `make datos-reales` | Geografía real de OpenStreetMap (idempotente, respalda antes) |
+| `make qgis-test` | Complemento con PyQGIS real: sesiones, capas, estilos, panel, navegación, mapa base y edición |
 | `make integrante3-unit` · `make qgis-plugin` | Pruebas locales y ZIP instalable del complemento QGIS |
 
 `NODE` acepta `all`, `campus`, `central`, `cartago`, `san_jose`, `san_carlos`, `alajuela`, `limon`.
@@ -146,7 +162,7 @@ Nunca use `docker compose down -v` como operación normal.
 |---|---|---|
 | Seis nodos PostgreSQL/PostGIS, red, volúmenes, healthchecks, TLS | Integrante 1 | **Implementado y probado** |
 | Modelo de ocho capas × cinco campus, SRID 5367, ids globales | Integrante 1 | **Implementado y probado** |
-| Datos de prueba (sintéticos, 41 objetos por campus) | Integrante 1 | **Implementado y probado** |
+| Datos de prueba sintéticos (41 por campus) para pruebas y CI; geografía real con `make datos-reales` | Integrante 1 | **Implementado y probado** |
 | pg_dump / restauración lógica (seis nodos) | Integrante 1 | **Implementado y probado** |
 | pg_basebackup / archivado WAL / recuperación física (seis nodos) | Integrante 1 | **Implementado y probado** |
 | Falla simulada + PITR (San Carlos, instancia aislada) | Integrante 1 | **Implementado y probado** |
@@ -155,7 +171,9 @@ Nunca use `docker compose down -v` como operación normal.
 | Reincorporación del nodo recuperado a la replicación | Integrante 2 | Demostrada con PITR real de San Carlos y nuevas ediciones; consultar validación |
 | `auth`, cuentas `qgis_*`, complemento PyQGIS, estilos `layer_styles`, manual | Integrante 3 | Implementados y probados con PostgreSQL y QGIS 3.44.15 |
 
-Los datos geográficos de prueba son **sintéticos**: no representan infraestructura real del TEC.
+La geografía de los cinco campus proviene de OpenStreetMap (ODbL 1.0). La iluminación y casi toda la
+accesibilidad son **demostración sintética**, marcada como tal: [docs/DATOS_GEOGRAFICOS.md](docs/DATOS_GEOGRAFICOS.md).
+El juego sintético original se conserva para las pruebas aisladas y CI.
 
 ## Desarrollo del integrante 2
 

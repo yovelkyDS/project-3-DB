@@ -19,6 +19,7 @@ Requisitos: Docker activo, Python 3.10 o posterior y QGIS Desktop 3.44 LTR. Desd
 ```bash
 make setup
 make replication-setup
+make datos-reales
 make integrante3-setup
 ```
 
@@ -27,6 +28,7 @@ En Windows se pueden ejecutar los equivalentes directamente:
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\setup.ps1
 python scripts\distributed\manage.py setup
+python scripts\datos\importar.py
 python scripts\integrante3\manage.py setup
 ```
 
@@ -47,11 +49,33 @@ Las cuentas son `qgis_cartago`, `qgis_san_jose`, `qgis_san_carlos`, `qgis_alajue
 
 El archivo `qgis_plugin/sigtec/config.json` usa `127.0.0.1` y los puertos contractuales 55430–55435. Al ejecutar `make qgis-plugin` o `manage.py package`, el ZIP toma automáticamente los puertos efectivos de `.env`; esto cubre los rangos que Windows/Hyper-V pueda reservar sin modificar el archivo versionado. Si QGIS corre en otra máquina, cambie únicamente los hosts y asegure la red. Se exige TLS (`sslmode=require`) y un tiempo máximo de conexión de cinco segundos.
 
-Para comprobar una instancia recuperada de San Carlos ya reincorporada por el integrante 2, detener el dueño anterior y cambiar temporalmente el puerto de `san_carlos` a `55436`; luego ejecutar `make qgis-plugin` e instalar nuevamente el ZIP.
+Para comprobar una instancia recuperada de San Carlos ya reincorporada por el integrante 2, ejecutar `make integrante3-setup` e instalar nuevamente el ZIP: el empaquetado usa el puerto de `pg-recovery` (`SIGTEC_PORT_RECOVERY`, 55436) según `.distributed-state/routes.json`, y los estilos vuelven a distribuirse al reemplazo con una ranura nueva.
 
 ## Uso diario
 
-Después de una sesión correcta aparece un grupo **SIG-TEC** con:
+Al iniciar sesión, sin configurar nada más, el complemento:
+
+* carga las ocho capas en el grupo **SIG-TEC** y, al fondo, **OpenStreetMap** con su atribución visible;
+* centra el mapa en los edificios del campus de la cuenta y muestra los nombres según la escala;
+* activa el panel **Capas** de QGIS y abre el **panel SIG-TEC** a la derecha.
+
+### Panel SIG-TEC
+
+| Elemento | Función |
+|---|---|
+| Usuario, campus, conexión, mapa base | Sesión y estado de los nodos, comprobado cada 20 s sin bloquear QGIS |
+| Indicador verde / ámbar | Campus que la cuenta puede editar; ámbar si el campus visible es solo de consulta |
+| Selector de campus · **Centrar** | Solo mueven el mapa: no cambian la cuenta, el nodo ni los permisos |
+| **Todos los campus** | Vista nacional con un rótulo por campus |
+| Leyenda y capas | Simbología de las ocho capas; la casilla muestra u oculta cada una |
+| **Actualizar capas** | Relee los datos sin tocar ediciones en curso |
+| **Cerrar sesión** | Retira solo lo de SIG-TEC; pide confirmación si hay cambios sin guardar. Las credenciales guardadas se conservan |
+
+El panel se abre o cierra en **Base de datos > SIG-TEC > Panel SIG-TEC**. Sin Internet el panel lo avisa y las
+capas institucionales siguen funcionando. Si el proyecto no tiene capas propias se fija en EPSG:5367; si las
+tiene, se respeta su sistema. El origen de los datos está en [DATOS_GEOGRAFICOS.md](DATOS_GEOGRAFICOS.md).
+
+Las ocho capas son:
 
 | Vista | Nombre en QGIS | Geometría |
 |---|---|---|
@@ -64,7 +88,7 @@ Después de una sesión correcta aparece un grupo **SIG-TEC** con:
 | `qgis.v_iluminacion` | Iluminación | Point |
 | `qgis.v_accesibilidad` | Accesibilidad | LineString |
 
-Cada capa usa `id` como clave, `geom` como geometría y EPSG:5367. Todas contienen información de los cinco campus. Al iniciar sesión, el mapa se centra en los objetos del campus de la cuenta. Un nuevo inicio de sesión elimina solo las capas administradas previamente por el complemento y coloca las ocho nuevas, por lo que nunca se duplican ni se borran capas ajenas del proyecto.
+Cada capa usa `id` como clave, `geom` como geometría y EPSG:5367. Todas contienen información de los cinco campus. Un nuevo inicio de sesión elimina solo las capas administradas previamente por el complemento y el mapa base, y coloca los nuevos, por lo que nunca se duplican ni se borran capas ajenas del proyecto.
 
 ### Editar datos propios
 
@@ -79,9 +103,10 @@ Los disparadores `INSTEAD OF` del integrante 2 enrutan el cambio a la tabla orig
 
 La fuente versionada está en `qgis_plugin/sigtec/styles/`. `make integrante3-setup` inserta esos ocho QML como estilos por defecto en el central y activa la publicación lógica `sigtec_styles`. El complemento intenta primero el estilo distribuido de la base y usa el QML local solo si todavía no llegó la réplica.
 
-Para cambiar un estilo, editar el QML correspondiente y repetir:
+Los QML se generan con `scripts/integrante3/generar_estilos.py` (reglas, escalas, etiquetas e iconos propios incrustados en base64, para que se vean igual en cualquier equipo). Para cambiar un estilo, editar ese archivo y repetir:
 
 ```bash
+"$(scripts/qgis_python.sh)" scripts/integrante3/generar_estilos.py
 make integrante3-setup
 ```
 
@@ -92,11 +117,22 @@ Después, abrir la misma capa con dos cuentas de campus y comprobar la misma sim
 | Mensaje | Causa y acción |
 |---|---|
 | No se pudo autenticar contra el nodo central | Usuario/clave incorrectos, central detenido o `config.json` equivocado. Revisar `docker compose ps` sin compartir secretos. |
+| QGIS abre su propia ventana de credenciales | Clave incorrecta: el proveedor PostgreSQL de QGIS pide otra antes de avisar al complemento. Cancelarla y volver a iniciar sesión desde SIG-TEC. |
 | La cuenta no tiene un campus activo asignado | Revisar `auth.usuario_campus` y ejecutar `make integrante3-setup`. |
 | El nodo `<campus>` no está accesible | Iniciar ese contenedor, corregir host/puerto o terminar la reincorporación. No se agrega un conjunto parcial de capas. |
 | La vista `qgis.v_*` no existe | Ejecutar `make replication-setup` y después `make integrante3-setup`. |
+| Master password stored in the keychain is not valid | El llavero guarda una contraseña maestra distinta de la del almacén. Escribir la actual cuando QGIS la pida (QGIS actualiza el llavero). Tras cinco fallos QGIS se bloquea hasta reiniciarlo. Si no se conoce, ver «Contraseña maestra». |
 | QGIS no pudo guardar las credenciales | Crear/desbloquear la contraseña maestra en **Preferencias > Opciones > Autenticación**. |
 | No se permite editar un campus ajeno | Comportamiento esperado; cancelar la edición de ese objeto. |
+
+### Contraseña maestra
+
+Protege el almacén `qgis-auth.db` del perfil y no puede recuperarse si se pierde. Para establecer otra: cerrar QGIS,
+respaldar `qgis-auth.db` y apartarlo (no borrarlo), y volver a abrir QGIS, que crea un almacén nuevo. Se pierden
+solo las credenciales guardadas en QGIS; las de los campus se vuelven a escribir en SIG-TEC. PostgreSQL no cambia.
+
+El llavero identifica la entrada por el nombre del perfil: abrir QGIS Desktop con otro `--profiles-path` y un perfil
+llamado `default` **sobrescribe la contraseña del perfil real**. Para pruebas usar `--profile` con otro nombre.
 
 ## Pruebas y evidencia
 
@@ -113,7 +149,15 @@ Prueba de integración con los seis nodos activos:
 make integrante3-verify
 ```
 
-La verificación inicia sesión con las cinco cuentas, comprueba la asignación de campus, exige que una clave incorrecta sea rechazada, revisa las 40 exposiciones de vistas (8 × 5) y espera los ocho estilos en cada nodo. La indisponibilidad se demuestra de forma segura deteniendo un campus, intentando iniciar sesión y volviéndolo a iniciar:
+Prueba del complemento con PyQGIS real (nodos activos y QGIS 3.44 LTR instalado):
+
+```bash
+make qgis-test
+```
+
+Instala el ZIP en un perfil temporal y comprueba, con las cinco cuentas, inicio de sesión, ocho capas, estilos, dibujo, etiquetas, panel, mapa base, navegación por los cinco campus, edición propia y rechazo de la ajena; además, clave incorrecta, nodo inaccesible, falta de Internet, cierre de sesión y ausencia de duplicados. Solo sustituye la ventana de inicio de sesión y los cuadros de mensaje. `QGIS_PYTHON` permite indicar otro intérprete.
+
+La verificación de `make integrante3-verify` inicia sesión con las cinco cuentas, comprueba la asignación de campus, exige que una clave incorrecta sea rechazada, revisa las 40 exposiciones de vistas (8 × 5) y espera los ocho estilos en cada nodo. La indisponibilidad se demuestra de forma segura deteniendo un campus, intentando iniciar sesión y volviéndolo a iniciar:
 
 ```bash
 docker compose stop pg-san-carlos

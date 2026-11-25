@@ -118,7 +118,7 @@ Después de que I3 cree `public.layer_styles` en central con QGIS:
 python scripts/distributed/manage.py styles
 ```
 
-Se exporta su DDL real, se crean destinos, se usa REPLICA IDENTITY FULL y una publicación/suscripción separada por campus, con SELECT para su cuenta QGIS. Crear o modificar estilos únicamente en central. I3 debe guardar estilos para las vistas `qgis.v_*`, base `sigtec`, geometría `geom`, con el estilo por defecto apropiado. El esquema de estilos aún inexistente no se inventa ni impide instalar las capas. Después de un PITR, volver a coordinar la distribución de estilos con I3 y verificar el dibujo desde QGIS.
+Se exporta su DDL real, se crean destinos, se usa REPLICA IDENTITY FULL y una publicación/suscripción separada por campus, con SELECT para su cuenta QGIS. Crear o modificar estilos únicamente en central. I3 debe guardar estilos para las vistas `qgis.v_*`, base `sigtec`, geometría `geom`, con el estilo por defecto apropiado. El esquema de estilos aún inexistente no se inventa ni impide instalar las capas. Después de un PITR reincorporado, repetir `manage.py styles` (o `make integrante3-setup`): crea la suscripción `sigtec_rejoined_styles` en el reemplazo, porque la ranura anterior queda reservada en central. Verificar el dibujo desde QGIS.
 
 ## Guion del segmento de video
 
