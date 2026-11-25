@@ -1,0 +1,12 @@
+[general]
+name=SIG-TEC
+description=Autenticación central y carga segura de las ocho capas distribuidas del TEC
+version=1.0.1
+qgisMinimumVersion=3.44
+author=Equipo SIG-TEC
+email=
+about=Inicia sesión contra el nodo central, determina el campus autorizado y carga las vistas editables con sus estilos institucionales.
+category=Database
+tags=PostGIS,QGIS,SIG,TEC,distributed
+experimental=False
+deprecated=False
