@@ -19,7 +19,7 @@ cambio-a)
     node="$1"; run="$2"; s="$(node_schema "$node")"
     psql_su "$node" -tA -v run="$run" -v node="$node" <<SQL
 BEGIN;
-WITH ref AS (SELECT geom FROM $s.puntos_interes WHERE nombre LIKE 'Punto de referencia del campus%' ORDER BY id LIMIT 1),
+WITH ref AS (SELECT geom FROM $s.puntos_interes ORDER BY (nombre LIKE 'Punto de referencia del campus%') DESC, id LIMIT 1),
 a AS (
   INSERT INTO $s.puntos_interes (nombre, tipo, descripcion, geom)
   SELECT 'PITR-A ' || :'run', 'otro', 'Cambio A: confirmado ANTES del instante objetivo (debe recuperarse).', ST_Translate(geom, 15, 15)

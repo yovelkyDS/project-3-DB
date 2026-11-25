@@ -263,8 +263,13 @@ def styles():
         if not sql(node,"SELECT to_regclass('public.layer_styles')"):
             sql(node,p.stdout)
         sql(node,'ALTER TABLE public.layer_styles REPLICA IDENTITY FULL;')
-        subscribe(node,'sigtec_styles','central','sigtec_styles',ensure_secret())
-        wait_ready(node,'sigtec_styles')
+        # Un nodo reincorporado tras PITR necesita ranura nueva: la anterior sigue reservada en central.
+        name='sigtec_rejoined_styles' if service(node)=='pg-recovery' else 'sigtec_styles'
+        if name!='sigtec_styles' and not sql(node,f'SELECT 1 FROM pg_subscription WHERE subname={lit(name)}'):
+            # Es solo una copia de central; se vacia para que la copia inicial no choque con la PK.
+            sql(node,'DELETE FROM public.layer_styles;')
+        subscribe(node,name,'central','sigtec_styles',ensure_secret())
+        wait_ready(node,name)
         sql(node,f'GRANT SELECT ON public.layer_styles TO {ident("qgis_"+node)};')
     print('Estilos distribuidos; modificar solamente en central.')
 

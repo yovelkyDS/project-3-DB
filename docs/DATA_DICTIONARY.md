@@ -141,6 +141,9 @@ Ejemplos verificados: primer objeto de Cartago `1000000001`; primero de San Carl
 
 ## 7. Datos de prueba
 
+Los nodos en uso llevan geografía real de OpenStreetMap ([DATOS_GEOGRAFICOS.md](DATOS_GEOGRAFICOS.md));
+lo siguiente describe el juego sintético inicial, que se conserva para pruebas y CI.
+
 `sql/seed/datos_sinteticos_v1.sql`: **41 objetos sintéticos por campus** (205 en total):
 6 edificios, 4 carreteras, 5 aceras, 4 parqueos, 4 zonas verdes, 6 puntos de interés,
 8 luminarias y 4 elementos de accesibilidad. Se dibujan en metros alrededor de una coordenada

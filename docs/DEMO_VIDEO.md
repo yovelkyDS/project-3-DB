@@ -18,7 +18,7 @@ terminal con letra grande; no muestre el contenido de `.env`.
 | 10 | Falla + PITR | `make pitr-demo` | Narrar los pasos mientras corren: cambio A, instante objetivo, cambio B, archivado del WAL, `SIGKILL` del nodo, recuperación en `pg-recovery` |
 | 11 | Resultado PITR | `evidence/pitr/pitr_<corrida>.md` | A presente, B ausente, "recovery stopping before commit", nueva línea de tiempo, nodo original intacto |
 | 12 | Instancia recuperada | `make migrate NODE=recovery` y `make recovery-status` | Migraciones al día, ocho capas válidas, registro de ids íntegro y "apta para entregar" en la instancia aislada (puerto 55436) |
-| 13 | Límites | — | La reincorporación a la replicación depende del Integrante 2 y no se demuestra aquí; los datos son sintéticos |
+| 13 | Límites | — | La reincorporación a la replicación depende del Integrante 2 y no se demuestra aquí; la geografía es de OpenStreetMap; iluminación y accesibilidad incluyen demostración sintética (DATOS_GEOGRAFICOS.md) |
 
 Duraciones aproximadas observadas: `make pitr-demo` ≈ 1 min; `make test` ≈ 1 min;
 respaldo + prueba de un nodo ≈ 15 s.

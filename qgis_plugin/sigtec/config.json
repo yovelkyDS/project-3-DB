@@ -10,5 +10,9 @@
     "san_carlos": {"host": "127.0.0.1", "port": 55433},
     "alajuela": {"host": "127.0.0.1", "port": 55434},
     "limon": {"host": "127.0.0.1", "port": 55435}
+  },
+  "basemap": {
+    "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "opacity": 0.5
   }
 }

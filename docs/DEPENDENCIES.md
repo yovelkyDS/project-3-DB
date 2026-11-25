@@ -9,11 +9,13 @@
 | bash | 3.2+ | Instalador y scripts (compatibles con el bash de macOS) | Incluido en macOS/Linux · Windows: WSL2 o Git for Windows |
 | make | cualquiera | Atajos opcionales | Xcode CLT / `build-essential` / Git for Windows |
 | openssl | cualquiera | Opcional; el instalador genera secretos con `openssl` o `/dev/urandom` | Incluido normalmente |
+| Python | 3.10 | `scripts/distributed`, `scripts/integrante3` y sus pruebas (solo biblioteca estándar) | macOS: `brew install python` · Linux: paquete `python3` · Windows: python.org |
+| QGIS Desktop | 3.44 LTR (contrato: 3.44.15; en macOS incluye Python 3.12 y PyQGIS) | Complemento SIG-TEC y `make qgis-test` | macOS: `brew install --cask qgis@ltr` · otros: qgis.org |
 
-**No** se necesita PostgreSQL, psql, PostGIS ni Python en el anfitrión: todos los clientes
+**No** se necesita PostgreSQL, psql ni PostGIS en el anfitrión: todos los clientes
 (`psql`, `pg_dump`, `pg_restore`, `pg_basebackup`, `pg_verifybackup`, `pg_archivecleanup`)
-corren en el contenedor `sigtec-tools`, construido con la misma imagen que los nodos. Por eso
-no hay `requirements.txt`. `scripts/check_prereqs.sh` valida todo y muestra cómo instalar lo
+corren en el contenedor `sigtec-tools`, construido con la misma imagen que los nodos. El código
+Python no usa paquetes de pip; por eso no hay `requirements.txt`. `scripts/check_prereqs.sh` valida todo y muestra cómo instalar lo
 que falte según el sistema operativo.
 
 ## 2. Imagen `sigtec/postgis:17.12-3.5.4`

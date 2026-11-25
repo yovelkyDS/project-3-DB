@@ -1,0 +1,4 @@
+[2026-11-24 22:32:35-0600] scripts/backup/logical_backup.sh limon  (registro: evidence/backups/logical_backup_20261124_223235.log)
+[2026-11-24 22:32:36-0600] pg_dump limon (pg-limon) -> logical/limon/20261125T043236Z
+[2026-11-24 22:32:36-0600]   OK limon: 273525 bytes, 266 entradas TOC, validado; edificios=5 carreteras=11 aceras=1 parqueos=1 zonas_verdes=3 puntos_interes=5 iluminacion=10 accesibilidad=4
+[2026-11-24 22:32:36-0600] resultado: OK
