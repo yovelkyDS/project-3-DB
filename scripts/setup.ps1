@@ -22,6 +22,41 @@ Set-Location $Root
 
 function Log($m) { Write-Host ("[{0}] {1}" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $m) }
 
+# PowerShell 5.1 convierte algunos mensajes de stderr de programas nativos en
+# ErrorRecord. Con ErrorActionPreference=Stop eso abortaba el instalador antes
+# de poder iniciar Docker Desktop. Esta función conserva el código de salida y
+# silencia únicamente la prueba esperada de disponibilidad.
+function Test-DockerDaemon {
+    $previousPreference = $ErrorActionPreference
+    $ready = $false
+    try {
+        $ErrorActionPreference = 'SilentlyContinue'
+        docker info *> $null
+        $ready = ($LASTEXITCODE -eq 0)
+    } catch {
+        $ready = $false
+    } finally {
+        $ErrorActionPreference = $previousPreference
+    }
+    return $ready
+}
+
+function Test-BashExecutable($path) {
+    if (-not $path -or -not (Test-Path -LiteralPath $path)) { return $false }
+    $previousPreference = $ErrorActionPreference
+    $works = $false
+    try {
+        $ErrorActionPreference = 'SilentlyContinue'
+        & $path -lc 'exit 0' *> $null
+        $works = ($LASTEXITCODE -eq 0)
+    } catch {
+        $works = $false
+    } finally {
+        $ErrorActionPreference = $previousPreference
+    }
+    return $works
+}
+
 # 1. Docker -------------------------------------------------------------
 if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
     throw "Docker no está instalado. Instale Docker Desktop: https://docs.docker.com/desktop/setup/install/windows-install/  (winget install -e --id Docker.DockerDesktop)"
@@ -29,12 +64,27 @@ if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
 docker compose version | Out-Null
 if ($LASTEXITCODE -ne 0) { throw "Docker Compose v2 no disponible (actualice Docker Desktop)." }
 
-docker info *> $null
-if ($LASTEXITCODE -ne 0) {
-    $dd = Join-Path $env:ProgramFiles 'Docker\Docker\Docker Desktop.exe'
-    if (Test-Path $dd) { Log 'Iniciando Docker Desktop...'; Start-Process $dd }
-    for ($i = 0; $i -lt 60; $i++) { Start-Sleep 3; docker info *> $null; if ($LASTEXITCODE -eq 0) { break } }
-    if ($LASTEXITCODE -ne 0) { throw 'El daemon de Docker no responde. Inicie Docker Desktop y vuelva a ejecutar.' }
+if (-not (Test-DockerDaemon)) {
+    $dockerCli = (Get-Command docker).Source
+    $desktopCandidates = @(
+        (Join-Path $env:ProgramFiles 'Docker\Docker\Docker Desktop.exe'),
+        (Join-Path $env:LOCALAPPDATA 'Programs\DockerDesktop\Docker Desktop.exe'),
+        (Join-Path $env:LOCALAPPDATA 'Docker\Docker Desktop.exe'),
+        (Join-Path (Split-Path (Split-Path (Split-Path $dockerCli -Parent) -Parent) -Parent) 'Docker Desktop.exe')
+    ) | Select-Object -Unique
+    $dd = $desktopCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+    if (-not $dd) {
+        throw 'Docker Desktop no está instalado completamente. Instálelo con: winget install -e --id Docker.DockerDesktop'
+    }
+    Log "Iniciando Docker Desktop desde $dd"
+    Start-Process -FilePath $dd -WindowStyle Hidden
+    for ($i = 0; $i -lt 90; $i++) {
+        Start-Sleep 2
+        if (Test-DockerDaemon) { break }
+    }
+    if (-not (Test-DockerDaemon)) {
+        throw 'Docker Desktop abrió, pero el motor Linux no respondió en 3 minutos. Abra Docker Desktop, revise el aviso mostrado y compruebe WSL 2 con: wsl --status'
+    }
 }
 Log "Docker listo: $(docker --version)"
 
@@ -53,13 +103,23 @@ $lines = Get-Content $envFile | ForEach-Object {
 [System.IO.File]::WriteAllText($envFile, (($lines -join "`n") + "`n"), (New-Object System.Text.UTF8Encoding $false))
 Log '.env listo (los valores no se muestran)'
 
-# 3. Delegar en bash si existe --------------------------------------------
-$bash = Get-Command bash -ErrorAction SilentlyContinue
-if ($bash) {
-    Log "Ejecutando scripts/setup.sh con $($bash.Source)"
-    & $bash.Source scripts/setup.sh
+# 3. Delegar en un bash funcional si existe -------------------------------
+# WindowsApps\bash.exe puede existir aunque WSL no tenga una distribución
+# utilizable. Preferimos Git Bash y probamos cada candidato antes de delegar.
+$pathBash = (Get-Command bash -ErrorAction SilentlyContinue).Source
+$bashCandidates = @(
+    (Join-Path $env:ProgramFiles 'Git\bin\bash.exe'),
+    (Join-Path $env:ProgramFiles 'Git\usr\bin\bash.exe'),
+    (Join-Path $env:LOCALAPPDATA 'Programs\Git\bin\bash.exe'),
+    $pathBash
+) | Where-Object { $_ } | Select-Object -Unique
+$bashPath = $bashCandidates | Where-Object { Test-BashExecutable $_ } | Select-Object -First 1
+if ($bashPath) {
+    Log "Ejecutando scripts/setup.sh con $bashPath"
+    & $bashPath scripts/setup.sh
     exit $LASTEXITCODE
 }
+Log 'No se encontró Bash funcional; se usará el flujo nativo de PowerShell.'
 
 # 4. Flujo equivalente sin bash --------------------------------------------
 $nodes = 'pg-central','pg-cartago','pg-san-jose','pg-san-carlos','pg-alajuela','pg-limon'
