@@ -59,7 +59,8 @@ FROM ops.seed_runs WHERE seed_name = 'datos_sinteticos_v1';
 
 -- Validación espacial y de identificadores, capa por capa
 SELECT pg_temp.t(:'node' || '.capa.' || v.capa,
-                 v.filas >= 4 AND v.geom_nula + v.geom_vacia + v.srid_incorrecto + v.tipo_incorrecto
+                 v.filas >= CASE WHEN EXISTS (SELECT 1 FROM ops.seed_runs WHERE seed_name = 'datos_osm_v1') THEN 1 ELSE 4 END
+                   AND v.geom_nula + v.geom_vacia + v.srid_incorrecto + v.tipo_incorrecto
                    + v.geom_invalida + v.campus_incorrecto + v.id_fuera_formato + v.ids_duplicados = 0,
                  format('filas=%s nulas=%s vacias=%s srid_mal=%s tipo_mal=%s invalidas=%s campus_mal=%s id_mal=%s dup=%s',
                         v.filas, v.geom_nula, v.geom_vacia, v.srid_incorrecto, v.tipo_incorrecto, v.geom_invalida,
@@ -76,13 +77,15 @@ SELECT pg_temp.t(:'node' || '.id_unico_entre_capas', count(*) = count(DISTINCT i
                  format('%s ids, %s distintos, rango %s..%s', count(*), count(DISTINCT id), min(id), max(id)))
 FROM ids;
 
--- Ejemplo del contrato: el primer objeto cargado del campus tiene consecutivo 1
-SELECT pg_temp.t(:'node' || '.primer_objeto_consecutivo_1',
-                 id = :campus_id::bigint * 1000000000 + 1, 'id=' || id || ' (' || codigo || ')')
-FROM :"schema".edificios WHERE codigo = :'code_prefix' || '-E01';
+-- Ejemplo del contrato: el primer objeto cargado del campus tiene consecutivo 1.
+-- Se consulta el registro permanente: el objeto puede haberse sustituido por datos reales.
+SELECT pg_temp.t(:'node' || '.primer_objeto_consecutivo_1', count(*) = 1 AND max(capa) = 'edificios',
+                 'id=' || max(id) || ' en ' || max(capa))
+FROM ops.identificadores_globales WHERE id = :campus_id::bigint * 1000000000 + 1;
 
 -- Coherencia geográfica: todo dentro de Costa Rica (CRTM05) y cerca de la referencia del campus
-WITH ref AS (SELECT geom FROM :"schema".puntos_interes WHERE nombre LIKE 'Punto de referencia del campus%' ORDER BY id LIMIT 1),
+-- (punto sintético de referencia o, con datos reales, centro de los edificios)
+WITH ref AS (SELECT ST_Centroid(ST_Collect(geom)) AS geom FROM :"schema".edificios),
 geoms AS (
             SELECT geom FROM :"schema".edificios      UNION ALL SELECT geom FROM :"schema".carreteras
   UNION ALL SELECT geom FROM :"schema".aceras         UNION ALL SELECT geom FROM :"schema".parqueos
