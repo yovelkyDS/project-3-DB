@@ -23,6 +23,9 @@ __pycache__/
 # Intermedios locales
 tmp/
 
+# Artefactos generados del complemento QGIS (se reconstruyen con make qgis-plugin)
+dist/
+
 # Respaldos binarios de bases de datos (solo almacenamiento local)
 *.dump
 *.backup

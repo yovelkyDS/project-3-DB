@@ -14,7 +14,8 @@ NODE    ?= all
 .PHONY: help prereqs setup build up down restart status ps logs migrate seed verify \
         test test-full backup backup-logical backup-physical backup-list restore-test \
         restore-logical-test restore-physical-test wal-retention pitr-demo recovery-status \
-        recovery-stop recovery-clean psql versions clean
+        recovery-stop recovery-clean psql versions clean integrante3-setup integrante3-verify \
+        integrante3-unit qgis-plugin
 
 help: ## Muestra esta ayuda
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}'
@@ -129,3 +130,16 @@ distributed-unit: ## Pruebas locales del coordinador sin Docker
 	@$(PYTHON) -m unittest discover -s tests/distributed -p 'test_*.py' -v
 distributed-resolve: ## Resuelve decisiones durables 2PC pendientes
 	@$(PYTHON) scripts/distributed/manage.py resolve
+
+# Integrante 3 (autenticación central, complemento QGIS y estilos)
+integrante3-setup: ## Instala autenticación/estilos, verifica y empaqueta el complemento
+	@$(PYTHON) scripts/integrante3/manage.py setup
+
+integrante3-verify: ## Prueba 5 cuentas, rechazo de claves, vistas y estilos replicados
+	@$(PYTHON) scripts/integrante3/manage.py verify
+
+integrante3-unit: ## Pruebas locales del complemento sin requerir QGIS ni Docker
+	@$(PYTHON) -m unittest discover -s tests/integrante3 -p 'test_*.py' -v
+
+qgis-plugin: ## Genera dist/sigtec_qgis.zip listo para instalar en QGIS
+	@$(PYTHON) scripts/integrante3/manage.py package

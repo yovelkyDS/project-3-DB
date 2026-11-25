@@ -143,10 +143,10 @@ docker compose --profile tools run --rm -T sigtec-tools -c '. scripts/lib/db.sh
 | Nodo de datos por usuario | el de su campus (55431–55435), base `sigtec` |
 | `campus_id` | 1 Cartago · 2 San José · 3 San Carlos · 4 Alajuela · 5 Limón |
 | SRID de todas las capas | EPSG:5367 (el complemento no necesita reproyectar) |
-| Capas a cargar | vistas `qgis.v_*` del nodo del campus (las crea el Integrante 2); hoy solo existen las tablas `local_<campus>.*` |
+| Capas a cargar | ocho vistas `qgis.v_*` del nodo del campus (Integrante 2), cargadas por el complemento SIG-TEC |
 | Llave primaria para QGIS | `id` (bigint) |
 | Altas desde QGIS | sin `id` (lo asigna PostgreSQL). Las cuentas de edición **no** deben ser miembros de `sigtec_mantenimiento_id`; un id explícito se rechaza con `23514`/`42501` |
-| Contraseñas de las cuentas de prueba | `SIGTEC_QGIS_CARTAGO_PASSWORD` … `SIGTEC_QGIS_LIMON_PASSWORD` en `.env`, **generadas** por el instalador; **ninguna cuenta fue creada** (pendiente de coordinar con el Integrante 3) |
+| Contraseñas de las cuentas de prueba | `SIGTEC_QGIS_CARTAGO_PASSWORD` … `SIGTEC_QGIS_LIMON_PASSWORD` en `.env`, generadas por el instalador y sincronizadas por `make integrante3-setup` |
 | TLS | activo; `sslmode=require` (certificado autofirmado, por eso no `verify-full`) |
 
 Para leer una contraseña generada sin mostrar las demás:
@@ -155,10 +155,9 @@ Para leer una contraseña generada sin mostrar las demás:
 grep '^SIGTEC_QGIS_SAN_CARLOS_PASSWORD=' .env | cut -d= -f2-
 ```
 
-Mientras no existan las vistas, las capas pueden revisarse en QGIS conectándose como `postgres`
-al puerto del campus y abriendo `local_<campus>.*` (solo para pruebas).
+Instalación y pruebas del complemento: [INTEGRANTE_3.md](INTEGRANTE_3.md). No se debe conectar QGIS como `postgres`; las cuentas finales solo tienen DML sobre las vistas de su campus.
 
-## 4. Pendiente de otros integrantes
+## 4. Responsabilidades integradas
 
 | Elemento | Responsable |
 |---|---|
@@ -173,3 +172,7 @@ al puerto del campus y abriendo `local_<campus>.*` (solo para pruebas).
 La implementación nueva y el contrato actualizado de vistas, permisos, cuentas de datos,
 replicación y reincorporación se documentan en [INTEGRANTE_2.md](INTEGRANTE_2.md).
 La sección anterior conserva el estado de entrega original del integrante 1.
+
+## Extensión del integrante 3
+
+El esquema `auth`, la función segura basada en `session_user`, las cuentas centrales, los estilos y el complemento se instalan con `make integrante3-setup`. El manual, tratamiento de errores, pruebas y guion visual están en [INTEGRANTE_3.md](INTEGRANTE_3.md).

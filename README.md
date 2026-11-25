@@ -1,4 +1,4 @@
-# SIG-TEC · PostgreSQL/PostGIS distribuido (Integrantes 1 y 2)
+# SIG-TEC · PostgreSQL/PostGIS distribuido (Integrantes 1, 2 y 3)
 
 **SIG-TEC: Sistema Distribuido de Gestión de Información Geográfica de los Campus del Tecnológico de Costa Rica** — Tercer Proyecto, Bases de Datos II.
 
@@ -8,7 +8,7 @@ capas en los cinco campus, identificadores globales, datos de prueba, respaldos 
 físicos, archivado WAL, recuperación a un instante (PITR) y una demostración de falla y
 recuperación reproducible. La extensión del **Integrante 2** agrega replicación, vistas, control de edición y coordinación
 transaccional; su guía está en [docs/INTEGRANTE_2.md](docs/INTEGRANTE_2.md). El integrante 3
-integra la autenticación central y el complemento de QGIS.
+integra la autenticación central, las cinco cuentas, el complemento instalable de QGIS y los estilos institucionales; su guía está en [docs/INTEGRANTE_3.md](docs/INTEGRANTE_3.md).
 
 | Documento | Contenido |
 |---|---|
@@ -18,6 +18,8 @@ integra la autenticación central y el complemento de QGIS.
 | [docs/INTEGRATION.md](docs/INTEGRATION.md) | Contrato e interfaces para los Integrantes 2 y 3 |
 | [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) | Manifiesto de dependencias y versiones efectivas |
 | [docs/DEMO_VIDEO.md](docs/DEMO_VIDEO.md) | Guion y comandos para grabar el segmento del video |
+| [docs/INTEGRANTE_3.md](docs/INTEGRANTE_3.md) | Instalación y manual de autenticación, complemento QGIS, edición y estilos |
+| [docs/INTEGRANTE_3_VALIDACION.md](docs/INTEGRANTE_3_VALIDACION.md) | Pruebas automatizadas y lista de comprobaciones para la demostración |
 | [evidence/](evidence/) | Registros reales de instalación, pruebas, respaldos y PITR |
 | [remediation/](remediation/) | Corrección de los defectos F-01 y F-02 de la auditoría; evidencias nuevas separadas |
 
@@ -76,6 +78,8 @@ La primera vez tarda unos minutos porque compila PostGIS 3.5.4 (ver
 | `make pitr-demo` | Falla simulada + PITR de San Carlos en la instancia aislada `pg-recovery` |
 | `make psql NODE=cartago` | Consola `psql` como superusuario (`NODE=recovery` para la instancia recuperada) |
 | `make versions` | Registra versiones efectivas en `evidence/versions.txt` |
+| `make integrante3-setup` · `make integrante3-verify` | Instala y valida autenticación, cuentas y estilos del Integrante 3 |
+| `make integrante3-unit` · `make qgis-plugin` | Pruebas locales y ZIP instalable del complemento QGIS |
 
 `NODE` acepta `all`, `campus`, `central`, `cartago`, `san_jose`, `san_carlos`, `alajuela`, `limon`.
 
@@ -149,7 +153,7 @@ Nunca use `docker compose down -v` como operación normal.
 | Parámetros habilitantes de replicación lógica + plantilla de tablas destino del central | Integrante 1 | **Listo para el Integrante 2** |
 | Publicaciones/suscripciones, `global`, vistas `qgis`, INSTEAD OF, transacción distribuida | Integrante 2 | Implementados y probados; resultados en docs/INTEGRANTE_2_VALIDACION.md |
 | Reincorporación del nodo recuperado a la replicación | Integrante 2 | Demostrada con PITR real de San Carlos y nuevas ediciones; consultar validación |
-| `auth`, cuentas `qgis_*`, complemento PyQGIS, estilos `layer_styles`, manual | Integrante 3 | Pendiente (fuera de este alcance) |
+| `auth`, cuentas `qgis_*`, complemento PyQGIS, estilos `layer_styles`, manual | Integrante 3 | Implementados y probados con PostgreSQL y QGIS 3.44.15 |
 
 Los datos geográficos de prueba son **sintéticos**: no representan infraestructura real del TEC.
 
@@ -159,5 +163,8 @@ Se agregaron los componentes de replicación, consolidación, vistas editables, 
 coordinación 2PC, reincorporación y pruebas. La guía de instalación, el contrato para I3,
 los comandos de demostración y las limitaciones están en [docs/INTEGRANTE_2.md](docs/INTEGRANTE_2.md).
 El estado de pruebas nuevas se registra en [docs/INTEGRANTE_2_VALIDACION.md](docs/INTEGRANTE_2_VALIDACION.md).
-El inicio de sesión central y el complemento QGIS corresponden al integrante 3.
+
+## Desarrollo del integrante 3
+
+La autenticación central, el complemento QGIS, los ocho estilos, las pruebas y el manual están en [docs/INTEGRANTE_3.md](docs/INTEGRANTE_3.md). Después de `make replication-setup`, ejecutar `make integrante3-setup` para generar el ZIP instalable en `dist/sigtec_qgis.zip`. Los resultados de las pruebas y el guion de comprobación manual están en [docs/INTEGRANTE_3_VALIDACION.md](docs/INTEGRANTE_3_VALIDACION.md).
 
