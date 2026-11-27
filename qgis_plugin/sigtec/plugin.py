@@ -489,8 +489,8 @@ class SigTecPlugin:
         return ("La contraseña maestra de QGIS no se ingresó o no es correcta. No es la contraseña de su "
                 "campus: protege las credenciales guardadas en este equipo.\n\n"
                 "Si QGIS avisa que la del llavero no es válida, escriba la actual cuando la pida: "
-                "QGIS actualizará el llavero. Si no la conoce, consulte «Contraseña maestra» en "
-                "docs/INTEGRANTE_3.md.")
+                "QGIS actualizará el llavero. Si no recuerda la contraseña maestra, cree un perfil "
+                "de usuario nuevo en QGIS e instale SIG-TEC en ese perfil.")
 
     @staticmethod
     def _safe_error(exc):

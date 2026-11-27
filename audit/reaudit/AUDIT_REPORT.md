@@ -88,4 +88,4 @@ F-06 queda BAJO: conexión TCP sin TLS aceptada. F-07 queda BAJO: PowerShell no 
 
 [final_integrity.json](raw/final_integrity.json) confirma 322 archivos preexistentes sin cambios, ningún volumen preexistente desaparecido y snapshots SQL originales idénticos en los siete servicios, incluidos hashes de contenido geográfico. Los seis originales y su recuperación, y los siete servicios de `sigtec_remed`, terminaron healthy. La recuperación nueva `sigtec_reaudit_pitr` quedó detenida, con sus volúmenes conservados. Se dejaron filas de prueba solo en el laboratorio. No se aplicaron correcciones al proyecto.
 
-Detalle: [matriz](COMPLIANCE_MATRIX.md), [pruebas](TEST_RESULTS.md), [hallazgos](FINDINGS.md), [integración](INTEGRATION_READINESS.md), [veredicto](FINAL_VERDICT.md).
+Consulta la [matriz de cumplimiento](COMPLIANCE_MATRIX.md), las [pruebas ejecutadas](TEST_RESULTS.md) y los [hallazgos](FINDINGS.md) de esta auditoría.
