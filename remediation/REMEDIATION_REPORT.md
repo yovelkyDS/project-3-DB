@@ -106,8 +106,8 @@ originales** (requiere eliminar el volumen de `pg-recovery`). `make wal-retentio
 
 Sin cambios en tablas publicables, parámetros ni plantillas; `global.plantilla_central_compatible`
 sigue pasando. Requisitos nuevos: insertar sin `id`, no publicar `ops`, no replicar hacia los
-esquemas originales, migrar `pg-recovery` antes de reincorporarlo. Ver
-[INTEGRATION_IMPACT.md](INTEGRATION_IMPACT.md). La entrega del Integrante 1 deja de estar
+esquemas originales, migrar `pg-recovery` antes de reincorporarlo. El procedimiento vigente
+está en la [guía de recuperación](../docs/BACKUP_RECOVERY.md#reincorporación-a-la-replicación). La entrega del Integrante 1 deja de estar
 bloqueada por F-01/F-02 si la nueva auditoría lo confirma.
 
 ## 8. Efecto lateral: identidad de la imagen
@@ -132,6 +132,6 @@ bit). No fue posible restaurar la etiqueta. Prevención aplicada: el laboratorio
 * La carpeta no es un repositorio git: la trazabilidad de cambios es por hashes
   (`evidence/00_baseline/pre_fix_hashes.txt`).
 
-## 10. Instrucciones para la nueva auditoría
+## 10. Seguimiento
 
-Ver [READY_FOR_REAUDIT.md](READY_FOR_REAUDIT.md).
+La [segunda auditoría](../audit/reaudit/AUDIT_REPORT.md) documenta el resultado de la revisión. Las [pruebas de regresión](REGRESSION_TESTS.md) recogen los casos y las evidencias de la remediación.

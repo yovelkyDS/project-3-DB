@@ -108,7 +108,10 @@ def setup():
     for node in ['central'] + NODES:
         print('Preparando', node, flush=True)
         if sql(node, 'SHOW max_prepared_transactions') == '0':
-            raise RuntimeError('Reconstruya imagen y recree los nodos para habilitar max_prepared_transactions=16; ver docs/INTEGRANTE_2.md')
+            raise RuntimeError(
+                'Reconstruya la imagen con docker compose build pg-central y recree los nodos con '
+                'docker compose up -d --force-recreate para habilitar max_prepared_transactions=16.'
+            )
         sql(node, (ROOT / 'sql/distributed/functions.sql').read_text(encoding='utf-8-sig'))
         sql(node, f"DO $$ BEGIN IF NOT EXISTS(SELECT FROM pg_roles WHERE rolname='sigtec_repl') THEN CREATE ROLE sigtec_repl LOGIN REPLICATION; END IF; END $$; ALTER ROLE sigtec_repl PASSWORD {lit(password)};")
     # La plantilla no es idempotente: aplicar únicamente esquemas ausentes, con transacción.
