@@ -2,6 +2,8 @@
 
 ## 1. Topología
 
+[Diagrama de infraestructura](DiagramaInfraestructura.jpeg) con los flujos de autenticación, replicación y recuperación, y los puertos publicados por defecto.
+
 Líneas continuas = **implementado y probado** por el Integrante 1.
 Líneas punteadas = **rutas reservadas** para los Integrantes 2 (replicación) y 3 (QGIS/autenticación).
 
