@@ -265,10 +265,19 @@ volver al paso 3. Los parámetros aplicados quedan en `$PGDATA/SIGTEC_RECOVERY_I
   `SET sigtec.permitir_id_explicito = on`. Un id ya presente en el registro (incluso de un objeto
   eliminado) se rechaza con `23505`. Verificación: `make recovery-status` incluye
   `sql/checks/verificar_registro_ids.sql`.
-* **Reincorporación a la replicación**: depende de las publicaciones/suscripciones del
-  Integrante 2 y **no está demostrada** (ver [INTEGRATION.md](INTEGRATION.md)). Las ranuras de
-  replicación no se incluyen en un respaldo físico y la línea de tiempo cambia; las
-  suscripciones del central deben recrearse contra el nodo recuperado.
+
+### Reincorporación a la replicación
+
+Cuando `make recovery-status` indique que `pg-recovery` está apto, pausa las ediciones y detén el nodo original. El siguiente ejemplo reincorpora San Carlos.
+
+```bash
+docker compose stop pg-san-carlos
+python3 scripts/distributed/manage.py rejoin --node san_carlos
+python3 scripts/distributed/manage.py verify
+python3 scripts/integrante3/manage.py setup
+```
+
+Usa `python` si así se llama tu intérprete. Las copias de ese campus se sincronizan con el estado restaurado. Los cambios posteriores al instante elegido salen de las vistas distribuidas. Mantén detenido el nodo original e instala de nuevo el ZIP que genera el último comando para conectar QGIS al nodo recuperado.
 
 ## 6. Conflictos de identificadores
 
